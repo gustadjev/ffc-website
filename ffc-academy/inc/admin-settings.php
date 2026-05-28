@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function ffc_native_settings_fields(): array {
-	return array(
+	$fields = array(
 		'tryout_page_url'           => array(
 			'label' => __( 'Tryout Page URL', 'ffc-academy' ),
 			'type'  => 'url',
@@ -124,6 +124,16 @@ function ffc_native_settings_fields(): array {
 			'type'  => 'url',
 		),
 	);
+
+	foreach ( ffc_global_display_settings() as $key => $setting ) {
+		$fields[ $key ] = array(
+			'label'   => $setting['label'],
+			'type'    => $setting['type'] ?? 'text',
+			'default' => $setting['default'] ?? '',
+		);
+	}
+
+	return $fields;
 }
 
 add_action( 'admin_menu', 'ffc_register_native_settings_page' );
@@ -150,7 +160,7 @@ function ffc_register_native_settings(): void {
 			array(
 				'type'              => 'string',
 				'sanitize_callback' => 'url' === $field['type'] ? 'esc_url_raw' : 'sanitize_textarea_field',
-				'default'           => '',
+				'default'           => $field['default'] ?? '',
 			)
 		);
 	}
@@ -169,7 +179,7 @@ function ffc_render_native_settings_page(): void {
 			<table class="form-table" role="presentation">
 				<tbody>
 					<?php foreach ( ffc_native_settings_fields() as $key => $field ) : ?>
-						<?php $value = get_option( 'ffc_' . $key, '' ); ?>
+						<?php $value = get_option( 'ffc_' . $key, $field['default'] ?? '' ); ?>
 						<tr>
 							<th scope="row"><label for="ffc_<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $field['label'] ); ?></label></th>
 							<td>

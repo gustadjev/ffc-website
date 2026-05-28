@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FFC_THEME_VERSION', '1.2.2' );
+define( 'FFC_THEME_VERSION', '1.2.15' );
 define( 'FFC_THEME_DIR', get_template_directory() );
 define( 'FFC_THEME_URI', get_template_directory_uri() );
 
@@ -17,9 +17,15 @@ require_once FFC_THEME_DIR . '/inc/template-functions.php';
 require_once FFC_THEME_DIR . '/inc/post-types.php';
 require_once FFC_THEME_DIR . '/inc/acf.php';
 require_once FFC_THEME_DIR . '/inc/admin-settings.php';
+require_once FFC_THEME_DIR . '/inc/customizer.php';
+require_once FFC_THEME_DIR . '/inc/editor.php';
 require_once FFC_THEME_DIR . '/inc/teamsnap.php';
 require_once FFC_THEME_DIR . '/inc/tryouts.php';
 require_once FFC_THEME_DIR . '/inc/blocks.php';
+
+add_filter( 'hfe_footer_enabled', '__return_false', 999 );
+add_filter( 'hfe_before_footer_enabled', '__return_false', 999 );
+add_filter( 'enable_hfe_render_footer', '__return_false', 999 );
 
 add_action( 'after_setup_theme', 'ffc_theme_setup' );
 function ffc_theme_setup(): void {
@@ -55,8 +61,24 @@ function ffc_theme_setup(): void {
 	add_image_size( 'ffc-square', 720, 720, true );
 }
 
+add_action( 'after_switch_theme', 'ffc_set_default_front_page' );
+function ffc_set_default_front_page(): void {
+	if ( (int) get_option( 'page_on_front' ) ) {
+		return;
+	}
+
+	$home_page = get_page_by_path( 'home' );
+	if ( $home_page instanceof WP_Post ) {
+		update_option( 'show_on_front', 'page' );
+		update_option( 'page_on_front', (int) $home_page->ID );
+	}
+}
+
 add_action( 'wp_enqueue_scripts', 'ffc_enqueue_assets' );
 function ffc_enqueue_assets(): void {
+	$css_file = FFC_THEME_DIR . '/assets/css/main.css';
+	$js_file  = FFC_THEME_DIR . '/assets/js/main.js';
+
 	wp_enqueue_style(
 		'ffc-fonts',
 		'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap',
@@ -68,14 +90,14 @@ function ffc_enqueue_assets(): void {
 		'ffc-theme',
 		FFC_THEME_URI . '/assets/css/main.css',
 		array( 'ffc-fonts' ),
-		FFC_THEME_VERSION
+		file_exists( $css_file ) ? (string) filemtime( $css_file ) : FFC_THEME_VERSION
 	);
 
 	wp_enqueue_script(
 		'ffc-theme',
 		FFC_THEME_URI . '/assets/js/main.js',
 		array(),
-		FFC_THEME_VERSION,
+		file_exists( $js_file ) ? (string) filemtime( $js_file ) : FFC_THEME_VERSION,
 		true
 	);
 
@@ -94,7 +116,7 @@ function ffc_add_site_schema(): void {
 	$schema = array(
 		'@context' => 'https://schema.org',
 		'@type'    => 'SportsOrganization',
-		'name'     => get_bloginfo( 'name' ) ?: 'F.F.C.',
+		'name'     => ffc_brand_name(),
 		'sport'    => 'Soccer',
 		'url'      => home_url( '/' ),
 		'logo'     => ffc_get_logo_url(),

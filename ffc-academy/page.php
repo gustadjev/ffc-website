@@ -14,7 +14,7 @@ get_header();
 		?>
 		<section class="page-hero">
 			<div class="container">
-				<p class="eyebrow"><?php esc_html_e( 'F.F.C. Academy', 'ffc-academy' ); ?></p>
+				<p class="eyebrow"><?php echo esc_html( ffc_option( 'default_page_eyebrow', __( 'F.F.C. Academy', 'ffc-academy' ) ) ); ?></p>
 				<h1><?php the_title(); ?></h1>
 			</div>
 		</section>

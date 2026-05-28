@@ -4,8 +4,8 @@ get_header();
 <main id="primary" class="site-main">
 	<section class="page-hero">
 		<div class="container">
-			<p class="eyebrow"><?php esc_html_e( 'Academy Desk', 'ffc-academy' ); ?></p>
-			<h1><?php esc_html_e( 'Announcements', 'ffc-academy' ); ?></h1>
+			<p class="eyebrow"><?php echo esc_html( ffc_option( 'archive_announcement_kicker', __( 'Academy Desk', 'ffc-academy' ) ) ); ?></p>
+			<h1><?php echo esc_html( ffc_option( 'archive_announcement_title', __( 'Announcements', 'ffc-academy' ) ) ); ?></h1>
 		</div>
 	</section>
 	<section class="section section--light">
@@ -20,7 +20,7 @@ get_header();
 			endwhile;
 				the_posts_pagination(); else :
 					?>
-				<p class="empty-state"><?php esc_html_e( 'Announcements will appear here.', 'ffc-academy' ); ?></p>
+				<p class="empty-state"><?php echo esc_html( ffc_option( 'archive_announcement_empty_message', __( 'Announcements will appear here.', 'ffc-academy' ) ) ); ?></p>
 							<?php endif; ?>
 		</div>
 	</section>

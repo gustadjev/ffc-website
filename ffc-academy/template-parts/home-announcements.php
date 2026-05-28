@@ -1,4 +1,5 @@
 <?php
+$home_id       = ffc_home_page_id();
 $announcements = new WP_Query(
 	array(
 		'post_type'      => 'ffc_announcement',
@@ -8,9 +9,9 @@ $announcements = new WP_Query(
 ?>
 <section class="section section--light">
 	<div class="container section-heading">
-		<p class="eyebrow"><?php esc_html_e( 'Academy Desk', 'ffc-academy' ); ?></p>
-		<h2><?php esc_html_e( 'Announcements', 'ffc-academy' ); ?></h2>
-		<a href="<?php echo esc_url( get_post_type_archive_link( 'ffc_announcement' ) ); ?>"><?php esc_html_e( 'All Updates', 'ffc-academy' ); ?></a>
+		<p class="eyebrow"><?php echo esc_html( ffc_get_field( 'home_announcements_kicker', $home_id, __( 'Academy Desk', 'ffc-academy' ) ) ); ?></p>
+		<h2><?php echo esc_html( ffc_get_field( 'home_announcements_title', $home_id, __( 'Announcements', 'ffc-academy' ) ) ); ?></h2>
+		<a href="<?php echo esc_url( get_post_type_archive_link( 'ffc_announcement' ) ); ?>"><?php echo esc_html( ffc_get_field( 'home_announcements_link_label', $home_id, __( 'All Updates', 'ffc-academy' ) ) ); ?></a>
 	</div>
 	<div class="container post-grid">
 		<?php if ( $announcements->have_posts() ) : ?>
@@ -24,9 +25,7 @@ $announcements = new WP_Query(
 			wp_reset_postdata();
 			?>
 		<?php else : ?>
-			<article class="card notice-card reveal"><div class="card__body"><span class="date-badge"><?php esc_html_e( 'Club', 'ffc-academy' ); ?></span><h2><?php esc_html_e( 'Tryout Window Opening Soon', 'ffc-academy' ); ?></h2><p><?php esc_html_e( 'Families can register online and receive follow-up details from academy staff.', 'ffc-academy' ); ?></p></div></article>
-			<article class="card notice-card reveal"><div class="card__body"><span class="date-badge"><?php esc_html_e( 'Training', 'ffc-academy' ); ?></span><h2><?php esc_html_e( 'Summer Development Blocks', 'ffc-academy' ); ?></h2><p><?php esc_html_e( 'Age-group sessions will focus on technical speed, decision-making, and finishing.', 'ffc-academy' ); ?></p></div></article>
-			<article class="card notice-card reveal"><div class="card__body"><span class="date-badge"><?php esc_html_e( 'Community', 'ffc-academy' ); ?></span><h2><?php esc_html_e( 'Sponsor Partnerships', 'ffc-academy' ); ?></h2><p><?php esc_html_e( 'Local partners can support player pathways, equipment, and tournament travel.', 'ffc-academy' ); ?></p></div></article>
+			<p class="empty-state"><?php echo esc_html( ffc_get_field( 'home_announcements_empty_message', $home_id, __( 'Club updates, weather notices, and tournament announcements will appear here.', 'ffc-academy' ) ) ); ?></p>
 		<?php endif; ?>
 	</div>
 </section>

@@ -8,7 +8,7 @@ $highlights     = ffc_get_field( 'highlights_url', get_the_ID() );
 ?>
 <article class="score-card <?php echo esc_attr( ffc_result_class( $result ) ); ?> reveal">
 	<div class="score-card__result"><?php echo esc_html( strtoupper( substr( $result, 0, 1 ) ) ); ?></div>
-	<h3><?php esc_html_e( 'F.F.C.', 'ffc-academy' ); ?> <span><?php echo esc_html( $ffc_score ); ?></span></h3>
+	<h3><?php echo esc_html( ffc_brand_name( true ) ); ?> <span><?php echo esc_html( $ffc_score ); ?></span></h3>
 	<h3><?php echo esc_html( $opponent ); ?> <span><?php echo esc_html( $opponent_score ); ?></span></h3>
 	<?php
 	if ( $date ) :
@@ -18,5 +18,5 @@ $highlights     = ffc_get_field( 'highlights_url', get_the_ID() );
 	<?php
 	if ( $highlights ) :
 		?>
-		<a href="<?php echo esc_url( $highlights ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Highlights', 'ffc-academy' ); ?></a><?php endif; ?>
+		<a href="<?php echo esc_url( $highlights ); ?>" target="_blank" rel="noopener"><?php echo esc_html( ffc_option( 'card_highlights_label', __( 'Highlights', 'ffc-academy' ) ) ); ?></a><?php endif; ?>
 </article>

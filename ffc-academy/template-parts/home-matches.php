@@ -1,4 +1,5 @@
 <?php
+$home_id = ffc_home_page_id();
 $matches = new WP_Query(
 	array(
 		'post_type'      => 'ffc_game',
@@ -19,9 +20,9 @@ $matches = new WP_Query(
 ?>
 <section class="section section--light">
 	<div class="container section-heading">
-		<p class="eyebrow"><?php esc_html_e( 'Next Up', 'ffc-academy' ); ?></p>
-		<h2><?php esc_html_e( 'Upcoming Matches', 'ffc-academy' ); ?></h2>
-		<a href="<?php echo esc_url( get_post_type_archive_link( 'ffc_game' ) ); ?>"><?php esc_html_e( 'Full Schedule', 'ffc-academy' ); ?></a>
+		<p class="eyebrow"><?php echo esc_html( ffc_get_field( 'home_matches_kicker', $home_id, __( 'Next Up', 'ffc-academy' ) ) ); ?></p>
+		<h2><?php echo esc_html( ffc_get_field( 'home_matches_title', $home_id, __( 'Upcoming Matches', 'ffc-academy' ) ) ); ?></h2>
+		<a href="<?php echo esc_url( get_post_type_archive_link( 'ffc_game' ) ); ?>"><?php echo esc_html( ffc_get_field( 'home_matches_link_label', $home_id, __( 'Full Schedule', 'ffc-academy' ) ) ); ?></a>
 	</div>
 	<div class="container match-grid">
 		<?php if ( $matches->have_posts() ) : ?>
@@ -35,22 +36,7 @@ $matches = new WP_Query(
 			wp_reset_postdata();
 			?>
 		<?php else : ?>
-			<?php
-			$fallback_matches = array(
-				array( 'Academy Showcase', 'Sat, Jun 8 - 9:00 AM', 'Freedom Training Ground', 'Home' ),
-				array( 'Metro Select', 'Sun, Jun 16 - 2:30 PM', 'North Athletic Complex', 'Away' ),
-				array( 'Summer Cup Group Stage', 'Fri, Jun 28 - 6:00 PM', 'Championship Fields', 'Neutral' ),
-			);
-			foreach ( $fallback_matches as $match ) :
-				?>
-				<article class="match-card reveal">
-					<div class="match-card__flag"><?php echo esc_html( $match[3] ); ?></div>
-					<h3><?php esc_html_e( 'F.F.C.', 'ffc-academy' ); ?> <span><?php esc_html_e( 'vs', 'ffc-academy' ); ?></span> <?php echo esc_html( $match[0] ); ?></h3>
-					<time><?php echo esc_html( $match[1] ); ?></time>
-					<p><?php echo esc_html( $match[2] ); ?></p>
-					<div class="card-actions"><a href="<?php echo esc_url( get_post_type_archive_link( 'ffc_game' ) ); ?>"><?php esc_html_e( 'Schedule Details', 'ffc-academy' ); ?></a></div>
-				</article>
-			<?php endforeach; ?>
+			<p class="empty-state"><?php echo esc_html( ffc_get_field( 'home_matches_empty_message', $home_id, __( 'Upcoming match details will be posted soon.', 'ffc-academy' ) ) ); ?></p>
 		<?php endif; ?>
 	</div>
 </section>

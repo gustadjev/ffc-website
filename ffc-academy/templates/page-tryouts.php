@@ -9,24 +9,39 @@
 get_header();
 $page_id = get_queried_object_id();
 $status  = isset( $_GET['tryout'] ) ? sanitize_key( wp_unslash( $_GET['tryout'] ) ) : '';
+$age_group_placeholder = ffc_get_field( 'tryout_age_group_placeholder', $page_id, __( 'U10, U12, U14', 'ffc-academy' ) );
+$labels  = array(
+	'player_first_name'     => ffc_get_field( 'tryout_label_player_first_name', $page_id, __( 'Player First Name', 'ffc-academy' ) ),
+	'player_last_name'      => ffc_get_field( 'tryout_label_player_last_name', $page_id, __( 'Player Last Name', 'ffc-academy' ) ),
+	'date_of_birth'         => ffc_get_field( 'tryout_label_date_of_birth', $page_id, __( 'Date of Birth', 'ffc-academy' ) ),
+	'age_group'             => ffc_get_field( 'tryout_label_age_group', $page_id, __( 'Age Group', 'ffc-academy' ) ),
+	'preferred_position'    => ffc_get_field( 'tryout_label_preferred_position', $page_id, __( 'Preferred Position', 'ffc-academy' ) ),
+	'preferred_tryout_date' => ffc_get_field( 'tryout_label_preferred_tryout_date', $page_id, __( 'Preferred Tryout Date', 'ffc-academy' ) ),
+	'previous_experience'   => ffc_get_field( 'tryout_label_previous_experience', $page_id, __( 'Previous Experience', 'ffc-academy' ) ),
+	'parent_name'           => ffc_get_field( 'tryout_label_parent_name', $page_id, __( 'Parent/Guardian Name', 'ffc-academy' ) ),
+	'parent_email'          => ffc_get_field( 'tryout_label_parent_email', $page_id, __( 'Parent/Guardian Email', 'ffc-academy' ) ),
+	'parent_phone'          => ffc_get_field( 'tryout_label_parent_phone', $page_id, __( 'Parent/Guardian Phone', 'ffc-academy' ) ),
+	'emergency_contact'     => ffc_get_field( 'tryout_label_emergency_contact', $page_id, __( 'Emergency Contact', 'ffc-academy' ) ),
+	'medical_notes'         => ffc_get_field( 'tryout_label_medical_notes', $page_id, __( 'Medical Notes', 'ffc-academy' ) ),
+	'additional_comments'   => ffc_get_field( 'tryout_label_additional_comments', $page_id, __( 'Additional Comments', 'ffc-academy' ) ),
+);
 ?>
 <main id="primary" class="site-main">
 	<section class="page-hero">
 		<div class="container">
-			<p class="eyebrow"><?php esc_html_e( 'Join F.F.C.', 'ffc-academy' ); ?></p>
-			<h1><?php esc_html_e( 'Tryout Registration', 'ffc-academy' ); ?></h1>
+			<p class="eyebrow"><?php echo esc_html( ffc_get_field( 'tryout_hero_kicker', $page_id, __( 'Join F.F.C.', 'ffc-academy' ) ) ); ?></p>
+			<h1><?php echo esc_html( ffc_get_field( 'tryout_hero_title', $page_id, __( 'Tryout Registration', 'ffc-academy' ) ) ); ?></h1>
 		</div>
 	</section>
-	<?php ffc_page_content_section( $page_id ); ?>
 	<section class="section section--light">
 		<div class="container form-layout">
 			<div class="form-intro">
-				<h2><?php esc_html_e( 'Start the Player Evaluation Process', 'ffc-academy' ); ?></h2>
-				<p><?php esc_html_e( 'Submit player and guardian details so academy staff can place athletes in the correct evaluation group and follow up with next steps.', 'ffc-academy' ); ?></p>
+				<h2><?php echo esc_html( ffc_get_field( 'tryout_intro_title', $page_id, __( 'Start the Player Evaluation Process', 'ffc-academy' ) ) ); ?></h2>
+				<p><?php echo esc_html( ffc_get_field( 'tryout_intro_copy', $page_id, __( 'Submit player and guardian details so academy staff can place athletes in the correct evaluation group and follow up with next steps.', 'ffc-academy' ) ) ); ?></p>
 				<?php if ( 'success' === $status ) : ?>
-					<div class="notice notice--success" role="status"><?php esc_html_e( 'Registration received. Our staff will follow up soon.', 'ffc-academy' ); ?></div>
+					<div class="notice notice--success" role="status"><?php echo esc_html( ffc_get_field( 'tryout_success_message', $page_id, __( 'Registration received. Our staff will follow up soon.', 'ffc-academy' ) ) ); ?></div>
 				<?php elseif ( 'error' === $status ) : ?>
-					<div class="notice notice--error" role="alert"><?php esc_html_e( 'Please check the required fields and try again.', 'ffc-academy' ); ?></div>
+					<div class="notice notice--error" role="alert"><?php echo esc_html( ffc_get_field( 'tryout_error_message', $page_id, __( 'Please check the required fields and try again.', 'ffc-academy' ) ) ); ?></div>
 				<?php endif; ?>
 			</div>
 			<form class="tryout-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
@@ -35,26 +50,26 @@ $status  = isset( $_GET['tryout'] ) ? sanitize_key( wp_unslash( $_GET['tryout'] 
 				<label class="hp-field">Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
 
 				<div class="form-grid">
-					<label><?php esc_html_e( 'Player First Name', 'ffc-academy' ); ?><input name="player_first_name" required autocomplete="given-name"></label>
-					<label><?php esc_html_e( 'Player Last Name', 'ffc-academy' ); ?><input name="player_last_name" required autocomplete="family-name"></label>
-					<label><?php esc_html_e( 'Date of Birth', 'ffc-academy' ); ?><input type="date" name="date_of_birth" required></label>
-					<label><?php esc_html_e( 'Age Group', 'ffc-academy' ); ?><input name="age_group" placeholder="U10, U12, U14" required></label>
-					<label><?php esc_html_e( 'Preferred Position', 'ffc-academy' ); ?><input name="preferred_position"></label>
-					<label><?php esc_html_e( 'Preferred Tryout Date', 'ffc-academy' ); ?><input type="date" name="preferred_tryout_date"></label>
+					<label><?php echo esc_html( $labels['player_first_name'] ); ?><input name="player_first_name" required autocomplete="given-name"></label>
+					<label><?php echo esc_html( $labels['player_last_name'] ); ?><input name="player_last_name" required autocomplete="family-name"></label>
+					<label><?php echo esc_html( $labels['date_of_birth'] ); ?><input type="date" name="date_of_birth" required></label>
+					<label><?php echo esc_html( $labels['age_group'] ); ?><input name="age_group" placeholder="<?php echo esc_attr( $age_group_placeholder ); ?>" required></label>
+					<label><?php echo esc_html( $labels['preferred_position'] ); ?><input name="preferred_position"></label>
+					<label><?php echo esc_html( $labels['preferred_tryout_date'] ); ?><input type="date" name="preferred_tryout_date"></label>
 				</div>
 
-				<label><?php esc_html_e( 'Previous Experience', 'ffc-academy' ); ?><textarea name="previous_experience" rows="4"></textarea></label>
+				<label><?php echo esc_html( $labels['previous_experience'] ); ?><textarea name="previous_experience" rows="4"></textarea></label>
 
 				<div class="form-grid">
-					<label><?php esc_html_e( 'Parent/Guardian Name', 'ffc-academy' ); ?><input name="parent_name" required></label>
-					<label><?php esc_html_e( 'Parent/Guardian Email', 'ffc-academy' ); ?><input type="email" name="parent_email" required autocomplete="email"></label>
-					<label><?php esc_html_e( 'Parent/Guardian Phone', 'ffc-academy' ); ?><input type="tel" name="parent_phone" required autocomplete="tel"></label>
-					<label><?php esc_html_e( 'Emergency Contact', 'ffc-academy' ); ?><input name="emergency_contact" required></label>
+					<label><?php echo esc_html( $labels['parent_name'] ); ?><input name="parent_name" required></label>
+					<label><?php echo esc_html( $labels['parent_email'] ); ?><input type="email" name="parent_email" required autocomplete="email"></label>
+					<label><?php echo esc_html( $labels['parent_phone'] ); ?><input type="tel" name="parent_phone" required autocomplete="tel"></label>
+					<label><?php echo esc_html( $labels['emergency_contact'] ); ?><input name="emergency_contact" required></label>
 				</div>
 
-				<label><?php esc_html_e( 'Medical Notes', 'ffc-academy' ); ?><textarea name="medical_notes" rows="4"></textarea></label>
-				<label><?php esc_html_e( 'Additional Comments', 'ffc-academy' ); ?><textarea name="additional_comments" rows="4"></textarea></label>
-				<button class="button button--accent" type="submit"><?php esc_html_e( 'Submit Registration', 'ffc-academy' ); ?></button>
+				<label><?php echo esc_html( $labels['medical_notes'] ); ?><textarea name="medical_notes" rows="4"></textarea></label>
+				<label><?php echo esc_html( $labels['additional_comments'] ); ?><textarea name="additional_comments" rows="4"></textarea></label>
+				<button class="button button--accent" type="submit"><?php echo esc_html( ffc_get_field( 'tryout_submit_label', $page_id, __( 'Submit Registration', 'ffc-academy' ) ) ); ?></button>
 			</form>
 		</div>
 	</section>

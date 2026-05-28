@@ -1,6 +1,6 @@
 <?php
 $url = ffc_get_field( 'sponsor_url', get_the_ID() );
-$cta = ffc_get_field( 'sponsor_cta', get_the_ID(), __( 'Visit Sponsor', 'ffc-academy' ) );
+$cta = ffc_get_field( 'sponsor_cta', get_the_ID(), ffc_option( 'card_visit_sponsor_label', __( 'Visit Sponsor', 'ffc-academy' ) ) );
 ?>
 <article class="sponsor-card reveal">
 	<?php if ( has_post_thumbnail() ) : ?>

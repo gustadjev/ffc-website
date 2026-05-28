@@ -1,23 +1,10 @@
+<?php $home_id = ffc_home_page_id(); ?>
 <section class="social-band">
 	<div class="container social-band__inner">
 		<div>
-			<p class="eyebrow"><?php esc_html_e( 'Follow the Phoenix', 'ffc-academy' ); ?></p>
-			<h2><?php esc_html_e( 'Matchday Moments, Training Clips, and Club Updates', 'ffc-academy' ); ?></h2>
+			<p class="eyebrow"><?php echo esc_html( ffc_get_field( 'home_social_kicker', $home_id, __( 'Follow the Phoenix', 'ffc-academy' ) ) ); ?></p>
+			<h2><?php echo esc_html( ffc_get_field( 'home_social_title', $home_id, __( 'Matchday Moments, Training Clips, and Club Updates', 'ffc-academy' ) ) ); ?></h2>
 		</div>
-		<div class="social-links social-links--large">
-			<?php
-			foreach ( array(
-				'instagram' => 'Instagram',
-				'facebook'  => 'Facebook',
-				'youtube'   => 'YouTube',
-				'tiktok'    => 'TikTok',
-			) as $key => $label ) :
-				?>
-					<?php $url = ffc_option( $key . '_url' ); ?>
-					<?php if ( $url ) : ?>
-					<a href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $label ); ?></a>
-				<?php endif; ?>
-			<?php endforeach; ?>
-		</div>
+		<?php echo ffc_social_links_markup( 'social-icons social-icons--large', true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</div>
 </section>

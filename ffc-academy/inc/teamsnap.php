@@ -9,8 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-function ffc_teamsnap_button( string $label = 'Open TeamSnap' ): string {
+function ffc_teamsnap_button( string $label = '' ): string {
 	$url = ffc_option( 'teamsnap_public_url' ) ?: ffc_option( 'teamsnap_schedule_url' );
+	$label = $label ?: ffc_option( 'teamsnap_default_button_label', __( 'Open TeamSnap', 'ffc-academy' ) );
 
 	return $url ? ffc_button( $label, $url, 'secondary' ) : '';
 }
@@ -19,23 +20,23 @@ function ffc_teamsnap_links(): array {
 	return array_filter(
 		array(
 			'schedule'     => array(
-				'label'       => __( 'Schedule', 'ffc-academy' ),
-				'description' => __( 'Practices, matches, fields, and calendar updates.', 'ffc-academy' ),
+				'label'       => ffc_option( 'teamsnap_schedule_label', __( 'Schedule', 'ffc-academy' ) ),
+				'description' => ffc_option( 'teamsnap_schedule_description', __( 'Practices, matches, fields, and calendar updates.', 'ffc-academy' ) ),
 				'url'         => ffc_option( 'teamsnap_schedule_url' ) ?: ffc_option( 'teamsnap_public_url' ),
 			),
 			'roster'       => array(
-				'label'       => __( 'Roster', 'ffc-academy' ),
-				'description' => __( 'Team contacts, player details, and family communication.', 'ffc-academy' ),
+				'label'       => ffc_option( 'teamsnap_roster_label', __( 'Roster', 'ffc-academy' ) ),
+				'description' => ffc_option( 'teamsnap_roster_description', __( 'Team contacts, player details, and family communication.', 'ffc-academy' ) ),
 				'url'         => ffc_option( 'teamsnap_roster_url' ),
 			),
 			'registration' => array(
-				'label'       => __( 'Registration', 'ffc-academy' ),
-				'description' => __( 'TeamSnap forms, dues, waivers, and season signups.', 'ffc-academy' ),
+				'label'       => ffc_option( 'teamsnap_registration_label', __( 'Registration', 'ffc-academy' ) ),
+				'description' => ffc_option( 'teamsnap_registration_description', __( 'TeamSnap forms, dues, waivers, and season signups.', 'ffc-academy' ) ),
 				'url'         => ffc_option( 'teamsnap_registration_url' ),
 			),
 			'app'          => array(
-				'label'       => __( 'TeamSnap App', 'ffc-academy' ),
-				'description' => __( 'Open the mobile app or TeamSnap login.', 'ffc-academy' ),
+				'label'       => ffc_option( 'teamsnap_app_label', __( 'TeamSnap App', 'ffc-academy' ) ),
+				'description' => ffc_option( 'teamsnap_app_description', __( 'Open the mobile app or TeamSnap login.', 'ffc-academy' ) ),
 				'url'         => ffc_option( 'teamsnap_app_url' ) ?: ffc_option( 'teamsnap_public_url' ),
 			),
 		),
@@ -89,7 +90,7 @@ function ffc_teamsnap_links_markup(): string {
 	$links = ffc_teamsnap_links();
 
 	if ( empty( $links ) ) {
-		return '<p class="teamsnap-empty">' . esc_html__( 'Add TeamSnap links in F.F.C. Settings to connect families directly to schedules, rosters, registration, and the TeamSnap app.', 'ffc-academy' ) . '</p>';
+		return '<p class="teamsnap-empty">' . esc_html( ffc_option( 'teamsnap_empty_message', __( 'Add TeamSnap links in F.F.C. Settings to connect families directly to schedules, rosters, registration, and the TeamSnap app.', 'ffc-academy' ) ) ) . '</p>';
 	}
 
 	$output = '<div class="teamsnap-link-grid">';

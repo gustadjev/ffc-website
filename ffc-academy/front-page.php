@@ -7,7 +7,7 @@
 
 get_header();
 
-$front_id = (int) get_option( 'page_on_front' );
+$front_id = ffc_home_page_id();
 if ( ffc_is_builder_page( $front_id ) ) {
 	ffc_render_builder_page( $front_id );
 	get_footer();
@@ -47,11 +47,54 @@ $fallback_slides = array(
 		'second'  => array( __( 'Contact Us', 'ffc-academy' ), ffc_archive_link_by_slug( 'contact', home_url( '/contact/' ) ) ),
 	),
 );
-$acf_slides      = ffc_get_field( 'home_slides', get_option( 'page_on_front' ), array() );
+$legacy_slides   = ffc_get_field( 'home_slides', $front_id, array() );
 $hero_slides     = array();
+$basic_slides    = array();
+$has_basic_data  = false;
 
-if ( is_array( $acf_slides ) && ! empty( $acf_slides ) ) {
-	foreach ( $acf_slides as $slide ) {
+for ( $i = 1; $i <= 3; $i++ ) {
+	$fallback = $fallback_slides[ $i - 1 ];
+	$image    = ffc_get_field( "home_slide_{$i}_image", $front_id, '' );
+
+	$stored_values = array(
+		$image,
+		(string) ffc_get_field( "home_slide_{$i}_kicker", $front_id, '' ),
+		(string) ffc_get_field( "home_slide_{$i}_title", $front_id, '' ),
+		(string) ffc_get_field( "home_slide_{$i}_copy", $front_id, '' ),
+		(string) ffc_get_field( "home_slide_{$i}_card_label", $front_id, '' ),
+		(string) ffc_get_field( "home_slide_{$i}_card_meta", $front_id, '' ),
+		(string) ffc_get_field( "home_slide_{$i}_primary_label", $front_id, '' ),
+		(string) ffc_get_field( "home_slide_{$i}_primary_url", $front_id, '' ),
+		(string) ffc_get_field( "home_slide_{$i}_secondary_label", $front_id, '' ),
+		(string) ffc_get_field( "home_slide_{$i}_secondary_url", $front_id, '' ),
+	);
+
+	if ( ! empty( array_filter( $stored_values ) ) ) {
+		$has_basic_data = true;
+	}
+
+	$basic_slides[] = array(
+		'image'   => ffc_image_url_from_field( $image, 'ffc-hero', $fallback['image'] ),
+		'kicker'  => ffc_get_field( "home_slide_{$i}_kicker", $front_id, $fallback['kicker'] ),
+		'title'   => ffc_get_field( "home_slide_{$i}_title", $front_id, $fallback['title'] ),
+		'copy'    => ffc_get_field( "home_slide_{$i}_copy", $front_id, $fallback['copy'] ),
+		'label'   => ffc_get_field( "home_slide_{$i}_card_label", $front_id, $fallback['label'] ),
+		'meta'    => ffc_get_field( "home_slide_{$i}_card_meta", $front_id, $fallback['meta'] ),
+		'primary' => array(
+			ffc_get_field( "home_slide_{$i}_primary_label", $front_id, $fallback['primary'][0] ),
+			ffc_get_field( "home_slide_{$i}_primary_url", $front_id, $fallback['primary'][1] ),
+		),
+		'second'  => array(
+			ffc_get_field( "home_slide_{$i}_secondary_label", $front_id, $fallback['second'][0] ),
+			ffc_get_field( "home_slide_{$i}_secondary_url", $front_id, $fallback['second'][1] ),
+		),
+	);
+}
+
+if ( $has_basic_data ) {
+	$hero_slides = $basic_slides;
+} elseif ( is_array( $legacy_slides ) && ! empty( $legacy_slides ) ) {
+	foreach ( $legacy_slides as $slide ) {
 		$hero_slides[] = array(
 			'image'   => ffc_image_url_from_field( $slide['image'] ?? '', 'ffc-hero', ffc_theme_image( 'hero' ) ),
 			'kicker'  => $slide['kicker'] ?: __( 'Freedom Futbol Club', 'ffc-academy' ),
@@ -61,33 +104,6 @@ if ( is_array( $acf_slides ) && ! empty( $acf_slides ) ) {
 			'meta'    => $slide['card_meta'] ?: '',
 			'primary' => array( $slide['primary_label'] ?: __( 'Register for Tryouts', 'ffc-academy' ), $slide['primary_url'] ?: $tryout_url ),
 			'second'  => array( $slide['secondary_label'] ?: __( 'View Schedule', 'ffc-academy' ), $slide['secondary_url'] ?: get_post_type_archive_link( 'ffc_game' ) ),
-		);
-	}
-} else {
-	for ( $i = 1; $i <= 3; $i++ ) {
-		$title = ffc_get_field( "home_slide_{$i}_title", $front_id, '' );
-		$image = ffc_get_field( "home_slide_{$i}_image", $front_id, '' );
-
-		if ( ! $title && ! $image ) {
-			continue;
-		}
-
-		$fallback      = $fallback_slides[ $i - 1 ];
-		$hero_slides[] = array(
-			'image'   => ffc_image_url_from_field( $image, 'ffc-hero', $fallback['image'] ),
-			'kicker'  => ffc_get_field( "home_slide_{$i}_kicker", $front_id, $fallback['kicker'] ),
-			'title'   => $title ?: $fallback['title'],
-			'copy'    => ffc_get_field( "home_slide_{$i}_copy", $front_id, $fallback['copy'] ),
-			'label'   => ffc_get_field( "home_slide_{$i}_card_label", $front_id, $fallback['label'] ),
-			'meta'    => ffc_get_field( "home_slide_{$i}_card_meta", $front_id, $fallback['meta'] ),
-			'primary' => array(
-				ffc_get_field( "home_slide_{$i}_primary_label", $front_id, $fallback['primary'][0] ),
-				ffc_get_field( "home_slide_{$i}_primary_url", $front_id, $fallback['primary'][1] ),
-			),
-			'second'  => array(
-				ffc_get_field( "home_slide_{$i}_secondary_label", $front_id, $fallback['second'][0] ),
-				ffc_get_field( "home_slide_{$i}_secondary_url", $front_id, $fallback['second'][1] ),
-			),
 		);
 	}
 }
@@ -137,12 +153,15 @@ if ( empty( $hero_slides ) ) {
 		</div>
 	</section>
 
-	<?php ffc_page_content_section( $front_id ); ?>
 	<?php get_template_part( 'template-parts/home', 'programs' ); ?>
 	<?php get_template_part( 'template-parts/home', 'matches' ); ?>
+	<?php get_template_part( 'template-parts/home', 'scores' ); ?>
 	<?php get_template_part( 'template-parts/home', 'development' ); ?>
 	<?php get_template_part( 'template-parts/home', 'gallery' ); ?>
 	<?php get_template_part( 'template-parts/home', 'teamsnap' ); ?>
+	<?php get_template_part( 'template-parts/home', 'announcements' ); ?>
+	<?php get_template_part( 'template-parts/home', 'sponsors' ); ?>
+	<?php get_template_part( 'template-parts/home', 'social' ); ?>
 	<?php get_template_part( 'template-parts/home', 'tryout-cta' ); ?>
 </main>
 <?php

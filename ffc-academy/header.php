@@ -29,8 +29,8 @@
 		<div class="brand-lockup">
 			<?php echo ffc_logo_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<a class="brand-lockup__text" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<strong><?php esc_html_e( 'F.F.C.', 'ffc-academy' ); ?></strong>
-				<span><?php esc_html_e( 'Freedom Futbol Club', 'ffc-academy' ); ?></span>
+				<strong><?php echo esc_html( ffc_brand_name( true ) ); ?></strong>
+				<span><?php echo esc_html( ffc_brand_name() ); ?></span>
 			</a>
 		</div>
 		<button class="nav-toggle" type="button" aria-controls="primary-menu" aria-expanded="false" data-nav-toggle>

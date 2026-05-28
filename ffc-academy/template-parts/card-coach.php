@@ -18,6 +18,6 @@ $email          = ffc_get_field( 'contact_email', get_the_ID() );
 		<?php
 		if ( $email ) :
 			?>
-			<a href="mailto:<?php echo esc_attr( $email ); ?>"><?php esc_html_e( 'Contact Coach', 'ffc-academy' ); ?></a><?php endif; ?>
+			<a href="mailto:<?php echo esc_attr( $email ); ?>"><?php echo esc_html( ffc_option( 'card_contact_coach_label', __( 'Contact Coach', 'ffc-academy' ) ) ); ?></a><?php endif; ?>
 	</div>
 </article>

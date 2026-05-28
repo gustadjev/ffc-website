@@ -94,6 +94,350 @@ function ffc_option( string $key, $default = '' ) {
 	return get_option( 'ffc_' . $key, $default );
 }
 
+function ffc_home_page_id(): int {
+	$front_id = (int) get_option( 'page_on_front' );
+	if ( $front_id ) {
+		return $front_id;
+	}
+
+	$home_page = get_page_by_path( 'home' );
+
+	return $home_page instanceof WP_Post ? (int) $home_page->ID : 0;
+}
+
+function ffc_page_id_by_slug( string $slug ): int {
+	$page = get_page_by_path( $slug );
+
+	return $page instanceof WP_Post ? (int) $page->ID : 0;
+}
+
+function ffc_tryout_page_id(): int {
+	$page_id = ffc_page_id_by_slug( 'tryouts' );
+	if ( $page_id ) {
+		return $page_id;
+	}
+
+	$tryout_url = ffc_option( 'tryout_page_url' );
+
+	return $tryout_url ? (int) url_to_postid( $tryout_url ) : 0;
+}
+
+function ffc_brand_name( bool $short = false ): string {
+	return $short
+		? (string) ffc_option( 'brand_short_name', __( 'F.F.C.', 'ffc-academy' ) )
+		: (string) ffc_option( 'brand_full_name', __( 'Freedom Futbol Club', 'ffc-academy' ) );
+}
+
+function ffc_global_display_settings(): array {
+	return array(
+		'brand_short_name'                    => array(
+			'label'   => __( 'Brand Short Name', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'F.F.C.', 'ffc-academy' ),
+		),
+		'brand_full_name'                     => array(
+			'label'   => __( 'Brand Full Name', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Freedom Futbol Club', 'ffc-academy' ),
+		),
+		'default_page_eyebrow'                => array(
+			'label'   => __( 'Default Page Eyebrow', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'F.F.C. Academy', 'ffc-academy' ),
+		),
+		'blog_archive_eyebrow'                => array(
+			'label'   => __( 'Blog / Updates Eyebrow', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'F.F.C.', 'ffc-academy' ),
+		),
+		'blog_empty_message'                  => array(
+			'label'   => __( 'Blog Empty Message', 'ffc-academy' ),
+			'type'    => 'textarea',
+			'default' => __( 'No updates are available yet.', 'ffc-academy' ),
+		),
+		'search_eyebrow'                      => array(
+			'label'   => __( 'Search Page Eyebrow', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Search', 'ffc-academy' ),
+		),
+		'search_empty_message'                => array(
+			'label'   => __( 'Search Empty Message', 'ffc-academy' ),
+			'type'    => 'textarea',
+			'default' => __( 'No results found.', 'ffc-academy' ),
+		),
+		'not_found_kicker'                    => array(
+			'label'   => __( '404 Kicker', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Offside', 'ffc-academy' ),
+		),
+		'not_found_title'                     => array(
+			'label'   => __( '404 Title', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Page Not Found', 'ffc-academy' ),
+		),
+		'not_found_button_label'              => array(
+			'label'   => __( '404 Button Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Return Home', 'ffc-academy' ),
+		),
+		'archive_game_kicker'                 => array(
+			'label'   => __( 'Schedule Archive Kicker', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Match Calendar', 'ffc-academy' ),
+		),
+		'archive_game_title'                  => array(
+			'label'   => __( 'Schedule Archive Title', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Schedule', 'ffc-academy' ),
+		),
+		'archive_game_empty_message'          => array(
+			'label'   => __( 'Schedule Empty Message', 'ffc-academy' ),
+			'type'    => 'textarea',
+			'default' => __( 'No scheduled games have been added yet.', 'ffc-academy' ),
+		),
+		'archive_game_embed_kicker'           => array(
+			'label'   => __( 'Schedule TeamSnap Embed Kicker', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Live TeamSnap Calendar', 'ffc-academy' ),
+		),
+		'archive_score_kicker'                => array(
+			'label'   => __( 'Scores Archive Kicker', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Results Center', 'ffc-academy' ),
+		),
+		'archive_score_title'                 => array(
+			'label'   => __( 'Scores Archive Title', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Scores & Standings', 'ffc-academy' ),
+		),
+		'archive_score_empty_message'         => array(
+			'label'   => __( 'Scores Empty Message', 'ffc-academy' ),
+			'type'    => 'textarea',
+			'default' => __( 'Scores and match recaps will appear here.', 'ffc-academy' ),
+		),
+		'archive_coach_kicker'                => array(
+			'label'   => __( 'Coaches Archive Kicker', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Player Development', 'ffc-academy' ),
+		),
+		'archive_coach_title'                 => array(
+			'label'   => __( 'Coaches Archive Title', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Coaching Staff', 'ffc-academy' ),
+		),
+		'archive_coach_empty_message'         => array(
+			'label'   => __( 'Coaches Empty Message', 'ffc-academy' ),
+			'type'    => 'textarea',
+			'default' => __( 'Coach profiles can be added from the WordPress admin.', 'ffc-academy' ),
+		),
+		'archive_gallery_kicker'              => array(
+			'label'   => __( 'Gallery Archive Kicker', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Visual Storytelling', 'ffc-academy' ),
+		),
+		'archive_gallery_title'               => array(
+			'label'   => __( 'Gallery Archive Title', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Gallery', 'ffc-academy' ),
+		),
+		'archive_gallery_empty_message'       => array(
+			'label'   => __( 'Gallery Empty Message', 'ffc-academy' ),
+			'type'    => 'textarea',
+			'default' => __( 'Gallery items will appear here.', 'ffc-academy' ),
+		),
+		'archive_sponsor_kicker'              => array(
+			'label'   => __( 'Sponsors Archive Kicker', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Partnerships', 'ffc-academy' ),
+		),
+		'archive_sponsor_title'               => array(
+			'label'   => __( 'Sponsors Archive Title', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Sponsors', 'ffc-academy' ),
+		),
+		'archive_sponsor_empty_message'       => array(
+			'label'   => __( 'Sponsors Empty Message', 'ffc-academy' ),
+			'type'    => 'textarea',
+			'default' => __( 'Sponsor information can be added from the WordPress admin.', 'ffc-academy' ),
+		),
+		'archive_announcement_kicker'         => array(
+			'label'   => __( 'Announcements Archive Kicker', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Academy Desk', 'ffc-academy' ),
+		),
+		'archive_announcement_title'          => array(
+			'label'   => __( 'Announcements Archive Title', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Announcements', 'ffc-academy' ),
+		),
+		'archive_announcement_empty_message'  => array(
+			'label'   => __( 'Announcements Empty Message', 'ffc-academy' ),
+			'type'    => 'textarea',
+			'default' => __( 'Announcements will appear here.', 'ffc-academy' ),
+		),
+		'filter_season_label'                 => array(
+			'label'   => __( 'Season Filter Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Season', 'ffc-academy' ),
+		),
+		'filter_team_label'                   => array(
+			'label'   => __( 'Team Filter Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Team', 'ffc-academy' ),
+		),
+		'filter_opponent_label'               => array(
+			'label'   => __( 'Opponent Filter Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Opponent', 'ffc-academy' ),
+		),
+		'filter_result_label'                 => array(
+			'label'   => __( 'Result Filter Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Result', 'ffc-academy' ),
+		),
+		'filter_result_win_label'             => array(
+			'label'   => __( 'Result Filter Win Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Win', 'ffc-academy' ),
+		),
+		'filter_result_loss_label'            => array(
+			'label'   => __( 'Result Filter Loss Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Loss', 'ffc-academy' ),
+		),
+		'filter_result_draw_label'            => array(
+			'label'   => __( 'Result Filter Draw Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Draw', 'ffc-academy' ),
+		),
+		'filter_all_label'                    => array(
+			'label'   => __( 'All Filter Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'All', 'ffc-academy' ),
+		),
+		'filter_apply_label'                  => array(
+			'label'   => __( 'Apply Filter Button Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Apply', 'ffc-academy' ),
+		),
+		'filter_reset_label'                  => array(
+			'label'   => __( 'Reset Filter Button Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Reset', 'ffc-academy' ),
+		),
+		'schedule_list_label'                 => array(
+			'label'   => __( 'Schedule List View Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'List', 'ffc-academy' ),
+		),
+		'schedule_calendar_label'             => array(
+			'label'   => __( 'Schedule Calendar View Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Calendar', 'ffc-academy' ),
+		),
+		'teamsnap_default_button_label'        => array(
+			'label'   => __( 'TeamSnap Default Button Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Open TeamSnap', 'ffc-academy' ),
+		),
+		'teamsnap_calendar_button_label'       => array(
+			'label'   => __( 'TeamSnap Calendar Button Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'TeamSnap Calendar', 'ffc-academy' ),
+		),
+		'teamsnap_footer_link_label'           => array(
+			'label'   => __( 'Footer TeamSnap Link Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'TeamSnap', 'ffc-academy' ),
+		),
+		'teamsnap_schedule_label'              => array(
+			'label'   => __( 'TeamSnap Schedule Card Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Schedule', 'ffc-academy' ),
+		),
+		'teamsnap_schedule_description'        => array(
+			'label'   => __( 'TeamSnap Schedule Card Description', 'ffc-academy' ),
+			'type'    => 'textarea',
+			'default' => __( 'Practices, matches, fields, and calendar updates.', 'ffc-academy' ),
+		),
+		'teamsnap_roster_label'                => array(
+			'label'   => __( 'TeamSnap Roster Card Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Roster', 'ffc-academy' ),
+		),
+		'teamsnap_roster_description'          => array(
+			'label'   => __( 'TeamSnap Roster Card Description', 'ffc-academy' ),
+			'type'    => 'textarea',
+			'default' => __( 'Team contacts, player details, and family communication.', 'ffc-academy' ),
+		),
+		'teamsnap_registration_label'          => array(
+			'label'   => __( 'TeamSnap Registration Card Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Registration', 'ffc-academy' ),
+		),
+		'teamsnap_registration_description'    => array(
+			'label'   => __( 'TeamSnap Registration Card Description', 'ffc-academy' ),
+			'type'    => 'textarea',
+			'default' => __( 'TeamSnap forms, dues, waivers, and season signups.', 'ffc-academy' ),
+		),
+		'teamsnap_app_label'                   => array(
+			'label'   => __( 'TeamSnap App Card Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'TeamSnap App', 'ffc-academy' ),
+		),
+		'teamsnap_app_description'             => array(
+			'label'   => __( 'TeamSnap App Card Description', 'ffc-academy' ),
+			'type'    => 'textarea',
+			'default' => __( 'Open the mobile app or TeamSnap login.', 'ffc-academy' ),
+		),
+		'teamsnap_empty_message'               => array(
+			'label'   => __( 'TeamSnap Empty Message', 'ffc-academy' ),
+			'type'    => 'textarea',
+			'default' => __( 'Add TeamSnap links in F.F.C. Settings to connect families directly to schedules, rosters, registration, and the TeamSnap app.', 'ffc-academy' ),
+		),
+		'match_vs_label'                       => array(
+			'label'   => __( 'Match Versus Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'vs', 'ffc-academy' ),
+		),
+		'card_teamsnap_label'                  => array(
+			'label'   => __( 'Game Card TeamSnap Link Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'TeamSnap', 'ffc-academy' ),
+		),
+		'card_map_label'                       => array(
+			'label'   => __( 'Game Card Map Link Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Map', 'ffc-academy' ),
+		),
+		'card_highlights_label'                => array(
+			'label'   => __( 'Score Card Highlights Link Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Highlights', 'ffc-academy' ),
+		),
+		'card_contact_coach_label'             => array(
+			'label'   => __( 'Coach Card Contact Link Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Contact Coach', 'ffc-academy' ),
+		),
+		'card_visit_sponsor_label'             => array(
+			'label'   => __( 'Sponsor Card Default Link Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Visit Sponsor', 'ffc-academy' ),
+		),
+		'card_schedule_details_label'          => array(
+			'label'   => __( 'Schedule Details Link Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Schedule Details', 'ffc-academy' ),
+		),
+		'card_recent_result_label'             => array(
+			'label'   => __( 'Recent Result Label', 'ffc-academy' ),
+			'type'    => 'text',
+			'default' => __( 'Recent Result', 'ffc-academy' ),
+		),
+	);
+}
+
 function ffc_button( string $label, string $url, string $variant = 'primary' ): string {
 	if ( empty( $label ) || empty( $url ) ) {
 		return '';
@@ -140,6 +484,10 @@ function ffc_page_has_elementor_layout( int $post_id = 0 ): bool {
 function ffc_is_builder_page( int $post_id = 0 ): bool {
 	$post_id = $post_id ?: get_the_ID();
 	if ( ! $post_id ) {
+		return false;
+	}
+
+	if ( function_exists( 'ffc_is_theme_managed_page' ) && ffc_is_theme_managed_page( $post_id ) ) {
 		return false;
 	}
 
@@ -267,7 +615,7 @@ function ffc_tax_filter_select( string $taxonomy, string $name, string $label ):
 
 	$current = isset( $_GET[ $name ] ) ? sanitize_text_field( wp_unslash( $_GET[ $name ] ) ) : '';
 	$output  = '<label class="filter-label"><span>' . esc_html( $label ) . '</span><select name="' . esc_attr( $name ) . '">';
-	$output .= '<option value="">' . esc_html__( 'All', 'ffc-academy' ) . '</option>';
+	$output .= '<option value="">' . esc_html( ffc_option( 'filter_all_label', __( 'All', 'ffc-academy' ) ) ) . '</option>';
 
 	foreach ( $terms as $term ) {
 		$output .= sprintf(
@@ -294,7 +642,7 @@ function ffc_social_icon( string $key ): string {
 	return $icons[ $key ] ?? '';
 }
 
-function ffc_social_links_markup( string $class = 'social-icons' ): string {
+function ffc_social_links_markup( string $class = 'social-icons', bool $show_placeholders = false ): string {
 	$channels = array(
 		'instagram' => __( 'Instagram', 'ffc-academy' ),
 		'facebook'  => __( 'Facebook', 'ffc-academy' ),
@@ -302,20 +650,41 @@ function ffc_social_links_markup( string $class = 'social-icons' ): string {
 		'tiktok'    => __( 'TikTok', 'ffc-academy' ),
 	);
 
-	$output = '<div class="' . esc_attr( $class ) . '">';
+	$links = '';
 	foreach ( $channels as $key => $label ) {
 		$url = ffc_option( $key . '_url' );
 		if ( ! $url ) {
+			if ( $show_placeholders ) {
+				$placeholder_label = sprintf(
+					/* translators: %s: social network name. */
+					__( 'Add %s URL in F.F.C. Settings', 'ffc-academy' ),
+					$label
+				);
+				$links .= sprintf(
+					'<a class="social-icons__placeholder" href="#" aria-disabled="true" aria-label="%1$s" title="%1$s"><span class="screen-reader-text">%2$s</span>%3$s</a>',
+					esc_attr( $placeholder_label ),
+					esc_html( $placeholder_label ),
+					ffc_social_icon( $key )
+				);
+			}
+
 			continue;
 		}
 
-		$output .= sprintf(
+		$links .= sprintf(
 			'<a href="%1$s" target="_blank" rel="noopener" aria-label="%2$s"><span class="screen-reader-text">%2$s</span>%3$s</a>',
 			esc_url( $url ),
 			esc_attr( $label ),
 			ffc_social_icon( $key )
 		);
 	}
+
+	if ( '' === $links ) {
+		return '';
+	}
+
+	$output  = '<div class="' . esc_attr( $class ) . '">';
+	$output .= $links;
 	$output .= '</div>';
 
 	return $output;

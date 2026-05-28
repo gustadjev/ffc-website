@@ -4,8 +4,8 @@ get_header();
 <main id="primary" class="site-main">
 	<section class="page-hero">
 		<div class="container">
-			<p class="eyebrow"><?php esc_html_e( 'Partnerships', 'ffc-academy' ); ?></p>
-			<h1><?php esc_html_e( 'Sponsors', 'ffc-academy' ); ?></h1>
+			<p class="eyebrow"><?php echo esc_html( ffc_option( 'archive_sponsor_kicker', __( 'Partnerships', 'ffc-academy' ) ) ); ?></p>
+			<h1><?php echo esc_html( ffc_option( 'archive_sponsor_title', __( 'Sponsors', 'ffc-academy' ) ) ); ?></h1>
 		</div>
 	</section>
 	<section class="section sponsor-section">
@@ -17,7 +17,7 @@ get_header();
 					?>
 					<?php get_template_part( 'template-parts/card', 'sponsor' ); ?>
 			<?php endwhile; else : ?>
-				<p class="empty-state"><?php esc_html_e( 'Sponsor information can be added from the WordPress admin.', 'ffc-academy' ); ?></p>
+				<p class="empty-state"><?php echo esc_html( ffc_option( 'archive_sponsor_empty_message', __( 'Sponsor information can be added from the WordPress admin.', 'ffc-academy' ) ) ); ?></p>
 			<?php endif; ?>
 		</div>
 	</section>

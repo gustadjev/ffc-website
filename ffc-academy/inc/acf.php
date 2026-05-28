@@ -31,6 +31,26 @@ function ffc_register_acf_fields(): void {
 		return;
 	}
 
+	$homepage_locations = array(
+		array(
+			array(
+				'param'    => 'page_type',
+				'operator' => '==',
+				'value'    => 'front_page',
+			),
+		),
+	);
+	$home_page = get_page_by_path( 'home' );
+	if ( $home_page instanceof WP_Post ) {
+		$homepage_locations[] = array(
+			array(
+				'param'    => 'page',
+				'operator' => '==',
+				'value'    => (string) $home_page->ID,
+			),
+		);
+	}
+
 	acf_add_local_field_group(
 		array(
 			'key'      => 'group_ffc_game_details',
@@ -240,77 +260,45 @@ function ffc_register_acf_fields(): void {
 					),
 				),
 			),
+			'position' => 'acf_after_title',
+		)
+	);
+
+	acf_add_local_field_group(
+		array(
+			'key'      => 'group_ffc_global_display_options',
+			'title'    => __( 'F.F.C. Global Display Copy', 'ffc-academy' ),
+			'fields'   => ffc_global_display_acf_fields(),
+			'location' => array(
+				array(
+					array(
+						'param'    => 'options_page',
+						'operator' => '==',
+						'value'    => 'ffc-theme-settings',
+					),
+				),
+			),
+			'position' => 'normal',
 		)
 	);
 
 	acf_add_local_field_group(
 		array(
 			'key'      => 'group_ffc_homepage',
-			'title'    => __( 'F.F.C. Homepage Content', 'ffc-academy' ),
-			'fields'   => array(
-				array(
-					'key'          => 'field_ffc_home_slides',
-					'label'        => __( 'Hero Slider', 'ffc-academy' ),
-					'name'         => 'home_slides',
-					'type'         => 'repeater',
-					'layout'       => 'block',
-					'button_label' => __( 'Add Slide', 'ffc-academy' ),
-					'sub_fields'   => array(
-						ffc_acf_image( 'field_ffc_slide_image', 'image', __( 'Slide Image', 'ffc-academy' ) ),
-						ffc_acf_text( 'field_ffc_slide_kicker', 'kicker', __( 'Kicker', 'ffc-academy' ) ),
-						ffc_acf_text( 'field_ffc_slide_title', 'title', __( 'Title', 'ffc-academy' ) ),
-						ffc_acf_textarea( 'field_ffc_slide_copy', 'copy', __( 'Copy', 'ffc-academy' ) ),
-						ffc_acf_text( 'field_ffc_slide_card_label', 'card_label', __( 'Side Card Label', 'ffc-academy' ) ),
-						ffc_acf_text( 'field_ffc_slide_card_meta', 'card_meta', __( 'Side Card Text', 'ffc-academy' ) ),
-						ffc_acf_text( 'field_ffc_slide_primary_label', 'primary_label', __( 'Primary Button Label', 'ffc-academy' ) ),
-						ffc_acf_url( 'field_ffc_slide_primary_url', 'primary_url', __( 'Primary Button URL', 'ffc-academy' ) ),
-						ffc_acf_text( 'field_ffc_slide_secondary_label', 'secondary_label', __( 'Secondary Button Label', 'ffc-academy' ) ),
-						ffc_acf_url( 'field_ffc_slide_secondary_url', 'secondary_url', __( 'Secondary Button URL', 'ffc-academy' ) ),
-					),
-				),
-				ffc_acf_text( 'field_ffc_home_intro_kicker', 'home_intro_kicker', __( 'Intro Kicker', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_home_intro_title', 'home_intro_title', __( 'Intro Title', 'ffc-academy' ) ),
-				ffc_acf_textarea( 'field_ffc_home_intro_copy', 'home_intro_copy', __( 'Intro Copy', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_home_pillar_one_title', 'home_pillar_one_title', __( 'Pillar 1 Title', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_home_pillar_one_copy', 'home_pillar_one_copy', __( 'Pillar 1 Copy', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_home_pillar_two_title', 'home_pillar_two_title', __( 'Pillar 2 Title', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_home_pillar_two_copy', 'home_pillar_two_copy', __( 'Pillar 2 Copy', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_home_pillar_three_title', 'home_pillar_three_title', __( 'Pillar 3 Title', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_home_pillar_three_copy', 'home_pillar_three_copy', __( 'Pillar 3 Copy', 'ffc-academy' ) ),
-				ffc_acf_image( 'field_ffc_home_development_image', 'home_development_image', __( 'Development Image', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_home_development_kicker', 'home_development_kicker', __( 'Development Kicker', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_home_development_title', 'home_development_title', __( 'Development Title', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_home_tryout_kicker', 'home_tryout_kicker', __( 'Tryout CTA Kicker', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_home_tryout_title', 'home_tryout_title', __( 'Tryout CTA Title', 'ffc-academy' ) ),
-				ffc_acf_textarea( 'field_ffc_home_tryout_copy', 'home_tryout_copy', __( 'Tryout CTA Copy', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_home_tryout_button_label', 'home_tryout_button_label', __( 'Tryout CTA Button Label', 'ffc-academy' ) ),
-			),
-			'location' => array(
-				array(
-					array(
-						'param'    => 'page_type',
-						'operator' => '==',
-						'value'    => 'front_page',
-					),
-				),
-			),
+			'title'    => __( 'F.F.C. Homepage Sections', 'ffc-academy' ),
+			'fields'   => ffc_homepage_section_fields(),
+			'location' => $homepage_locations,
+			'position' => 'acf_after_title',
 		)
 	);
 
 	acf_add_local_field_group(
 		array(
 			'key'      => 'group_ffc_homepage_slider_basic',
-			'title'    => __( 'F.F.C. Homepage Slider Slides', 'ffc-academy' ),
+			'title'    => __( 'F.F.C. Homepage Slider', 'ffc-academy' ),
 			'fields'   => ffc_homepage_basic_slide_fields(),
-			'location' => array(
-				array(
-					array(
-						'param'    => 'page_type',
-						'operator' => '==',
-						'value'    => 'front_page',
-					),
-				),
-			),
+			'location' => $homepage_locations,
+			'position' => 'acf_after_title',
 		)
 	);
 
@@ -330,6 +318,7 @@ function ffc_register_acf_fields(): void {
 						),
 					),
 				),
+				'position' => 'acf_after_title',
 			)
 		);
 	}
@@ -350,25 +339,207 @@ function ffc_register_acf_fields(): void {
 						),
 					),
 				),
+				'position' => 'acf_after_title',
+			)
+		);
+	}
+
+	$tryout_page = get_page_by_path( 'tryouts' );
+	if ( $tryout_page instanceof WP_Post ) {
+		acf_add_local_field_group(
+			array(
+				'key'      => 'group_ffc_tryout_page',
+				'title'    => __( 'F.F.C. Tryout Page Content', 'ffc-academy' ),
+				'fields'   => ffc_tryout_page_fields(),
+				'location' => array(
+					array(
+						array(
+							'param'    => 'page',
+							'operator' => '==',
+							'value'    => (string) $tryout_page->ID,
+						),
+					),
+					array(
+						array(
+							'param'    => 'page_template',
+							'operator' => '==',
+							'value'    => 'templates/page-tryouts.php',
+						),
+					),
+				),
+				'position' => 'acf_after_title',
 			)
 		);
 	}
 }
 
-function ffc_homepage_basic_slide_fields(): array {
+function ffc_global_display_acf_fields(): array {
 	$fields = array();
 
+	foreach ( ffc_global_display_settings() as $key => $setting ) {
+		$field_key = 'field_ffc_global_' . $key;
+		$default   = $setting['default'] ?? '';
+		$type      = $setting['type'] ?? 'text';
+
+		if ( 'textarea' === $type ) {
+			$fields[] = ffc_acf_textarea( $field_key, $key, $setting['label'], $default );
+			continue;
+		}
+
+		$fields[] = ffc_acf_text( $field_key, $key, $setting['label'], $default );
+	}
+
+	return $fields;
+}
+
+function ffc_homepage_section_fields(): array {
+	$fields = array(
+		ffc_acf_text( 'field_ffc_home_intro_kicker', 'home_intro_kicker', __( 'Intro Kicker', 'ffc-academy' ), __( 'Academy Pathway', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_intro_title', 'home_intro_title', __( 'Intro Title', 'ffc-academy' ), __( 'Built for Families. Serious About Player Growth.', 'ffc-academy' ) ),
+		ffc_acf_textarea( 'field_ffc_home_intro_copy', 'home_intro_copy', __( 'Intro Copy', 'ffc-academy' ), __( 'F.F.C. keeps the experience organized for parents and ambitious for players: clear communication, thoughtful coaching, match preparation, and a culture that rewards effort.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_pillar_one_title', 'home_pillar_one_title', __( 'Pillar 1 Title', 'ffc-academy' ), __( 'Develop', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_pillar_one_copy', 'home_pillar_one_copy', __( 'Pillar 1 Copy', 'ffc-academy' ), __( 'Technical habits and game intelligence.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_pillar_two_title', 'home_pillar_two_title', __( 'Pillar 2 Title', 'ffc-academy' ), __( 'Compete', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_pillar_two_copy', 'home_pillar_two_copy', __( 'Pillar 2 Copy', 'ffc-academy' ), __( 'Purposeful matches and tournament readiness.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_pillar_three_title', 'home_pillar_three_title', __( 'Pillar 3 Title', 'ffc-academy' ), __( 'Belong', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_pillar_three_copy', 'home_pillar_three_copy', __( 'Pillar 3 Copy', 'ffc-academy' ), __( 'A family-friendly club culture.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_matches_kicker', 'home_matches_kicker', __( 'Matches Kicker', 'ffc-academy' ), __( 'Next Up', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_matches_title', 'home_matches_title', __( 'Matches Title', 'ffc-academy' ), __( 'Upcoming Matches', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_matches_link_label', 'home_matches_link_label', __( 'Matches Link Label', 'ffc-academy' ), __( 'Full Schedule', 'ffc-academy' ) ),
+		ffc_acf_textarea( 'field_ffc_home_matches_empty_message', 'home_matches_empty_message', __( 'Matches Empty Message', 'ffc-academy' ), __( 'Upcoming match details will be posted soon.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_scores_kicker', 'home_scores_kicker', __( 'Scores Kicker', 'ffc-academy' ), __( 'Matchday', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_scores_title', 'home_scores_title', __( 'Scores Title', 'ffc-academy' ), __( 'Latest Scores', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_scores_link_label', 'home_scores_link_label', __( 'Scores Link Label', 'ffc-academy' ), __( 'View Results', 'ffc-academy' ) ),
+		ffc_acf_textarea( 'field_ffc_home_scores_empty_message', 'home_scores_empty_message', __( 'Scores Empty Message', 'ffc-academy' ), __( 'Recent results and match recaps will be posted after games.', 'ffc-academy' ) ),
+		ffc_acf_image( 'field_ffc_home_development_image', 'home_development_image', __( 'Development Image', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_development_image_alt', 'home_development_image_alt', __( 'Development Image Alt Text', 'ffc-academy' ), __( 'Youth soccer training session', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_development_kicker', 'home_development_kicker', __( 'Development Kicker', 'ffc-academy' ), __( 'Player Development Model', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_home_development_title', 'home_development_title', __( 'Development Title', 'ffc-academy' ), __( 'Training With Standards, Care, and Competitive Intent.', 'ffc-academy' ) ),
+	);
+
+	$development_items = array(
+		array(
+			'title' => __( 'Technical Identity', 'ffc-academy' ),
+			'copy'  => __( 'First touch, passing detail, finishing, defending habits.', 'ffc-academy' ),
+		),
+		array(
+			'title' => __( 'Game Intelligence', 'ffc-academy' ),
+			'copy'  => __( 'Scanning, spacing, decision speed, and pressure recognition.', 'ffc-academy' ),
+		),
+		array(
+			'title' => __( 'Character Growth', 'ffc-academy' ),
+			'copy'  => __( 'Resilience, leadership, accountability, and team responsibility.', 'ffc-academy' ),
+		),
+	);
+
 	for ( $i = 1; $i <= 3; $i++ ) {
+		$fields[] = ffc_acf_text( "field_ffc_home_development_item_{$i}_title", "home_development_item_{$i}_title", sprintf( __( 'Development Item %d Title', 'ffc-academy' ), $i ), $development_items[ $i - 1 ]['title'] );
+		$fields[] = ffc_acf_text( "field_ffc_home_development_item_{$i}_copy", "home_development_item_{$i}_copy", sprintf( __( 'Development Item %d Copy', 'ffc-academy' ), $i ), $development_items[ $i - 1 ]['copy'] );
+	}
+
+	$fields = array_merge(
+		$fields,
+		array(
+			ffc_acf_text( 'field_ffc_home_gallery_kicker', 'home_gallery_kicker', __( 'Gallery Kicker', 'ffc-academy' ), __( 'Club Culture', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_gallery_title', 'home_gallery_title', __( 'Gallery Title', 'ffc-academy' ), __( 'Featured Gallery', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_gallery_link_label', 'home_gallery_link_label', __( 'Gallery Link Label', 'ffc-academy' ), __( 'Open Gallery', 'ffc-academy' ) ),
+		)
+	);
+
+	$gallery_labels = array(
+		__( 'Training Intensity', 'ffc-academy' ),
+		__( 'Matchday Focus', 'ffc-academy' ),
+		__( 'Team Standards', 'ffc-academy' ),
+		__( 'Player Growth', 'ffc-academy' ),
+	);
+	foreach ( $gallery_labels as $index => $label ) {
+		$number   = $index + 1;
+		$fields[] = ffc_acf_text( "field_ffc_home_gallery_fallback_{$number}_label", "home_gallery_fallback_{$number}_label", sprintf( __( 'Fallback Gallery Item %d Label', 'ffc-academy' ), $number ), $label );
+	}
+
+	$fields = array_merge(
+		$fields,
+		array(
+			ffc_acf_text( 'field_ffc_home_teamsnap_kicker', 'home_teamsnap_kicker', __( 'TeamSnap Kicker', 'ffc-academy' ), __( 'TeamSnap Hub', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_teamsnap_title', 'home_teamsnap_title', __( 'TeamSnap Title', 'ffc-academy' ), __( 'Family Logistics Stay in TeamSnap.', 'ffc-academy' ) ),
+			ffc_acf_textarea( 'field_ffc_home_teamsnap_copy', 'home_teamsnap_copy', __( 'TeamSnap Copy', 'ffc-academy' ), __( 'The website promotes the academy while TeamSnap handles the live operational details families already use: schedules, rosters, messages, and registration links.', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_teamsnap_button_label', 'home_teamsnap_button_label', __( 'TeamSnap Button Label', 'ffc-academy' ), __( 'Open TeamSnap', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_teamsnap_schedule_label', 'home_teamsnap_schedule_label', __( 'TeamSnap Schedule Button Label', 'ffc-academy' ), __( 'Website Schedule', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_announcements_kicker', 'home_announcements_kicker', __( 'Announcements Kicker', 'ffc-academy' ), __( 'Academy Desk', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_announcements_title', 'home_announcements_title', __( 'Announcements Title', 'ffc-academy' ), __( 'Announcements', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_announcements_link_label', 'home_announcements_link_label', __( 'Announcements Link Label', 'ffc-academy' ), __( 'All Updates', 'ffc-academy' ) ),
+			ffc_acf_textarea( 'field_ffc_home_announcements_empty_message', 'home_announcements_empty_message', __( 'Announcements Empty Message', 'ffc-academy' ), __( 'Club updates, weather notices, and tournament announcements will appear here.', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_sponsors_kicker', 'home_sponsors_kicker', __( 'Sponsors Kicker', 'ffc-academy' ), __( 'Community Partners', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_sponsors_title', 'home_sponsors_title', __( 'Sponsors Title', 'ffc-academy' ), __( 'Sponsors Fuel Player Growth', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_sponsors_link_label', 'home_sponsors_link_label', __( 'Sponsors Link Label', 'ffc-academy' ), __( 'Partner With F.F.C.', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_sponsors_placeholder_tier', 'home_sponsors_placeholder_tier', __( 'Sponsor Placeholder Tier', 'ffc-academy' ), __( 'Partnership Opportunity', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_sponsors_placeholder_title', 'home_sponsors_placeholder_title', __( 'Sponsor Placeholder Title', 'ffc-academy' ), __( 'Partner With F.F.C.', 'ffc-academy' ) ),
+			ffc_acf_textarea( 'field_ffc_home_sponsors_placeholder_copy', 'home_sponsors_placeholder_copy', __( 'Sponsor Placeholder Copy', 'ffc-academy' ), __( 'Support youth development, tournament access, and a professional academy environment.', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_sponsors_placeholder_cta_label', 'home_sponsors_placeholder_cta_label', __( 'Sponsor Placeholder CTA Label', 'ffc-academy' ), __( 'Start a Conversation', 'ffc-academy' ) ),
+			ffc_acf_url( 'field_ffc_home_sponsors_placeholder_cta_url', 'home_sponsors_placeholder_cta_url', __( 'Sponsor Placeholder CTA URL', 'ffc-academy' ), home_url( '/contact/' ) ),
+			ffc_acf_text( 'field_ffc_home_social_kicker', 'home_social_kicker', __( 'Social Kicker', 'ffc-academy' ), __( 'Follow the Phoenix', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_social_title', 'home_social_title', __( 'Social Title', 'ffc-academy' ), __( 'Matchday Moments, Training Clips, and Club Updates', 'ffc-academy' ) ),
+			ffc_acf_image( 'field_ffc_home_tryout_image', 'home_tryout_image', __( 'Tryout CTA Image', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_tryout_kicker', 'home_tryout_kicker', __( 'Tryout CTA Kicker', 'ffc-academy' ), __( 'Player Evaluations', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_tryout_title', 'home_tryout_title', __( 'Tryout CTA Title', 'ffc-academy' ), __( 'Ready to Compete for a Place at F.F.C.?', 'ffc-academy' ) ),
+			ffc_acf_textarea( 'field_ffc_home_tryout_copy', 'home_tryout_copy', __( 'Tryout CTA Copy', 'ffc-academy' ), __( 'Register for tryouts and our staff will follow up with age-group placement, evaluation timing, and next steps.', 'ffc-academy' ) ),
+			ffc_acf_text( 'field_ffc_home_tryout_button_label', 'home_tryout_button_label', __( 'Tryout CTA Button Label', 'ffc-academy' ), __( 'Start Registration', 'ffc-academy' ) ),
+		)
+	);
+
+	return $fields;
+}
+
+function ffc_homepage_basic_slide_fields(): array {
+	$fields = array();
+	$slides = array(
+		array(
+			'kicker'          => __( 'Freedom Futbol Club', 'ffc-academy' ),
+			'title'           => __( 'A Serious Soccer Home for Growing Players.', 'ffc-academy' ),
+			'copy'            => __( 'Elite standards, family communication, and a clear development pathway for young athletes ready to train, compete, and belong.', 'ffc-academy' ),
+			'card_label'      => __( 'Academy Pathway', 'ffc-academy' ),
+			'card_meta'       => __( 'U8-U18 player development', 'ffc-academy' ),
+			'primary_label'   => __( 'Register for Tryouts', 'ffc-academy' ),
+			'primary_url'     => home_url( '/tryouts/' ),
+			'secondary_label' => __( 'View Schedule', 'ffc-academy' ),
+			'secondary_url'   => get_post_type_archive_link( 'ffc_game' ) ?: home_url( '/games/' ),
+		),
+		array(
+			'kicker'          => __( 'Matchday Ready', 'ffc-academy' ),
+			'title'           => __( 'Train With Purpose. Compete With Confidence.', 'ffc-academy' ),
+			'copy'            => __( 'Structured sessions prepare players for the pace, pressure, and decision-making of real match environments.', 'ffc-academy' ),
+			'card_label'      => __( 'Next Match', 'ffc-academy' ),
+			'card_meta'       => __( 'Schedules managed through TeamSnap', 'ffc-academy' ),
+			'primary_label'   => __( 'Open TeamSnap', 'ffc-academy' ),
+			'primary_url'     => home_url( '/games/' ),
+			'secondary_label' => __( 'Latest Scores', 'ffc-academy' ),
+			'secondary_url'   => get_post_type_archive_link( 'ffc_score' ) ?: home_url( '/scores/' ),
+		),
+		array(
+			'kicker'          => __( 'Player Development', 'ffc-academy' ),
+			'title'           => __( 'Build the Habits That Last Beyond the Field.', 'ffc-academy' ),
+			'copy'            => __( 'F.F.C. emphasizes teamwork, sportsmanship, dedication, and excellence in every training block.', 'ffc-academy' ),
+			'card_label'      => __( 'Club Culture', 'ffc-academy' ),
+			'card_meta'       => __( 'Discipline, unity, leadership', 'ffc-academy' ),
+			'primary_label'   => __( 'About F.F.C.', 'ffc-academy' ),
+			'primary_url'     => home_url( '/about/' ),
+			'secondary_label' => __( 'Contact Us', 'ffc-academy' ),
+			'secondary_url'   => home_url( '/contact/' ),
+		),
+	);
+
+	for ( $i = 1; $i <= 3; $i++ ) {
+		$slide    = $slides[ $i - 1 ];
 		$fields[] = ffc_acf_image( "field_ffc_home_slide_{$i}_image", "home_slide_{$i}_image", sprintf( __( 'Slide %d Image', 'ffc-academy' ), $i ) );
-		$fields[] = ffc_acf_text( "field_ffc_home_slide_{$i}_kicker", "home_slide_{$i}_kicker", sprintf( __( 'Slide %d Kicker', 'ffc-academy' ), $i ) );
-		$fields[] = ffc_acf_text( "field_ffc_home_slide_{$i}_title", "home_slide_{$i}_title", sprintf( __( 'Slide %d Title', 'ffc-academy' ), $i ) );
-		$fields[] = ffc_acf_textarea( "field_ffc_home_slide_{$i}_copy", "home_slide_{$i}_copy", sprintf( __( 'Slide %d Copy', 'ffc-academy' ), $i ) );
-		$fields[] = ffc_acf_text( "field_ffc_home_slide_{$i}_card_label", "home_slide_{$i}_card_label", sprintf( __( 'Slide %d Side Card Label', 'ffc-academy' ), $i ) );
-		$fields[] = ffc_acf_text( "field_ffc_home_slide_{$i}_card_meta", "home_slide_{$i}_card_meta", sprintf( __( 'Slide %d Side Card Text', 'ffc-academy' ), $i ) );
-		$fields[] = ffc_acf_text( "field_ffc_home_slide_{$i}_primary_label", "home_slide_{$i}_primary_label", sprintf( __( 'Slide %d Primary Button Label', 'ffc-academy' ), $i ) );
-		$fields[] = ffc_acf_url( "field_ffc_home_slide_{$i}_primary_url", "home_slide_{$i}_primary_url", sprintf( __( 'Slide %d Primary Button URL', 'ffc-academy' ), $i ) );
-		$fields[] = ffc_acf_text( "field_ffc_home_slide_{$i}_secondary_label", "home_slide_{$i}_secondary_label", sprintf( __( 'Slide %d Secondary Button Label', 'ffc-academy' ), $i ) );
-		$fields[] = ffc_acf_url( "field_ffc_home_slide_{$i}_secondary_url", "home_slide_{$i}_secondary_url", sprintf( __( 'Slide %d Secondary Button URL', 'ffc-academy' ), $i ) );
+		$fields[] = ffc_acf_text( "field_ffc_home_slide_{$i}_kicker", "home_slide_{$i}_kicker", sprintf( __( 'Slide %d Kicker', 'ffc-academy' ), $i ), $slide['kicker'] );
+		$fields[] = ffc_acf_text( "field_ffc_home_slide_{$i}_title", "home_slide_{$i}_title", sprintf( __( 'Slide %d Title', 'ffc-academy' ), $i ), $slide['title'] );
+		$fields[] = ffc_acf_textarea( "field_ffc_home_slide_{$i}_copy", "home_slide_{$i}_copy", sprintf( __( 'Slide %d Copy', 'ffc-academy' ), $i ), $slide['copy'] );
+		$fields[] = ffc_acf_text( "field_ffc_home_slide_{$i}_card_label", "home_slide_{$i}_card_label", sprintf( __( 'Slide %d Side Card Label', 'ffc-academy' ), $i ), $slide['card_label'] );
+		$fields[] = ffc_acf_text( "field_ffc_home_slide_{$i}_card_meta", "home_slide_{$i}_card_meta", sprintf( __( 'Slide %d Side Card Text', 'ffc-academy' ), $i ), $slide['card_meta'] );
+		$fields[] = ffc_acf_text( "field_ffc_home_slide_{$i}_primary_label", "home_slide_{$i}_primary_label", sprintf( __( 'Slide %d Primary Button Label', 'ffc-academy' ), $i ), $slide['primary_label'] );
+		$fields[] = ffc_acf_url( "field_ffc_home_slide_{$i}_primary_url", "home_slide_{$i}_primary_url", sprintf( __( 'Slide %d Primary Button URL', 'ffc-academy' ), $i ), $slide['primary_url'] );
+		$fields[] = ffc_acf_text( "field_ffc_home_slide_{$i}_secondary_label", "home_slide_{$i}_secondary_label", sprintf( __( 'Slide %d Secondary Button Label', 'ffc-academy' ), $i ), $slide['secondary_label'] );
+		$fields[] = ffc_acf_url( "field_ffc_home_slide_{$i}_secondary_url", "home_slide_{$i}_secondary_url", sprintf( __( 'Slide %d Secondary Button URL', 'ffc-academy' ), $i ), $slide['secondary_url'] );
 	}
 
 	return $fields;
@@ -376,79 +547,192 @@ function ffc_homepage_basic_slide_fields(): array {
 
 function ffc_about_page_fields(): array {
 	$fields = array(
-		ffc_acf_text( 'field_ffc_about_hero_kicker', 'about_hero_kicker', __( 'Hero Kicker', 'ffc-academy' ) ),
-		ffc_acf_text( 'field_ffc_about_hero_title', 'about_hero_title', __( 'Hero Title', 'ffc-academy' ) ),
-		ffc_acf_textarea( 'field_ffc_about_hero_copy', 'about_hero_copy', __( 'Hero Copy', 'ffc-academy' ) ),
-		ffc_acf_text( 'field_ffc_about_intro_title', 'about_intro_title', __( 'Intro Title', 'ffc-academy' ) ),
-		ffc_acf_textarea( 'field_ffc_about_intro_copy_one', 'about_intro_copy_one', __( 'Intro Copy 1', 'ffc-academy' ) ),
-		ffc_acf_textarea( 'field_ffc_about_intro_copy_two', 'about_intro_copy_two', __( 'Intro Copy 2', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_about_hero_kicker', 'about_hero_kicker', __( 'Hero Kicker', 'ffc-academy' ), __( 'About F.F.C.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_about_hero_title', 'about_hero_title', __( 'Hero Title', 'ffc-academy' ), __( 'Freedom Futbol Club', 'ffc-academy' ) ),
+		ffc_acf_textarea( 'field_ffc_about_hero_copy', 'about_hero_copy', __( 'Hero Copy', 'ffc-academy' ), __( 'F.F.C. is a youth soccer academy built around player growth, positive team culture, and clear communication for families. We create an environment where young athletes can train with purpose, compete with confidence, and learn values that carry beyond the field.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_about_intro_title', 'about_intro_title', __( 'Intro Title', 'ffc-academy' ), __( 'A Club Environment for Ambitious Young Players', 'ffc-academy' ) ),
+		ffc_acf_textarea( 'field_ffc_about_intro_copy_one', 'about_intro_copy_one', __( 'Intro Copy 1', 'ffc-academy' ), __( 'Our academy model balances high standards with a family-friendly experience. Players are challenged technically and tactically, while coaches emphasize teamwork, sportsmanship, dedication, and resilience.', 'ffc-academy' ) ),
+		ffc_acf_textarea( 'field_ffc_about_intro_copy_two', 'about_intro_copy_two', __( 'Intro Copy 2', 'ffc-academy' ), __( 'From foundational age groups through competitive teams, F.F.C. provides structured training, match preparation, and a shared identity rooted in discipline, unity, and continuous improvement.', 'ffc-academy' ) ),
 		ffc_acf_image( 'field_ffc_about_intro_image', 'about_intro_image', __( 'Intro Image', 'ffc-academy' ) ),
-		ffc_acf_text( 'field_ffc_about_values_kicker', 'about_values_kicker', __( 'Values Kicker', 'ffc-academy' ) ),
-		ffc_acf_text( 'field_ffc_about_values_title', 'about_values_title', __( 'Values Title', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_about_intro_image_alt', 'about_intro_image_alt', __( 'Intro Image Alt Text', 'ffc-academy' ), __( 'F.F.C. players and families at a soccer field', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_about_values_kicker', 'about_values_kicker', __( 'Values Kicker', 'ffc-academy' ), __( 'What We Value', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_about_values_title', 'about_values_title', __( 'Values Title', 'ffc-academy' ), __( 'The Standards Behind the Crest', 'ffc-academy' ) ),
+	);
+	$values = array(
+		array(
+			'title' => __( 'Teamwork', 'ffc-academy' ),
+			'copy'  => __( 'We build inclusive teams that pursue common goals with trust and accountability.', 'ffc-academy' ),
+		),
+		array(
+			'title' => __( 'Sportsmanship', 'ffc-academy' ),
+			'copy'  => __( 'Players, coaches, and families represent the club with respect on every touchline.', 'ffc-academy' ),
+		),
+		array(
+			'title' => __( 'Dedication', 'ffc-academy' ),
+			'copy'  => __( 'Consistent effort, preparation, and coachability drive long-term player development.', 'ffc-academy' ),
+		),
+		array(
+			'title' => __( 'Excellence', 'ffc-academy' ),
+			'copy'  => __( 'We aim to deliver a quality soccer experience for every player and family.', 'ffc-academy' ),
+		),
 	);
 
 	for ( $i = 1; $i <= 4; $i++ ) {
 		$fields[] = ffc_acf_image( "field_ffc_about_value_{$i}_image", "about_value_{$i}_image", sprintf( __( 'Value %d Image', 'ffc-academy' ), $i ) );
-		$fields[] = ffc_acf_text( "field_ffc_about_value_{$i}_title", "about_value_{$i}_title", sprintf( __( 'Value %d Title', 'ffc-academy' ), $i ) );
-		$fields[] = ffc_acf_textarea( "field_ffc_about_value_{$i}_copy", "about_value_{$i}_copy", sprintf( __( 'Value %d Copy', 'ffc-academy' ), $i ) );
+		$fields[] = ffc_acf_text( "field_ffc_about_value_{$i}_title", "about_value_{$i}_title", sprintf( __( 'Value %d Title', 'ffc-academy' ), $i ), $values[ $i - 1 ]['title'] );
+		$fields[] = ffc_acf_textarea( "field_ffc_about_value_{$i}_copy", "about_value_{$i}_copy", sprintf( __( 'Value %d Copy', 'ffc-academy' ), $i ), $values[ $i - 1 ]['copy'] );
 	}
 
-	$fields[] = ffc_acf_text( 'field_ffc_about_story_kicker', 'about_story_kicker', __( 'Story Kicker', 'ffc-academy' ) );
-	$fields[] = ffc_acf_text( 'field_ffc_about_story_title', 'about_story_title', __( 'Story Title', 'ffc-academy' ) );
+	$fields[] = ffc_acf_text( 'field_ffc_about_story_kicker', 'about_story_kicker', __( 'Story Kicker', 'ffc-academy' ), __( 'Our Story', 'ffc-academy' ) );
+	$fields[] = ffc_acf_text( 'field_ffc_about_story_title', 'about_story_title', __( 'Story Title', 'ffc-academy' ), __( 'Growing the Game With Community at the Center', 'ffc-academy' ) );
+	$timeline = array(
+		array(
+			'label' => __( 'Foundation', 'ffc-academy' ),
+			'title' => __( 'A Place to Belong', 'ffc-academy' ),
+			'copy'  => __( 'F.F.C. gives players a structured club home where training, communication, and team culture all work together.', 'ffc-academy' ),
+		),
+		array(
+			'label' => __( 'Development', 'ffc-academy' ),
+			'title' => __( 'A Path to Improve', 'ffc-academy' ),
+			'copy'  => __( 'Age-appropriate coaching helps players grow in confidence, skill, decision-making, and love for the game.', 'ffc-academy' ),
+		),
+		array(
+			'label' => __( 'Competition', 'ffc-academy' ),
+			'title' => __( 'A Standard to Chase', 'ffc-academy' ),
+			'copy'  => __( 'Matchdays and tournaments become opportunities to test progress, learn resilience, and represent the club well.', 'ffc-academy' ),
+		),
+	);
 
 	for ( $i = 1; $i <= 3; $i++ ) {
-		$fields[] = ffc_acf_text( "field_ffc_about_timeline_{$i}_label", "about_timeline_{$i}_label", sprintf( __( 'Timeline %d Label', 'ffc-academy' ), $i ) );
-		$fields[] = ffc_acf_text( "field_ffc_about_timeline_{$i}_title", "about_timeline_{$i}_title", sprintf( __( 'Timeline %d Title', 'ffc-academy' ), $i ) );
-		$fields[] = ffc_acf_textarea( "field_ffc_about_timeline_{$i}_copy", "about_timeline_{$i}_copy", sprintf( __( 'Timeline %d Copy', 'ffc-academy' ), $i ) );
+		$fields[] = ffc_acf_text( "field_ffc_about_timeline_{$i}_label", "about_timeline_{$i}_label", sprintf( __( 'Timeline %d Label', 'ffc-academy' ), $i ), $timeline[ $i - 1 ]['label'] );
+		$fields[] = ffc_acf_text( "field_ffc_about_timeline_{$i}_title", "about_timeline_{$i}_title", sprintf( __( 'Timeline %d Title', 'ffc-academy' ), $i ), $timeline[ $i - 1 ]['title'] );
+		$fields[] = ffc_acf_textarea( "field_ffc_about_timeline_{$i}_copy", "about_timeline_{$i}_copy", sprintf( __( 'Timeline %d Copy', 'ffc-academy' ), $i ), $timeline[ $i - 1 ]['copy'] );
 	}
 
-	$fields[] = ffc_acf_text( 'field_ffc_about_cta_title', 'about_cta_title', __( 'CTA Title', 'ffc-academy' ) );
-	$fields[] = ffc_acf_text( 'field_ffc_about_cta_primary_label', 'about_cta_primary_label', __( 'Primary CTA Label', 'ffc-academy' ) );
-	$fields[] = ffc_acf_url( 'field_ffc_about_cta_primary_url', 'about_cta_primary_url', __( 'Primary CTA URL', 'ffc-academy' ) );
-	$fields[] = ffc_acf_text( 'field_ffc_about_cta_secondary_label', 'about_cta_secondary_label', __( 'Secondary CTA Label', 'ffc-academy' ) );
-	$fields[] = ffc_acf_url( 'field_ffc_about_cta_secondary_url', 'about_cta_secondary_url', __( 'Secondary CTA URL', 'ffc-academy' ) );
+	$fields[] = ffc_acf_text( 'field_ffc_about_cta_title', 'about_cta_title', __( 'CTA Title', 'ffc-academy' ), __( 'Ready to Learn More?', 'ffc-academy' ) );
+	$fields[] = ffc_acf_text( 'field_ffc_about_cta_primary_label', 'about_cta_primary_label', __( 'Primary CTA Label', 'ffc-academy' ), __( 'Register for Tryouts', 'ffc-academy' ) );
+	$fields[] = ffc_acf_url( 'field_ffc_about_cta_primary_url', 'about_cta_primary_url', __( 'Primary CTA URL', 'ffc-academy' ), home_url( '/tryouts/' ) );
+	$fields[] = ffc_acf_text( 'field_ffc_about_cta_secondary_label', 'about_cta_secondary_label', __( 'Secondary CTA Label', 'ffc-academy' ), __( 'Contact F.F.C.', 'ffc-academy' ) );
+	$fields[] = ffc_acf_url( 'field_ffc_about_cta_secondary_url', 'about_cta_secondary_url', __( 'Secondary CTA URL', 'ffc-academy' ), home_url( '/contact/' ) );
 
 	return $fields;
 }
 
 function ffc_contact_page_fields(): array {
 	$fields = array(
-		ffc_acf_text( 'field_ffc_contact_hero_kicker', 'contact_hero_kicker', __( 'Hero Kicker', 'ffc-academy' ) ),
-		ffc_acf_text( 'field_ffc_contact_hero_title', 'contact_hero_title', __( 'Hero Title', 'ffc-academy' ) ),
-		ffc_acf_textarea( 'field_ffc_contact_hero_copy', 'contact_hero_copy', __( 'Hero Copy', 'ffc-academy' ) ),
-		ffc_acf_text( 'field_ffc_contact_card_label', 'contact_card_label', __( 'Hero Card Label', 'ffc-academy' ) ),
-		ffc_acf_text( 'field_ffc_contact_card_title', 'contact_card_title', __( 'Hero Card Title', 'ffc-academy' ) ),
-		ffc_acf_text( 'field_ffc_contact_card_button_label', 'contact_card_button_label', __( 'Hero Card Button Label', 'ffc-academy' ) ),
-		ffc_acf_url( 'field_ffc_contact_card_button_url', 'contact_card_button_url', __( 'Hero Card Button URL', 'ffc-academy' ) ),
-		ffc_acf_text( 'field_ffc_contact_panel_kicker', 'contact_panel_kicker', __( 'Panel Kicker', 'ffc-academy' ) ),
-		ffc_acf_text( 'field_ffc_contact_panel_title', 'contact_panel_title', __( 'Panel Title', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_contact_hero_kicker', 'contact_hero_kicker', __( 'Hero Kicker', 'ffc-academy' ), __( 'Contact F.F.C.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_contact_hero_title', 'contact_hero_title', __( 'Hero Title', 'ffc-academy' ), __( 'Let\'s Talk Soccer.', 'ffc-academy' ) ),
+		ffc_acf_textarea( 'field_ffc_contact_hero_copy', 'contact_hero_copy', __( 'Hero Copy', 'ffc-academy' ), __( 'Reach out about tryouts, schedules, sponsorship, coaching questions, or community partnerships.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_contact_card_label', 'contact_card_label', __( 'Hero Card Label', 'ffc-academy' ), __( 'Fastest Path', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_contact_card_title', 'contact_card_title', __( 'Hero Card Title', 'ffc-academy' ), __( 'Register for tryouts online.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_contact_card_button_label', 'contact_card_button_label', __( 'Hero Card Button Label', 'ffc-academy' ), __( 'Tryout Form', 'ffc-academy' ) ),
+		ffc_acf_url( 'field_ffc_contact_card_button_url', 'contact_card_button_url', __( 'Hero Card Button URL', 'ffc-academy' ), home_url( '/tryouts/' ) ),
+		ffc_acf_text( 'field_ffc_contact_panel_kicker', 'contact_panel_kicker', __( 'Panel Kicker', 'ffc-academy' ), __( 'Club Office', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_contact_panel_title', 'contact_panel_title', __( 'Panel Title', 'ffc-academy' ), __( 'How Can We Help?', 'ffc-academy' ) ),
 		ffc_acf_text( 'field_ffc_contact_form_shortcode', 'contact_form_shortcode', __( 'Contact Form Shortcode', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_contact_fallback_name_label', 'contact_fallback_name_label', __( 'Fallback Form Name Label', 'ffc-academy' ), __( 'Name', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_contact_fallback_email_label', 'contact_fallback_email_label', __( 'Fallback Form Email Label', 'ffc-academy' ), __( 'Email', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_contact_fallback_message_label', 'contact_fallback_message_label', __( 'Fallback Form Message Label', 'ffc-academy' ), __( 'Message', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_contact_fallback_button_label', 'contact_fallback_button_label', __( 'Fallback Form Button Label', 'ffc-academy' ), __( 'Send Message', 'ffc-academy' ) ),
+	);
+	$methods = array(
+		array(
+			'title' => __( 'Tryouts', 'ffc-academy' ),
+			'copy'  => __( 'Player evaluations and age-group placement.', 'ffc-academy' ),
+		),
+		array(
+			'title' => __( 'TeamSnap', 'ffc-academy' ),
+			'copy'  => __( 'Schedules, rosters, and family logistics.', 'ffc-academy' ),
+		),
+		array(
+			'title' => __( 'Sponsors', 'ffc-academy' ),
+			'copy'  => __( 'Partnerships supporting youth development.', 'ffc-academy' ),
+		),
 	);
 
 	for ( $i = 1; $i <= 3; $i++ ) {
-		$fields[] = ffc_acf_text( "field_ffc_contact_method_{$i}_title", "contact_method_{$i}_title", sprintf( __( 'Contact Method %d Title', 'ffc-academy' ), $i ) );
-		$fields[] = ffc_acf_textarea( "field_ffc_contact_method_{$i}_copy", "contact_method_{$i}_copy", sprintf( __( 'Contact Method %d Copy', 'ffc-academy' ), $i ) );
+		$fields[] = ffc_acf_text( "field_ffc_contact_method_{$i}_title", "contact_method_{$i}_title", sprintf( __( 'Contact Method %d Title', 'ffc-academy' ), $i ), $methods[ $i - 1 ]['title'] );
+		$fields[] = ffc_acf_textarea( "field_ffc_contact_method_{$i}_copy", "contact_method_{$i}_copy", sprintf( __( 'Contact Method %d Copy', 'ffc-academy' ), $i ), $methods[ $i - 1 ]['copy'] );
 	}
 
 	return $fields;
 }
 
-function ffc_acf_text( string $key, string $name, string $label ): array {
-	return array(
+function ffc_tryout_page_fields(): array {
+	$fields = array(
+		ffc_acf_text( 'field_ffc_tryout_hero_kicker', 'tryout_hero_kicker', __( 'Hero Kicker', 'ffc-academy' ), __( 'Join F.F.C.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_hero_title', 'tryout_hero_title', __( 'Hero Title', 'ffc-academy' ), __( 'Tryout Registration', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_intro_title', 'tryout_intro_title', __( 'Intro Title', 'ffc-academy' ), __( 'Start the Player Evaluation Process', 'ffc-academy' ) ),
+		ffc_acf_textarea( 'field_ffc_tryout_intro_copy', 'tryout_intro_copy', __( 'Intro Copy', 'ffc-academy' ), __( 'Submit player and guardian details so academy staff can place athletes in the correct evaluation group and follow up with next steps.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_success_message', 'tryout_success_message', __( 'Success Message', 'ffc-academy' ), __( 'Registration received. Our staff will follow up soon.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_error_message', 'tryout_error_message', __( 'Error Message', 'ffc-academy' ), __( 'Please check the required fields and try again.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_submit_label', 'tryout_submit_label', __( 'Submit Button Label', 'ffc-academy' ), __( 'Submit Registration', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_age_group_placeholder', 'tryout_age_group_placeholder', __( 'Age Group Placeholder', 'ffc-academy' ), __( 'U10, U12, U14', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_admin_email_subject', 'tryout_admin_email_subject', __( 'Admin Email Subject', 'ffc-academy' ), __( 'New F.F.C. Tryout Registration: {player_first_name} {player_last_name}', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_parent_email_subject', 'tryout_parent_email_subject', __( 'Parent Confirmation Email Subject', 'ffc-academy' ), __( 'F.F.C. Tryout Registration Received', 'ffc-academy' ) ),
+		ffc_acf_textarea( 'field_ffc_tryout_parent_email_intro', 'tryout_parent_email_intro', __( 'Parent Confirmation Email Intro', 'ffc-academy' ), __( 'Thank you for registering with F.F.C. Our staff will review the submission and follow up with next steps.', 'ffc-academy' ) ),
+	);
+
+	$labels = array(
+		'player_first_name'     => __( 'Player First Name', 'ffc-academy' ),
+		'player_last_name'      => __( 'Player Last Name', 'ffc-academy' ),
+		'date_of_birth'         => __( 'Date of Birth', 'ffc-academy' ),
+		'age_group'             => __( 'Age Group', 'ffc-academy' ),
+		'preferred_position'    => __( 'Preferred Position', 'ffc-academy' ),
+		'preferred_tryout_date' => __( 'Preferred Tryout Date', 'ffc-academy' ),
+		'previous_experience'   => __( 'Previous Experience', 'ffc-academy' ),
+		'parent_name'           => __( 'Parent/Guardian Name', 'ffc-academy' ),
+		'parent_email'          => __( 'Parent/Guardian Email', 'ffc-academy' ),
+		'parent_phone'          => __( 'Parent/Guardian Phone', 'ffc-academy' ),
+		'emergency_contact'     => __( 'Emergency Contact', 'ffc-academy' ),
+		'medical_notes'         => __( 'Medical Notes', 'ffc-academy' ),
+		'additional_comments'   => __( 'Additional Comments', 'ffc-academy' ),
+	);
+
+	foreach ( $labels as $name => $default ) {
+		$fields[] = ffc_acf_text(
+			'field_ffc_tryout_label_' . $name,
+			'tryout_label_' . $name,
+			sprintf(
+				/* translators: %s: form field label. */
+				__( 'Form Label: %s', 'ffc-academy' ),
+				$default
+			),
+			$default
+		);
+	}
+
+	return $fields;
+}
+
+function ffc_acf_text( string $key, string $name, string $label, string $default = '' ): array {
+	$field = array(
 		'key'   => $key,
 		'label' => $label,
 		'name'  => $name,
 		'type'  => 'text',
 	);
+
+	if ( '' !== $default ) {
+		$field['default_value'] = $default;
+	}
+
+	return $field;
 }
 
-function ffc_acf_url( string $key, string $name, string $label ): array {
-	return array(
+function ffc_acf_url( string $key, string $name, string $label, string $default = '' ): array {
+	$field = array(
 		'key'   => $key,
 		'label' => $label,
 		'name'  => $name,
 		'type'  => 'url',
 	);
+
+	if ( '' !== $default ) {
+		$field['default_value'] = $default;
+	}
+
+	return $field;
 }
 
 function ffc_acf_email( string $key, string $name, string $label ): array {
@@ -469,14 +753,20 @@ function ffc_acf_number( string $key, string $name, string $label ): array {
 	);
 }
 
-function ffc_acf_textarea( string $key, string $name, string $label ): array {
-	return array(
+function ffc_acf_textarea( string $key, string $name, string $label, string $default = '' ): array {
+	$field = array(
 		'key'   => $key,
 		'label' => $label,
 		'name'  => $name,
 		'type'  => 'textarea',
 		'rows'  => 4,
 	);
+
+	if ( '' !== $default ) {
+		$field['default_value'] = $default;
+	}
+
+	return $field;
 }
 
 function ffc_acf_image( string $key, string $name, string $label ): array {

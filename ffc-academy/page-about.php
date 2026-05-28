@@ -75,7 +75,7 @@ $timeline = array(
 				<p><?php echo esc_html( ffc_get_field( 'about_intro_copy_two', $page_id, __( 'From foundational age groups through competitive teams, F.F.C. provides structured training, match preparation, and a shared identity rooted in discipline, unity, and continuous improvement.', 'ffc-academy' ) ) ); ?></p>
 			</div>
 			<figure class="about-intro__image">
-				<img src="<?php echo esc_url( ffc_image_url_from_field( ffc_get_field( 'about_intro_image', $page_id ), 'ffc-card', ffc_theme_image( 'community' ) ) ); ?>" alt="<?php esc_attr_e( 'F.F.C. players and families at a soccer field', 'ffc-academy' ); ?>" loading="lazy">
+				<img src="<?php echo esc_url( ffc_image_url_from_field( ffc_get_field( 'about_intro_image', $page_id ), 'ffc-card', ffc_theme_image( 'community' ) ) ); ?>" alt="<?php echo esc_attr( ffc_get_field( 'about_intro_image_alt', $page_id, __( 'F.F.C. players and families at a soccer field', 'ffc-academy' ) ) ); ?>" loading="lazy">
 			</figure>
 		</div>
 	</section>
@@ -117,8 +117,6 @@ $timeline = array(
 			</div>
 		</div>
 	</section>
-
-	<?php ffc_page_content_section( $page_id ); ?>
 
 	<section class="about-cta">
 		<div class="container about-cta__inner">

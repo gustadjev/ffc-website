@@ -70,41 +70,57 @@ function ffc_handle_tryout_registration(): void {
 		update_post_meta( $post_id, $key, $value );
 	}
 
-	$admin_email = get_option( 'admin_email' );
-	$subject     = sprintf( __( 'New F.F.C. Tryout Registration: %1$s %2$s', 'ffc-academy' ), $data['player_first_name'], $data['player_last_name'] );
-	$message     = ffc_tryout_summary( $data );
+	$admin_email      = get_option( 'admin_email' );
+	$tryout_page_id   = ffc_tryout_page_id();
+	$subject_template = ffc_get_field( 'tryout_admin_email_subject', $tryout_page_id, __( 'New F.F.C. Tryout Registration: {player_first_name} {player_last_name}', 'ffc-academy' ) );
+	$parent_subject   = ffc_get_field( 'tryout_parent_email_subject', $tryout_page_id, __( 'F.F.C. Tryout Registration Received', 'ffc-academy' ) );
+	$parent_intro     = ffc_get_field( 'tryout_parent_email_intro', $tryout_page_id, __( 'Thank you for registering with F.F.C. Our staff will review the submission and follow up with next steps.', 'ffc-academy' ) );
+	$subject          = ffc_tryout_replace_tokens( $subject_template, $data );
+	$message          = ffc_tryout_summary( $data );
 
 	wp_mail( $admin_email, $subject, $message );
 	wp_mail(
 		$data['parent_email'],
-		__( 'F.F.C. Tryout Registration Received', 'ffc-academy' ),
-		__( "Thank you for registering with F.F.C. Our staff will review the submission and follow up with next steps.\n\n", 'ffc-academy' ) . $message
+		ffc_tryout_replace_tokens( $parent_subject, $data ),
+		ffc_tryout_replace_tokens( $parent_intro, $data ) . "\n\n" . $message
 	);
 
 	wp_safe_redirect( add_query_arg( 'tryout', 'success', wp_get_referer() ?: home_url( '/' ) ) );
 	exit;
 }
 
+function ffc_tryout_replace_tokens( string $text, array $data ): string {
+	$tokens = array();
+
+	foreach ( $data as $key => $value ) {
+		$tokens[ '{' . $key . '}' ] = $value;
+	}
+
+	return strtr( $text, $tokens );
+}
+
 function ffc_tryout_summary( array $data ): string {
+	$tryout_page_id = ffc_tryout_page_id();
 	$labels = array(
-		'player_first_name'     => 'Player First Name',
-		'player_last_name'      => 'Player Last Name',
-		'date_of_birth'         => 'Date of Birth',
-		'age_group'             => 'Age Group',
-		'preferred_position'    => 'Preferred Position',
-		'previous_experience'   => 'Previous Experience',
-		'parent_name'           => 'Parent/Guardian',
-		'parent_email'          => 'Parent Email',
-		'parent_phone'          => 'Parent Phone',
-		'emergency_contact'     => 'Emergency Contact',
-		'medical_notes'         => 'Medical Notes',
-		'preferred_tryout_date' => 'Preferred Tryout Date',
-		'additional_comments'   => 'Additional Comments',
+		'player_first_name'     => __( 'Player First Name', 'ffc-academy' ),
+		'player_last_name'      => __( 'Player Last Name', 'ffc-academy' ),
+		'date_of_birth'         => __( 'Date of Birth', 'ffc-academy' ),
+		'age_group'             => __( 'Age Group', 'ffc-academy' ),
+		'preferred_position'    => __( 'Preferred Position', 'ffc-academy' ),
+		'previous_experience'   => __( 'Previous Experience', 'ffc-academy' ),
+		'parent_name'           => __( 'Parent/Guardian Name', 'ffc-academy' ),
+		'parent_email'          => __( 'Parent/Guardian Email', 'ffc-academy' ),
+		'parent_phone'          => __( 'Parent/Guardian Phone', 'ffc-academy' ),
+		'emergency_contact'     => __( 'Emergency Contact', 'ffc-academy' ),
+		'medical_notes'         => __( 'Medical Notes', 'ffc-academy' ),
+		'preferred_tryout_date' => __( 'Preferred Tryout Date', 'ffc-academy' ),
+		'additional_comments'   => __( 'Additional Comments', 'ffc-academy' ),
 	);
 
 	$lines = array();
 	foreach ( $labels as $key => $label ) {
-		$lines[] = $label . ': ' . ( $data[ $key ] ?? '' );
+		$editable_label = ffc_get_field( 'tryout_label_' . $key, $tryout_page_id, $label );
+		$lines[]        = $editable_label . ': ' . ( $data[ $key ] ?? '' );
 	}
 
 	return implode( "\n", $lines );

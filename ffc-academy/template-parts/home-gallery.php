@@ -1,4 +1,5 @@
 <?php
+$home_id = ffc_home_page_id();
 $gallery = new WP_Query(
 	array(
 		'post_type'      => 'ffc_gallery',
@@ -8,9 +9,9 @@ $gallery = new WP_Query(
 ?>
 <section class="section section--ivory">
 	<div class="container section-heading">
-		<p class="eyebrow"><?php esc_html_e( 'Club Culture', 'ffc-academy' ); ?></p>
-		<h2><?php esc_html_e( 'Featured Gallery', 'ffc-academy' ); ?></h2>
-		<a href="<?php echo esc_url( get_post_type_archive_link( 'ffc_gallery' ) ); ?>"><?php esc_html_e( 'Open Gallery', 'ffc-academy' ); ?></a>
+		<p class="eyebrow"><?php echo esc_html( ffc_get_field( 'home_gallery_kicker', $home_id, __( 'Club Culture', 'ffc-academy' ) ) ); ?></p>
+		<h2><?php echo esc_html( ffc_get_field( 'home_gallery_title', $home_id, __( 'Featured Gallery', 'ffc-academy' ) ) ); ?></h2>
+		<a href="<?php echo esc_url( get_post_type_archive_link( 'ffc_gallery' ) ); ?>"><?php echo esc_html( ffc_get_field( 'home_gallery_link_label', $home_id, __( 'Open Gallery', 'ffc-academy' ) ) ); ?></a>
 	</div>
 	<div class="container gallery-grid">
 		<?php if ( $gallery->have_posts() ) : ?>
@@ -26,10 +27,10 @@ $gallery = new WP_Query(
 		<?php else : ?>
 			<?php
 			$fallback_gallery = array(
-				array( 'Training Intensity', ffc_theme_image( 'gallery_1' ) ),
-				array( 'Matchday Focus', ffc_theme_image( 'gallery_2' ) ),
-				array( 'Team Standards', ffc_theme_image( 'gallery_3' ) ),
-				array( 'Player Growth', ffc_theme_image( 'gallery_4' ) ),
+				array( ffc_get_field( 'home_gallery_fallback_1_label', $home_id, __( 'Training Intensity', 'ffc-academy' ) ), ffc_theme_image( 'gallery_1' ) ),
+				array( ffc_get_field( 'home_gallery_fallback_2_label', $home_id, __( 'Matchday Focus', 'ffc-academy' ) ), ffc_theme_image( 'gallery_2' ) ),
+				array( ffc_get_field( 'home_gallery_fallback_3_label', $home_id, __( 'Team Standards', 'ffc-academy' ) ), ffc_theme_image( 'gallery_3' ) ),
+				array( ffc_get_field( 'home_gallery_fallback_4_label', $home_id, __( 'Player Growth', 'ffc-academy' ) ), ffc_theme_image( 'gallery_4' ) ),
 			);
 			foreach ( $fallback_gallery as $item ) :
 				?>

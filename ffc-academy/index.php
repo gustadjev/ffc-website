@@ -10,7 +10,7 @@ get_header();
 <main id="primary" class="site-main section">
 	<div class="container">
 		<header class="archive-header">
-			<p class="eyebrow"><?php esc_html_e( 'F.F.C.', 'ffc-academy' ); ?></p>
+			<p class="eyebrow"><?php echo esc_html( ffc_option( 'blog_archive_eyebrow', __( 'F.F.C.', 'ffc-academy' ) ) ); ?></p>
 			<h1><?php single_post_title(); ?></h1>
 		</header>
 		<div class="post-grid">
@@ -23,7 +23,7 @@ get_header();
 				<?php endwhile; ?>
 				<?php the_posts_pagination(); ?>
 			<?php else : ?>
-				<p><?php esc_html_e( 'No updates are available yet.', 'ffc-academy' ); ?></p>
+				<p><?php echo esc_html( ffc_option( 'blog_empty_message', __( 'No updates are available yet.', 'ffc-academy' ) ) ); ?></p>
 			<?php endif; ?>
 		</div>
 	</div>

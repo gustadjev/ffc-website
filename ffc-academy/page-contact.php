@@ -45,12 +45,6 @@ $methods = array(
 			</div>
 		</div>
 	</section>
-	<?php
-	$content = (string) get_post_field( 'post_content', $page_id );
-	if ( ffc_page_has_editor_content( $page_id ) && ! has_shortcode( $content, 'contact-form-7' ) ) {
-		ffc_page_content_section( $page_id );
-	}
-	?>
 	<section class="section section--light contact-section">
 		<div class="container contact-grid">
 			<div class="contact-panel">
@@ -62,7 +56,7 @@ $methods = array(
 						<div><strong><?php echo esc_html( ffc_get_field( "contact_method_{$number}_title", $page_id, $method['title'] ) ); ?></strong><span><?php echo esc_html( ffc_get_field( "contact_method_{$number}_copy", $page_id, $method['copy'] ) ); ?></span></div>
 					<?php endforeach; ?>
 				</div>
-				<?php echo ffc_social_links_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php echo ffc_social_links_markup( 'social-icons', true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
 			<div class="contact-form-panel">
 				<?php
@@ -78,10 +72,10 @@ $methods = array(
 						} else {
 							?>
 						<form class="tryout-form contact-fallback-form">
-							<label><?php esc_html_e( 'Name', 'ffc-academy' ); ?><input type="text"></label>
-							<label><?php esc_html_e( 'Email', 'ffc-academy' ); ?><input type="email"></label>
-							<label><?php esc_html_e( 'Message', 'ffc-academy' ); ?><textarea rows="5"></textarea></label>
-							<button class="button button--accent" type="button"><?php esc_html_e( 'Send Message', 'ffc-academy' ); ?></button>
+							<label><?php echo esc_html( ffc_get_field( 'contact_fallback_name_label', $page_id, __( 'Name', 'ffc-academy' ) ) ); ?><input type="text"></label>
+							<label><?php echo esc_html( ffc_get_field( 'contact_fallback_email_label', $page_id, __( 'Email', 'ffc-academy' ) ) ); ?><input type="email"></label>
+							<label><?php echo esc_html( ffc_get_field( 'contact_fallback_message_label', $page_id, __( 'Message', 'ffc-academy' ) ) ); ?><textarea rows="5"></textarea></label>
+							<button class="button button--accent" type="button"><?php echo esc_html( ffc_get_field( 'contact_fallback_button_label', $page_id, __( 'Send Message', 'ffc-academy' ) ) ); ?></button>
 						</form>
 							<?php
 						}
