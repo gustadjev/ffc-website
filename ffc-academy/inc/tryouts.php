@@ -52,12 +52,14 @@ function ffc_handle_tryout_registration(): void {
 		exit;
 	}
 
-	$post_id = wp_insert_post( array(
-		'post_type'   => 'ffc_tryout',
-		'post_status' => 'private',
-		'post_title'  => sprintf( '%s %s - %s', $data['player_first_name'], $data['player_last_name'], current_time( 'mysql' ) ),
-		'post_content'=> ffc_tryout_summary( $data ),
-	) );
+	$post_id = wp_insert_post(
+		array(
+			'post_type'    => 'ffc_tryout',
+			'post_status'  => 'private',
+			'post_title'   => sprintf( '%s %s - %s', $data['player_first_name'], $data['player_last_name'], current_time( 'mysql' ) ),
+			'post_content' => ffc_tryout_summary( $data ),
+		)
+	);
 
 	if ( is_wp_error( $post_id ) ) {
 		wp_safe_redirect( add_query_arg( 'tryout', 'error', wp_get_referer() ?: home_url( '/' ) ) );
@@ -69,7 +71,7 @@ function ffc_handle_tryout_registration(): void {
 	}
 
 	$admin_email = get_option( 'admin_email' );
-	$subject     = sprintf( __( 'New F.F.C. Tryout Registration: %s %s', 'ffc-academy' ), $data['player_first_name'], $data['player_last_name'] );
+	$subject     = sprintf( __( 'New F.F.C. Tryout Registration: %1$s %2$s', 'ffc-academy' ), $data['player_first_name'], $data['player_last_name'] );
 	$message     = ffc_tryout_summary( $data );
 
 	wp_mail( $admin_email, $subject, $message );

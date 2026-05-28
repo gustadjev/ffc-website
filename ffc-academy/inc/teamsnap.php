@@ -16,30 +16,33 @@ function ffc_teamsnap_button( string $label = 'Open TeamSnap' ): string {
 }
 
 function ffc_teamsnap_links(): array {
-	return array_filter( array(
-		'schedule'     => array(
-			'label'       => __( 'Schedule', 'ffc-academy' ),
-			'description' => __( 'Practices, matches, fields, and calendar updates.', 'ffc-academy' ),
-			'url'         => ffc_option( 'teamsnap_schedule_url' ) ?: ffc_option( 'teamsnap_public_url' ),
+	return array_filter(
+		array(
+			'schedule'     => array(
+				'label'       => __( 'Schedule', 'ffc-academy' ),
+				'description' => __( 'Practices, matches, fields, and calendar updates.', 'ffc-academy' ),
+				'url'         => ffc_option( 'teamsnap_schedule_url' ) ?: ffc_option( 'teamsnap_public_url' ),
+			),
+			'roster'       => array(
+				'label'       => __( 'Roster', 'ffc-academy' ),
+				'description' => __( 'Team contacts, player details, and family communication.', 'ffc-academy' ),
+				'url'         => ffc_option( 'teamsnap_roster_url' ),
+			),
+			'registration' => array(
+				'label'       => __( 'Registration', 'ffc-academy' ),
+				'description' => __( 'TeamSnap forms, dues, waivers, and season signups.', 'ffc-academy' ),
+				'url'         => ffc_option( 'teamsnap_registration_url' ),
+			),
+			'app'          => array(
+				'label'       => __( 'TeamSnap App', 'ffc-academy' ),
+				'description' => __( 'Open the mobile app or TeamSnap login.', 'ffc-academy' ),
+				'url'         => ffc_option( 'teamsnap_app_url' ) ?: ffc_option( 'teamsnap_public_url' ),
+			),
 		),
-		'roster'       => array(
-			'label'       => __( 'Roster', 'ffc-academy' ),
-			'description' => __( 'Team contacts, player details, and family communication.', 'ffc-academy' ),
-			'url'         => ffc_option( 'teamsnap_roster_url' ),
-		),
-		'registration' => array(
-			'label'       => __( 'Registration', 'ffc-academy' ),
-			'description' => __( 'TeamSnap forms, dues, waivers, and season signups.', 'ffc-academy' ),
-			'url'         => ffc_option( 'teamsnap_registration_url' ),
-		),
-		'app'          => array(
-			'label'       => __( 'TeamSnap App', 'ffc-academy' ),
-			'description' => __( 'Open the mobile app or TeamSnap login.', 'ffc-academy' ),
-			'url'         => ffc_option( 'teamsnap_app_url' ) ?: ffc_option( 'teamsnap_public_url' ),
-		),
-	), static function ( array $link ): bool {
-		return ! empty( $link['url'] );
-	} );
+		static function ( array $link ): bool {
+			return ! empty( $link['url'] );
+		}
+	);
 }
 
 function ffc_teamsnap_embed(): string {
@@ -67,8 +70,16 @@ function ffc_teamsnap_embed(): string {
 			'rel'    => true,
 			'class'  => true,
 		),
-		'div'    => array( 'class' => true, 'id' => true, 'style' => true ),
-		'script' => array( 'src' => true, 'async' => true, 'defer' => true ),
+		'div'    => array(
+			'class' => true,
+			'id'    => true,
+			'style' => true,
+		),
+		'script' => array(
+			'src'   => true,
+			'async' => true,
+			'defer' => true,
+		),
 	);
 
 	return wp_kses( $embed, $allowed );

@@ -28,8 +28,12 @@ get_header();
 			</div>
 		<?php endif; ?>
 		<div class="container match-grid is-list" data-schedule-view>
-			<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
-				<?php get_template_part( 'template-parts/card', 'game' ); ?>
+			<?php
+			if ( have_posts() ) :
+				while ( have_posts() ) :
+					the_post();
+					?>
+					<?php get_template_part( 'template-parts/card', 'game' ); ?>
 			<?php endwhile; else : ?>
 				<p class="empty-state"><?php esc_html_e( 'No scheduled games have been added yet.', 'ffc-academy' ); ?></p>
 			<?php endif; ?>

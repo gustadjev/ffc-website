@@ -11,7 +11,13 @@ $email          = ffc_get_field( 'contact_email', get_the_ID() );
 		<p class="eyebrow"><?php echo esc_html( $role ); ?></p>
 		<h2><?php the_title(); ?></h2>
 		<p><?php echo esc_html( wp_trim_words( get_the_content(), 28 ) ); ?></p>
-		<?php if ( $certifications ) : ?><p class="muted"><?php echo esc_html( $certifications ); ?></p><?php endif; ?>
-		<?php if ( $email ) : ?><a href="mailto:<?php echo esc_attr( $email ); ?>"><?php esc_html_e( 'Contact Coach', 'ffc-academy' ); ?></a><?php endif; ?>
+		<?php
+		if ( $certifications ) :
+			?>
+			<p class="muted"><?php echo esc_html( $certifications ); ?></p><?php endif; ?>
+		<?php
+		if ( $email ) :
+			?>
+			<a href="mailto:<?php echo esc_attr( $email ); ?>"><?php esc_html_e( 'Contact Coach', 'ffc-academy' ); ?></a><?php endif; ?>
 	</div>
 </article>

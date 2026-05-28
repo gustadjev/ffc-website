@@ -1,11 +1,13 @@
 <?php
-$scores = new WP_Query( array(
-	'post_type'      => 'ffc_score',
-	'posts_per_page' => 4,
-	'meta_key'       => 'game_datetime',
-	'orderby'        => 'meta_value',
-	'order'          => 'DESC',
-) );
+$scores = new WP_Query(
+	array(
+		'post_type'      => 'ffc_score',
+		'posts_per_page' => 4,
+		'meta_key'       => 'game_datetime',
+		'orderby'        => 'meta_value',
+		'order'          => 'DESC',
+	)
+);
 ?>
 <section class="scoreboard">
 	<div class="container section-heading section-heading--dark">
@@ -15,9 +17,15 @@ $scores = new WP_Query( array(
 	</div>
 	<div class="container score-strip">
 		<?php if ( $scores->have_posts() ) : ?>
-			<?php while ( $scores->have_posts() ) : $scores->the_post(); ?>
+			<?php
+			while ( $scores->have_posts() ) :
+				$scores->the_post();
+				?>
 				<?php get_template_part( 'template-parts/card', 'score' ); ?>
-			<?php endwhile; wp_reset_postdata(); ?>
+				<?php
+			endwhile;
+			wp_reset_postdata();
+			?>
 		<?php else : ?>
 			<?php
 			$fallback_scores = array(

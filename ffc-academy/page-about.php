@@ -7,7 +7,7 @@
 
 get_header();
 
-$page_id  = get_queried_object_id();
+$page_id = get_queried_object_id();
 if ( ffc_is_builder_page( $page_id ) ) {
 	ffc_render_builder_page( $page_id );
 	get_footer();
@@ -17,15 +17,43 @@ if ( ffc_is_builder_page( $page_id ) ) {
 $tryouts  = ffc_archive_link_by_slug( 'tryouts', home_url( '/tryouts/' ) );
 $contact  = ffc_archive_link_by_slug( 'contact', home_url( '/contact/' ) );
 $values   = array(
-	array( 'image' => ffc_theme_image( 'training' ), 'title' => __( 'Teamwork', 'ffc-academy' ), 'copy' => __( 'We build inclusive teams that pursue common goals with trust and accountability.', 'ffc-academy' ) ),
-	array( 'image' => ffc_theme_image( 'match' ), 'title' => __( 'Sportsmanship', 'ffc-academy' ), 'copy' => __( 'Players, coaches, and families represent the club with respect on every touchline.', 'ffc-academy' ) ),
-	array( 'image' => ffc_theme_image( 'gallery_1' ), 'title' => __( 'Dedication', 'ffc-academy' ), 'copy' => __( 'Consistent effort, preparation, and coachability drive long-term player development.', 'ffc-academy' ) ),
-	array( 'image' => ffc_theme_image( 'gallery_3' ), 'title' => __( 'Excellence', 'ffc-academy' ), 'copy' => __( 'We aim to deliver a quality soccer experience for every player and family.', 'ffc-academy' ) ),
+	array(
+		'image' => ffc_theme_image( 'training' ),
+		'title' => __( 'Teamwork', 'ffc-academy' ),
+		'copy'  => __( 'We build inclusive teams that pursue common goals with trust and accountability.', 'ffc-academy' ),
+	),
+	array(
+		'image' => ffc_theme_image( 'match' ),
+		'title' => __( 'Sportsmanship', 'ffc-academy' ),
+		'copy'  => __( 'Players, coaches, and families represent the club with respect on every touchline.', 'ffc-academy' ),
+	),
+	array(
+		'image' => ffc_theme_image( 'gallery_1' ),
+		'title' => __( 'Dedication', 'ffc-academy' ),
+		'copy'  => __( 'Consistent effort, preparation, and coachability drive long-term player development.', 'ffc-academy' ),
+	),
+	array(
+		'image' => ffc_theme_image( 'gallery_3' ),
+		'title' => __( 'Excellence', 'ffc-academy' ),
+		'copy'  => __( 'We aim to deliver a quality soccer experience for every player and family.', 'ffc-academy' ),
+	),
 );
 $timeline = array(
-	array( 'label' => __( 'Foundation', 'ffc-academy' ), 'title' => __( 'A Place to Belong', 'ffc-academy' ), 'copy' => __( 'F.F.C. gives players a structured club home where training, communication, and team culture all work together.', 'ffc-academy' ) ),
-	array( 'label' => __( 'Development', 'ffc-academy' ), 'title' => __( 'A Path to Improve', 'ffc-academy' ), 'copy' => __( 'Age-appropriate coaching helps players grow in confidence, skill, decision-making, and love for the game.', 'ffc-academy' ) ),
-	array( 'label' => __( 'Competition', 'ffc-academy' ), 'title' => __( 'A Standard to Chase', 'ffc-academy' ), 'copy' => __( 'Matchdays and tournaments become opportunities to test progress, learn resilience, and represent the club well.', 'ffc-academy' ) ),
+	array(
+		'label' => __( 'Foundation', 'ffc-academy' ),
+		'title' => __( 'A Place to Belong', 'ffc-academy' ),
+		'copy'  => __( 'F.F.C. gives players a structured club home where training, communication, and team culture all work together.', 'ffc-academy' ),
+	),
+	array(
+		'label' => __( 'Development', 'ffc-academy' ),
+		'title' => __( 'A Path to Improve', 'ffc-academy' ),
+		'copy'  => __( 'Age-appropriate coaching helps players grow in confidence, skill, decision-making, and love for the game.', 'ffc-academy' ),
+	),
+	array(
+		'label' => __( 'Competition', 'ffc-academy' ),
+		'title' => __( 'A Standard to Chase', 'ffc-academy' ),
+		'copy'  => __( 'Matchdays and tournaments become opportunities to test progress, learn resilience, and represent the club well.', 'ffc-academy' ),
+	),
 );
 ?>
 <main id="primary" class="site-main">

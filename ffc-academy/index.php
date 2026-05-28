@@ -15,7 +15,10 @@ get_header();
 		</header>
 		<div class="post-grid">
 			<?php if ( have_posts() ) : ?>
-				<?php while ( have_posts() ) : the_post(); ?>
+				<?php
+				while ( have_posts() ) :
+					the_post();
+					?>
 					<?php get_template_part( 'template-parts/card', 'post' ); ?>
 				<?php endwhile; ?>
 				<?php the_posts_pagination(); ?>

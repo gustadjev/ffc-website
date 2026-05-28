@@ -1,19 +1,21 @@
 <?php
-$matches = new WP_Query( array(
-	'post_type'      => 'ffc_game',
-	'posts_per_page' => 3,
-	'meta_key'       => 'game_datetime',
-	'orderby'        => 'meta_value',
-	'order'          => 'ASC',
-	'meta_query'     => array(
-		array(
-			'key'     => 'game_datetime',
-			'value'   => current_time( 'mysql' ),
-			'compare' => '>=',
-			'type'    => 'DATETIME',
+$matches = new WP_Query(
+	array(
+		'post_type'      => 'ffc_game',
+		'posts_per_page' => 3,
+		'meta_key'       => 'game_datetime',
+		'orderby'        => 'meta_value',
+		'order'          => 'ASC',
+		'meta_query'     => array(
+			array(
+				'key'     => 'game_datetime',
+				'value'   => current_time( 'mysql' ),
+				'compare' => '>=',
+				'type'    => 'DATETIME',
+			),
 		),
-	),
-) );
+	)
+);
 ?>
 <section class="section section--light">
 	<div class="container section-heading">
@@ -23,9 +25,15 @@ $matches = new WP_Query( array(
 	</div>
 	<div class="container match-grid">
 		<?php if ( $matches->have_posts() ) : ?>
-			<?php while ( $matches->have_posts() ) : $matches->the_post(); ?>
+			<?php
+			while ( $matches->have_posts() ) :
+				$matches->the_post();
+				?>
 				<?php get_template_part( 'template-parts/card', 'game' ); ?>
-			<?php endwhile; wp_reset_postdata(); ?>
+				<?php
+			endwhile;
+			wp_reset_postdata();
+			?>
 		<?php else : ?>
 			<?php
 			$fallback_matches = array(

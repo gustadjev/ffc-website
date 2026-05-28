@@ -85,10 +85,37 @@ For production, configure SMTP before opening registration publicly.
 
 ## Development
 
-The CSS file at `ffc-academy/assets/css/main.css` is production-ready. `ffc-academy/assets/scss/main.scss` is included as the start of a SCSS source architecture for teams that want a build step.
+The project includes working development tooling for Sass, Stylelint, PHPCS, and WordPress Coding Standards.
 
-Suggested future build stack:
+### Requirements
 
-- Dart Sass for SCSS compilation.
-- Stylelint and PHPCS for code standards.
-- WordPress Coding Standards via Composer.
+- Node.js 18, matching `.nvmrc`.
+- The Local PHP binary used by the npm PHP lint script, or update `package.json` if your PHP path changes.
+
+### Install Tooling
+
+```bash
+npm install
+COMPOSER_HOME="$PWD/.composer-cache" "/Users/elgusto/Library/Application Support/Local/lightning-services/php-8.2.29+0/bin/darwin-arm64/bin/php" composer.phar install
+```
+
+If `composer.phar` is not present, install Composer locally first:
+
+```bash
+curl -sS https://getcomposer.org/installer -o composer-setup.php
+COMPOSER_HOME="$PWD/.composer-cache" "/Users/elgusto/Library/Application Support/Local/lightning-services/php-8.2.29+0/bin/darwin-arm64/bin/php" composer-setup.php --filename=composer.phar
+```
+
+### Commands
+
+```bash
+npm run build:css
+npm run watch:css
+npm run lint:css
+npm run lint:php
+npm run lint
+```
+
+`ffc-academy/assets/scss/main.scss` is the Sass source. `npm run build:css` compiles it to `ffc-academy/assets/css/main.css`.
+
+PHPCS is configured in `phpcs.xml.dist` with WordPress Coding Standards and PHPCompatibilityWP. Stylelint is configured in `.stylelintrc.json`.

@@ -17,6 +17,10 @@ node_modules/
 vendor/
 dist/
 build/
+composer.phar
+composer-setup.php
+.composer-cache/
+*.cache
 
 # WordPress/package archives
 *.zip

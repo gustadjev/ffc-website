@@ -1,6 +1,11 @@
 <?php
 get_header();
-$terms = get_terms( array( 'taxonomy' => 'ffc_gallery_category', 'hide_empty' => true ) );
+$terms = get_terms(
+	array(
+		'taxonomy'   => 'ffc_gallery_category',
+		'hide_empty' => true,
+	)
+);
 $terms = is_wp_error( $terms ) ? array() : $terms;
 ?>
 <main id="primary" class="site-main">
@@ -18,11 +23,18 @@ $terms = is_wp_error( $terms ) ? array() : $terms;
 			<?php endforeach; ?>
 		</div>
 		<div class="container gallery-grid">
-			<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
-				<?php get_template_part( 'template-parts/card', 'gallery' ); ?>
-			<?php endwhile; the_posts_pagination(); else : ?>
+			<?php
+			if ( have_posts() ) :
+				while ( have_posts() ) :
+					the_post();
+					?>
+					<?php get_template_part( 'template-parts/card', 'gallery' ); ?>
+					<?php
+			endwhile;
+				the_posts_pagination(); else :
+					?>
 				<p class="empty-state"><?php esc_html_e( 'Gallery items will appear here.', 'ffc-academy' ); ?></p>
-			<?php endif; ?>
+							<?php endif; ?>
 		</div>
 	</section>
 </main>

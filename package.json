@@ -1,0 +1,19 @@
+{
+  "name": "ffc-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Development tooling for the F.F.C. Academy WordPress theme.",
+  "scripts": {
+    "build:css": "sass ffc-academy/assets/scss/main.scss ffc-academy/assets/css/main.css --style=expanded --source-map",
+    "watch:css": "sass ffc-academy/assets/scss/main.scss ffc-academy/assets/css/main.css --style=expanded --source-map --watch",
+    "lint:css": "stylelint \"ffc-academy/assets/scss/**/*.scss\"",
+    "lint:php": "\"/Users/elgusto/Library/Application Support/Local/lightning-services/php-8.2.29+0/bin/darwin-arm64/bin/php\" composer.phar lint:php",
+    "fix:php": "\"/Users/elgusto/Library/Application Support/Local/lightning-services/php-8.2.29+0/bin/darwin-arm64/bin/php\" composer.phar fix:php",
+    "lint": "npm run lint:css && npm run lint:php"
+  },
+  "devDependencies": {
+    "sass": "1.69.5",
+    "stylelint": "16.6.1",
+    "stylelint-config-standard-scss": "13.1.0"
+  }
+}

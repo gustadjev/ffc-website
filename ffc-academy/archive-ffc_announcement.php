@@ -10,11 +10,18 @@ get_header();
 	</section>
 	<section class="section section--light">
 		<div class="container post-grid">
-			<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
-				<?php get_template_part( 'template-parts/card', 'post' ); ?>
-			<?php endwhile; the_posts_pagination(); else : ?>
+			<?php
+			if ( have_posts() ) :
+				while ( have_posts() ) :
+					the_post();
+					?>
+					<?php get_template_part( 'template-parts/card', 'post' ); ?>
+					<?php
+			endwhile;
+				the_posts_pagination(); else :
+					?>
 				<p class="empty-state"><?php esc_html_e( 'Announcements will appear here.', 'ffc-academy' ); ?></p>
-			<?php endif; ?>
+							<?php endif; ?>
 		</div>
 	</section>
 </main>

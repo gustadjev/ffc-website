@@ -14,7 +14,7 @@ if ( ffc_is_builder_page( $front_id ) ) {
 	return;
 }
 
-$tryout_url = ffc_option( 'tryout_page_url', ffc_archive_link_by_slug( 'tryouts', home_url( '/tryouts/' ) ) );
+$tryout_url      = ffc_option( 'tryout_page_url', ffc_archive_link_by_slug( 'tryouts', home_url( '/tryouts/' ) ) );
 $fallback_slides = array(
 	array(
 		'image'   => ffc_theme_image( 'hero' ),
@@ -47,8 +47,8 @@ $fallback_slides = array(
 		'second'  => array( __( 'Contact Us', 'ffc-academy' ), ffc_archive_link_by_slug( 'contact', home_url( '/contact/' ) ) ),
 	),
 );
-$acf_slides  = ffc_get_field( 'home_slides', get_option( 'page_on_front' ), array() );
-$hero_slides = array();
+$acf_slides      = ffc_get_field( 'home_slides', get_option( 'page_on_front' ), array() );
+$hero_slides     = array();
 
 if ( is_array( $acf_slides ) && ! empty( $acf_slides ) ) {
 	foreach ( $acf_slides as $slide ) {

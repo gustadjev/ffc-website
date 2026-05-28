@@ -8,7 +8,10 @@
 get_header();
 ?>
 <main id="primary" class="site-main">
-	<?php while ( have_posts() ) : the_post(); ?>
+	<?php
+	while ( have_posts() ) :
+		the_post();
+		?>
 		<section class="page-hero page-hero--single">
 			<div class="container">
 				<p class="eyebrow"><?php echo esc_html( get_post_type_object( get_post_type() )->labels->singular_name ?? 'F.F.C.' ); ?></p>

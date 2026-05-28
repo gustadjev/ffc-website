@@ -1,8 +1,10 @@
 <?php
-$announcements = new WP_Query( array(
-	'post_type'      => 'ffc_announcement',
-	'posts_per_page' => 3,
-) );
+$announcements = new WP_Query(
+	array(
+		'post_type'      => 'ffc_announcement',
+		'posts_per_page' => 3,
+	)
+);
 ?>
 <section class="section section--light">
 	<div class="container section-heading">
@@ -12,9 +14,15 @@ $announcements = new WP_Query( array(
 	</div>
 	<div class="container post-grid">
 		<?php if ( $announcements->have_posts() ) : ?>
-			<?php while ( $announcements->have_posts() ) : $announcements->the_post(); ?>
+			<?php
+			while ( $announcements->have_posts() ) :
+				$announcements->the_post();
+				?>
 				<?php get_template_part( 'template-parts/card', 'post' ); ?>
-			<?php endwhile; wp_reset_postdata(); ?>
+				<?php
+			endwhile;
+			wp_reset_postdata();
+			?>
 		<?php else : ?>
 			<article class="card notice-card reveal"><div class="card__body"><span class="date-badge"><?php esc_html_e( 'Club', 'ffc-academy' ); ?></span><h2><?php esc_html_e( 'Tryout Window Opening Soon', 'ffc-academy' ); ?></h2><p><?php esc_html_e( 'Families can register online and receive follow-up details from academy staff.', 'ffc-academy' ); ?></p></div></article>
 			<article class="card notice-card reveal"><div class="card__body"><span class="date-badge"><?php esc_html_e( 'Training', 'ffc-academy' ); ?></span><h2><?php esc_html_e( 'Summer Development Blocks', 'ffc-academy' ); ?></h2><p><?php esc_html_e( 'Age-group sessions will focus on technical speed, decision-making, and finishing.', 'ffc-academy' ); ?></p></div></article>

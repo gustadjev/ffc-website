@@ -9,7 +9,10 @@ $teamsnap = ffc_get_field( 'teamsnap_event_url', get_the_ID() );
 ?>
 <article class="match-card reveal" itemscope itemtype="https://schema.org/SportsEvent">
 	<meta itemprop="name" content="<?php echo esc_attr( 'F.F.C. vs ' . $opponent ); ?>">
-	<?php if ( $date ) : ?><meta itemprop="startDate" content="<?php echo esc_attr( mysql2date( 'c', $date ) ); ?>"><?php endif; ?>
+	<?php
+	if ( $date ) :
+		?>
+		<meta itemprop="startDate" content="<?php echo esc_attr( mysql2date( 'c', $date ) ); ?>"><?php endif; ?>
 	<div class="match-card__flag"><?php echo esc_html( ucfirst( $homeaway ) ); ?></div>
 	<h3><?php esc_html_e( 'F.F.C.', 'ffc-academy' ); ?> <span><?php esc_html_e( 'vs', 'ffc-academy' ); ?></span> <?php echo esc_html( $opponent ); ?></h3>
 	<?php if ( $date ) : ?>
@@ -17,7 +20,13 @@ $teamsnap = ffc_get_field( 'teamsnap_event_url', get_the_ID() );
 	<?php endif; ?>
 	<p itemprop="location"><?php echo esc_html( trim( $location . ( $field ? ' - ' . $field : '' ) ) ); ?></p>
 	<div class="card-actions">
-		<?php if ( $teamsnap ) : ?><a href="<?php echo esc_url( $teamsnap ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'TeamSnap', 'ffc-academy' ); ?></a><?php endif; ?>
-		<?php if ( $maps ) : ?><a href="<?php echo esc_url( $maps ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Map', 'ffc-academy' ); ?></a><?php endif; ?>
+		<?php
+		if ( $teamsnap ) :
+			?>
+			<a href="<?php echo esc_url( $teamsnap ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'TeamSnap', 'ffc-academy' ); ?></a><?php endif; ?>
+		<?php
+		if ( $maps ) :
+			?>
+			<a href="<?php echo esc_url( $maps ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Map', 'ffc-academy' ); ?></a><?php endif; ?>
 	</div>
 </article>

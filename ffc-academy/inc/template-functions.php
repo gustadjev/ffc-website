@@ -29,14 +29,14 @@ function ffc_upload_asset_url( string $relative_path, string $fallback = '' ): s
 
 function ffc_theme_image( string $name = 'hero' ): string {
 	$images = array(
-		'hero'       => '2023/11/pexels-robo-michalec-9508142-1536x1024.jpg',
-		'training'   => '2023/10/pexels-kampus-production-8941650-1536x1024.jpg',
-		'match'      => '2023/11/pexels-lucas-andrade-3316948-1170x600.jpg',
-		'community'  => '2023/10/pexels-gillingham-town-14250916-1170x600.jpg',
-		'gallery_1'  => '2023/11/pexels-diego-santacruz-12616083-900x550.jpg',
-		'gallery_2'  => '2023/10/pexels-noelle-otto-906073-900x550.jpg',
-		'gallery_3'  => '2023/11/pexels-robo-michalec-9695668-900x550.jpg',
-		'gallery_4'  => '2023/10/pexels-lucas-andrade-3316948-1-1-900x550.jpg',
+		'hero'      => '2023/11/pexels-robo-michalec-9508142-1536x1024.jpg',
+		'training'  => '2023/10/pexels-kampus-production-8941650-1536x1024.jpg',
+		'match'     => '2023/11/pexels-lucas-andrade-3316948-1170x600.jpg',
+		'community' => '2023/10/pexels-gillingham-town-14250916-1170x600.jpg',
+		'gallery_1' => '2023/11/pexels-diego-santacruz-12616083-900x550.jpg',
+		'gallery_2' => '2023/10/pexels-noelle-otto-906073-900x550.jpg',
+		'gallery_3' => '2023/11/pexels-robo-michalec-9695668-900x550.jpg',
+		'gallery_4' => '2023/10/pexels-lucas-andrade-3316948-1-1-900x550.jpg',
 	);
 
 	return ffc_upload_asset_url( $images[ $name ] ?? $images['hero'], FFC_THEME_URI . '/assets/images/ffc-logo-placeholder.svg' );
@@ -161,7 +161,7 @@ function ffc_render_builder_page( int $post_id = 0 ): void {
 		return;
 	}
 
-	$previous_post = $GLOBALS['post'] ?? null;
+	$previous_post   = $GLOBALS['post'] ?? null;
 	$GLOBALS['post'] = $page; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 	setup_postdata( $page );
 	?>
@@ -186,7 +186,7 @@ function ffc_page_content_section( int $post_id = 0, string $class = 'section pa
 		return;
 	}
 
-	$previous_post = $GLOBALS['post'] ?? null;
+	$previous_post   = $GLOBALS['post'] ?? null;
 	$GLOBALS['post'] = $page; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 	setup_postdata( $page );
 	?>
@@ -255,7 +255,12 @@ function ffc_default_menu(): void {
 }
 
 function ffc_tax_filter_select( string $taxonomy, string $name, string $label ): string {
-	$terms = get_terms( array( 'taxonomy' => $taxonomy, 'hide_empty' => true ) );
+	$terms = get_terms(
+		array(
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => true,
+		)
+	);
 	if ( is_wp_error( $terms ) || empty( $terms ) ) {
 		return '';
 	}
@@ -329,7 +334,10 @@ function ffc_apply_archive_filters( WP_Query $query ): void {
 	$tax_query  = array();
 	$meta_query = array();
 
-	foreach ( array( 'ffc_team' => 'team', 'ffc_season' => 'season' ) as $taxonomy => $param ) {
+	foreach ( array(
+		'ffc_team'   => 'team',
+		'ffc_season' => 'season',
+	) as $taxonomy => $param ) {
 		if ( ! empty( $_GET[ $param ] ) ) {
 			$tax_query[] = array(
 				'taxonomy' => $taxonomy,

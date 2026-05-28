@@ -7,18 +7,27 @@
 
 get_header();
 
-$page_id  = get_queried_object_id();
+$page_id = get_queried_object_id();
 if ( ffc_is_builder_page( $page_id ) ) {
 	ffc_render_builder_page( $page_id );
 	get_footer();
 	return;
 }
 
-$tryouts  = ffc_archive_link_by_slug( 'tryouts', home_url( '/tryouts/' ) );
-$methods  = array(
-	array( 'title' => __( 'Tryouts', 'ffc-academy' ), 'copy' => __( 'Player evaluations and age-group placement.', 'ffc-academy' ) ),
-	array( 'title' => __( 'TeamSnap', 'ffc-academy' ), 'copy' => __( 'Schedules, rosters, and family logistics.', 'ffc-academy' ) ),
-	array( 'title' => __( 'Sponsors', 'ffc-academy' ), 'copy' => __( 'Partnerships supporting youth development.', 'ffc-academy' ) ),
+$tryouts = ffc_archive_link_by_slug( 'tryouts', home_url( '/tryouts/' ) );
+$methods = array(
+	array(
+		'title' => __( 'Tryouts', 'ffc-academy' ),
+		'copy'  => __( 'Player evaluations and age-group placement.', 'ffc-academy' ),
+	),
+	array(
+		'title' => __( 'TeamSnap', 'ffc-academy' ),
+		'copy'  => __( 'Schedules, rosters, and family logistics.', 'ffc-academy' ),
+	),
+	array(
+		'title' => __( 'Sponsors', 'ffc-academy' ),
+		'copy'  => __( 'Partnerships supporting youth development.', 'ffc-academy' ),
+	),
 );
 ?>
 <main id="primary" class="site-main">
@@ -61,21 +70,21 @@ $methods  = array(
 				if ( $form_shortcode ) {
 					echo do_shortcode( $form_shortcode );
 				} else {
-				while ( have_posts() ) :
-					the_post();
-					$content = get_the_content();
-					if ( has_shortcode( $content, 'contact-form-7' ) ) {
-						echo do_shortcode( preg_replace( '/.*(\[contact-form-7[^\]]+\]).*/s', '$1', $content ) );
-					} else {
-						?>
+					while ( have_posts() ) :
+						the_post();
+						$content = get_the_content();
+						if ( has_shortcode( $content, 'contact-form-7' ) ) {
+							echo do_shortcode( preg_replace( '/.*(\[contact-form-7[^\]]+\]).*/s', '$1', $content ) );
+						} else {
+							?>
 						<form class="tryout-form contact-fallback-form">
 							<label><?php esc_html_e( 'Name', 'ffc-academy' ); ?><input type="text"></label>
 							<label><?php esc_html_e( 'Email', 'ffc-academy' ); ?><input type="email"></label>
 							<label><?php esc_html_e( 'Message', 'ffc-academy' ); ?><textarea rows="5"></textarea></label>
 							<button class="button button--accent" type="button"><?php esc_html_e( 'Send Message', 'ffc-academy' ); ?></button>
 						</form>
-						<?php
-					}
+							<?php
+						}
 				endwhile;
 				}
 				?>

@@ -1,8 +1,10 @@
 <?php
-$gallery = new WP_Query( array(
-	'post_type'      => 'ffc_gallery',
-	'posts_per_page' => 6,
-) );
+$gallery = new WP_Query(
+	array(
+		'post_type'      => 'ffc_gallery',
+		'posts_per_page' => 6,
+	)
+);
 ?>
 <section class="section section--ivory">
 	<div class="container section-heading">
@@ -12,9 +14,15 @@ $gallery = new WP_Query( array(
 	</div>
 	<div class="container gallery-grid">
 		<?php if ( $gallery->have_posts() ) : ?>
-			<?php while ( $gallery->have_posts() ) : $gallery->the_post(); ?>
+			<?php
+			while ( $gallery->have_posts() ) :
+				$gallery->the_post();
+				?>
 				<?php get_template_part( 'template-parts/card', 'gallery' ); ?>
-			<?php endwhile; wp_reset_postdata(); ?>
+				<?php
+			endwhile;
+			wp_reset_postdata();
+			?>
 		<?php else : ?>
 			<?php
 			$fallback_gallery = array(

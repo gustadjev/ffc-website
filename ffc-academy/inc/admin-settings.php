@@ -11,34 +11,118 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function ffc_native_settings_fields(): array {
 	return array(
-		'tryout_page_url'             => array( 'label' => __( 'Tryout Page URL', 'ffc-academy' ), 'type' => 'url' ),
-		'utility_bar_text'            => array( 'label' => __( 'Top Bar Text', 'ffc-academy' ), 'type' => 'text' ),
-		'utility_tryouts_label'       => array( 'label' => __( 'Top Bar Tryouts Label', 'ffc-academy' ), 'type' => 'text' ),
-		'utility_schedule_label'      => array( 'label' => __( 'Top Bar Schedule Label', 'ffc-academy' ), 'type' => 'text' ),
-		'utility_teamsnap_label'      => array( 'label' => __( 'Top Bar TeamSnap Label', 'ffc-academy' ), 'type' => 'text' ),
-		'header_cta_label'            => array( 'label' => __( 'Header CTA Label', 'ffc-academy' ), 'type' => 'text' ),
-		'footer_cta_one_label'        => array( 'label' => __( 'Footer CTA 1 Label', 'ffc-academy' ), 'type' => 'text' ),
-		'footer_cta_one_url'          => array( 'label' => __( 'Footer CTA 1 URL', 'ffc-academy' ), 'type' => 'url' ),
-		'footer_cta_two_label'        => array( 'label' => __( 'Footer CTA 2 Label', 'ffc-academy' ), 'type' => 'text' ),
-		'footer_cta_two_url'          => array( 'label' => __( 'Footer CTA 2 URL', 'ffc-academy' ), 'type' => 'url' ),
-		'footer_brand_copy'           => array( 'label' => __( 'Footer Brand Copy', 'ffc-academy' ), 'type' => 'textarea' ),
-		'footer_teamsnap_label'       => array( 'label' => __( 'Footer TeamSnap Label', 'ffc-academy' ), 'type' => 'text' ),
-		'footer_contact_heading'      => array( 'label' => __( 'Footer Contact Heading', 'ffc-academy' ), 'type' => 'text' ),
-		'footer_mailing_label'        => array( 'label' => __( 'Footer Mailing Label', 'ffc-academy' ), 'type' => 'text' ),
-		'footer_mailing_address'      => array( 'label' => __( 'Footer Mailing Address', 'ffc-academy' ), 'type' => 'textarea' ),
-		'footer_training_label'       => array( 'label' => __( 'Footer Training Label', 'ffc-academy' ), 'type' => 'text' ),
-		'footer_training_text'        => array( 'label' => __( 'Footer Training Text', 'ffc-academy' ), 'type' => 'textarea' ),
-		'footer_copyright_note'       => array( 'label' => __( 'Footer Copyright Note', 'ffc-academy' ), 'type' => 'text' ),
-		'teamsnap_public_url'         => array( 'label' => __( 'TeamSnap Main Team URL', 'ffc-academy' ), 'type' => 'url' ),
-		'teamsnap_schedule_url'       => array( 'label' => __( 'TeamSnap Schedule URL', 'ffc-academy' ), 'type' => 'url' ),
-		'teamsnap_roster_url'         => array( 'label' => __( 'TeamSnap Roster URL', 'ffc-academy' ), 'type' => 'url' ),
-		'teamsnap_registration_url'   => array( 'label' => __( 'TeamSnap Registration URL', 'ffc-academy' ), 'type' => 'url' ),
-		'teamsnap_app_url'            => array( 'label' => __( 'TeamSnap App / Login URL', 'ffc-academy' ), 'type' => 'url' ),
-		'teamsnap_embed_code'         => array( 'label' => __( 'TeamSnap Embed Code', 'ffc-academy' ), 'type' => 'textarea' ),
-		'instagram_url'               => array( 'label' => __( 'Instagram URL', 'ffc-academy' ), 'type' => 'url' ),
-		'facebook_url'                => array( 'label' => __( 'Facebook URL', 'ffc-academy' ), 'type' => 'url' ),
-		'youtube_url'                 => array( 'label' => __( 'YouTube URL', 'ffc-academy' ), 'type' => 'url' ),
-		'tiktok_url'                  => array( 'label' => __( 'TikTok URL', 'ffc-academy' ), 'type' => 'url' ),
+		'tryout_page_url'           => array(
+			'label' => __( 'Tryout Page URL', 'ffc-academy' ),
+			'type'  => 'url',
+		),
+		'utility_bar_text'          => array(
+			'label' => __( 'Top Bar Text', 'ffc-academy' ),
+			'type'  => 'text',
+		),
+		'utility_tryouts_label'     => array(
+			'label' => __( 'Top Bar Tryouts Label', 'ffc-academy' ),
+			'type'  => 'text',
+		),
+		'utility_schedule_label'    => array(
+			'label' => __( 'Top Bar Schedule Label', 'ffc-academy' ),
+			'type'  => 'text',
+		),
+		'utility_teamsnap_label'    => array(
+			'label' => __( 'Top Bar TeamSnap Label', 'ffc-academy' ),
+			'type'  => 'text',
+		),
+		'header_cta_label'          => array(
+			'label' => __( 'Header CTA Label', 'ffc-academy' ),
+			'type'  => 'text',
+		),
+		'footer_cta_one_label'      => array(
+			'label' => __( 'Footer CTA 1 Label', 'ffc-academy' ),
+			'type'  => 'text',
+		),
+		'footer_cta_one_url'        => array(
+			'label' => __( 'Footer CTA 1 URL', 'ffc-academy' ),
+			'type'  => 'url',
+		),
+		'footer_cta_two_label'      => array(
+			'label' => __( 'Footer CTA 2 Label', 'ffc-academy' ),
+			'type'  => 'text',
+		),
+		'footer_cta_two_url'        => array(
+			'label' => __( 'Footer CTA 2 URL', 'ffc-academy' ),
+			'type'  => 'url',
+		),
+		'footer_brand_copy'         => array(
+			'label' => __( 'Footer Brand Copy', 'ffc-academy' ),
+			'type'  => 'textarea',
+		),
+		'footer_teamsnap_label'     => array(
+			'label' => __( 'Footer TeamSnap Label', 'ffc-academy' ),
+			'type'  => 'text',
+		),
+		'footer_contact_heading'    => array(
+			'label' => __( 'Footer Contact Heading', 'ffc-academy' ),
+			'type'  => 'text',
+		),
+		'footer_mailing_label'      => array(
+			'label' => __( 'Footer Mailing Label', 'ffc-academy' ),
+			'type'  => 'text',
+		),
+		'footer_mailing_address'    => array(
+			'label' => __( 'Footer Mailing Address', 'ffc-academy' ),
+			'type'  => 'textarea',
+		),
+		'footer_training_label'     => array(
+			'label' => __( 'Footer Training Label', 'ffc-academy' ),
+			'type'  => 'text',
+		),
+		'footer_training_text'      => array(
+			'label' => __( 'Footer Training Text', 'ffc-academy' ),
+			'type'  => 'textarea',
+		),
+		'footer_copyright_note'     => array(
+			'label' => __( 'Footer Copyright Note', 'ffc-academy' ),
+			'type'  => 'text',
+		),
+		'teamsnap_public_url'       => array(
+			'label' => __( 'TeamSnap Main Team URL', 'ffc-academy' ),
+			'type'  => 'url',
+		),
+		'teamsnap_schedule_url'     => array(
+			'label' => __( 'TeamSnap Schedule URL', 'ffc-academy' ),
+			'type'  => 'url',
+		),
+		'teamsnap_roster_url'       => array(
+			'label' => __( 'TeamSnap Roster URL', 'ffc-academy' ),
+			'type'  => 'url',
+		),
+		'teamsnap_registration_url' => array(
+			'label' => __( 'TeamSnap Registration URL', 'ffc-academy' ),
+			'type'  => 'url',
+		),
+		'teamsnap_app_url'          => array(
+			'label' => __( 'TeamSnap App / Login URL', 'ffc-academy' ),
+			'type'  => 'url',
+		),
+		'teamsnap_embed_code'       => array(
+			'label' => __( 'TeamSnap Embed Code', 'ffc-academy' ),
+			'type'  => 'textarea',
+		),
+		'instagram_url'             => array(
+			'label' => __( 'Instagram URL', 'ffc-academy' ),
+			'type'  => 'url',
+		),
+		'facebook_url'              => array(
+			'label' => __( 'Facebook URL', 'ffc-academy' ),
+			'type'  => 'url',
+		),
+		'youtube_url'               => array(
+			'label' => __( 'YouTube URL', 'ffc-academy' ),
+			'type'  => 'url',
+		),
+		'tiktok_url'                => array(
+			'label' => __( 'TikTok URL', 'ffc-academy' ),
+			'type'  => 'url',
+		),
 	);
 }
 

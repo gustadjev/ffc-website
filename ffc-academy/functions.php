@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FFC_THEME_VERSION', '1.1.9' );
+define( 'FFC_THEME_VERSION', '1.2.0' );
 define( 'FFC_THEME_DIR', get_template_directory() );
 define( 'FFC_THEME_URI', get_template_directory_uri() );
 
@@ -27,23 +27,28 @@ function ffc_theme_setup(): void {
 
 	add_theme_support( 'title-tag' );
 	add_theme_support( 'post-thumbnails' );
-	add_theme_support( 'custom-logo', array(
-		'height'      => 220,
-		'width'       => 220,
-		'flex-height' => true,
-		'flex-width'  => true,
-	) );
+	add_theme_support(
+		'custom-logo',
+		array(
+			'height'      => 220,
+			'width'       => 220,
+			'flex-height' => true,
+			'flex-width'  => true,
+		)
+	);
 	add_theme_support( 'html5', array( 'search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script' ) );
 	add_theme_support( 'align-wide' );
 	add_theme_support( 'responsive-embeds' );
 	add_theme_support( 'editor-styles' );
 	add_editor_style( 'assets/css/editor.css' );
 
-	register_nav_menus( array(
-		'primary' => __( 'Primary Navigation', 'ffc-academy' ),
-		'footer'  => __( 'Footer Navigation', 'ffc-academy' ),
-		'social'  => __( 'Social Links', 'ffc-academy' ),
-	) );
+	register_nav_menus(
+		array(
+			'primary' => __( 'Primary Navigation', 'ffc-academy' ),
+			'footer'  => __( 'Footer Navigation', 'ffc-academy' ),
+			'social'  => __( 'Social Links', 'ffc-academy' ),
+		)
+	);
 
 	add_image_size( 'ffc-hero', 1920, 1080, true );
 	add_image_size( 'ffc-card', 720, 520, true );
@@ -74,10 +79,14 @@ function ffc_enqueue_assets(): void {
 		true
 	);
 
-	wp_localize_script( 'ffc-theme', 'ffcTheme', array(
-		'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-		'nonce'   => wp_create_nonce( 'ffc_theme_nonce' ),
-	) );
+	wp_localize_script(
+		'ffc-theme',
+		'ffcTheme',
+		array(
+			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			'nonce'   => wp_create_nonce( 'ffc_theme_nonce' ),
+		)
+	);
 }
 
 add_action( 'wp_head', 'ffc_add_site_schema' );

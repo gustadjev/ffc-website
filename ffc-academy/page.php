@@ -8,7 +8,10 @@
 get_header();
 ?>
 <main id="primary" class="site-main">
-	<?php while ( have_posts() ) : the_post(); ?>
+	<?php
+	while ( have_posts() ) :
+		the_post();
+		?>
 		<section class="page-hero">
 			<div class="container">
 				<p class="eyebrow"><?php esc_html_e( 'F.F.C. Academy', 'ffc-academy' ); ?></p>

@@ -1,8 +1,10 @@
 <?php
-$sponsors = new WP_Query( array(
-	'post_type'      => 'ffc_sponsor',
-	'posts_per_page' => 6,
-) );
+$sponsors = new WP_Query(
+	array(
+		'post_type'      => 'ffc_sponsor',
+		'posts_per_page' => 6,
+	)
+);
 ?>
 <section class="section sponsor-section">
 	<div class="container section-heading">
@@ -12,9 +14,15 @@ $sponsors = new WP_Query( array(
 	</div>
 	<div class="container sponsor-grid">
 		<?php if ( $sponsors->have_posts() ) : ?>
-			<?php while ( $sponsors->have_posts() ) : $sponsors->the_post(); ?>
+			<?php
+			while ( $sponsors->have_posts() ) :
+				$sponsors->the_post();
+				?>
 				<?php get_template_part( 'template-parts/card', 'sponsor' ); ?>
-			<?php endwhile; wp_reset_postdata(); ?>
+				<?php
+			endwhile;
+			wp_reset_postdata();
+			?>
 		<?php else : ?>
 			<?php foreach ( array( 'Platinum Partner', 'Community Sponsor', 'Training Partner' ) as $tier ) : ?>
 				<article class="sponsor-card sponsor-card--placeholder reveal">

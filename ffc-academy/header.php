@@ -39,12 +39,14 @@
 		</button>
 		<nav class="primary-nav" aria-label="<?php esc_attr_e( 'Primary navigation', 'ffc-academy' ); ?>" data-primary-nav>
 			<?php
-			wp_nav_menu( array(
-				'theme_location' => 'primary',
-				'menu_id'        => 'primary-menu',
-				'container'      => false,
-				'fallback_cb'    => 'ffc_default_menu',
-			) );
+			wp_nav_menu(
+				array(
+					'theme_location' => 'primary',
+					'menu_id'        => 'primary-menu',
+					'container'      => false,
+					'fallback_cb'    => 'ffc_default_menu',
+				)
+			);
 			?>
 		</nav>
 		<a class="header-cta" href="<?php echo esc_url( ffc_archive_link_by_slug( 'tryouts', home_url( '/tryouts/' ) ) ); ?>"><?php echo esc_html( ffc_option( 'header_cta_label', __( 'Tryouts', 'ffc-academy' ) ) ); ?></a>
