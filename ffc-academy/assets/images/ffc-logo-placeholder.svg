@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360" role="img" aria-labelledby="title">
+  <title id="title">F.F.C. logo placeholder</title>
+  <rect width="360" height="360" rx="180" fill="#05133D"/>
+  <path d="M180 38c55 38 91 88 91 147 0 68-45 112-91 137-46-25-91-69-91-137 0-59 36-109 91-147Z" fill="none" stroke="#E4A0BD" stroke-width="12"/>
+  <circle cx="180" cy="92" r="31" fill="#F5E9F0"/>
+  <path d="M111 167c38-14 63-39 69-75 6 36 31 61 69 75-36 9-61 31-69 67-8-36-33-58-69-67Z" fill="#E4A0BD"/>
+  <text x="180" y="292" text-anchor="middle" fill="#F5E9F0" font-family="Georgia, serif" font-size="58" font-weight="700">F.F.C.</text>
+</svg>

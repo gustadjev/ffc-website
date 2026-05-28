@@ -1,0 +1,23 @@
+.DS_Store
+Thumbs.db
+
+# Local/editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
+
+# Dependency/build output if added later
+node_modules/
+vendor/
+dist/
+build/
+
+# WordPress/package archives
+*.zip
+*.tar.gz

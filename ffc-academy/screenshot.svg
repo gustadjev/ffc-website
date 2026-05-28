@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
+  <rect width="1200" height="900" fill="#05133D"/>
+  <path d="M0 0h1200v900H0z" fill="#05133D"/>
+  <path d="M140 190c155-75 295-112 420-112 204 0 371 83 500 249 37 47 70 104 100 170v403H0V310c44-46 91-86 140-120z" fill="#0B1D56"/>
+  <circle cx="918" cy="214" r="190" fill="#E4A0BD" opacity=".2"/>
+  <text x="90" y="410" fill="#F5E9F0" font-family="Impact, sans-serif" font-size="120">F.F.C.</text>
+  <text x="90" y="520" fill="#fff" font-family="Impact, sans-serif" font-size="82">RISE TOGETHER</text>
+  <rect x="90" y="580" width="220" height="64" rx="8" fill="#E4A0BD"/>
+  <rect x="330" y="580" width="200" height="64" rx="8" fill="#F5E9F0"/>
+  <rect x="90" y="720" width="300" height="96" rx="8" fill="#F5F5F5"/>
+  <rect x="450" y="720" width="300" height="96" rx="8" fill="#F5F5F5"/>
+  <rect x="810" y="720" width="300" height="96" rx="8" fill="#F5F5F5"/>
+</svg>

@@ -1,0 +1,22 @@
+body {
+	color: #101827;
+	font-family: Inter, system-ui, sans-serif;
+}
+
+.editor-styles-wrapper h1,
+.editor-styles-wrapper h2,
+.editor-styles-wrapper h3 {
+	color: #05133d;
+	font-family: "Bebas Neue", Impact, sans-serif;
+	letter-spacing: 0;
+}
+
+.is-style-ffc-navy-band {
+	background: #05133d;
+	color: #fff;
+}
+
+.is-style-ffc-rose-gold .wp-block-button__link {
+	background: #e4a0bd;
+	color: #05133d;
+}
