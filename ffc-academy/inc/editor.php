@@ -24,9 +24,42 @@ function ffc_is_theme_managed_page( $post ): bool {
 	return $front_page_id === (int) $post->ID || in_array( $post->post_name, $managed_slugs, true );
 }
 
+function ffc_structured_content_post_types(): array {
+	return array(
+		'ffc_game',
+		'ffc_score',
+		'ffc_coach',
+		'ffc_announcement',
+		'ffc_sponsor',
+		'ffc_gallery',
+		'ffc_tryout',
+	);
+}
+
+function ffc_is_structured_content_post( $post ): bool {
+	if ( is_numeric( $post ) ) {
+		$post = get_post( (int) $post );
+	}
+
+	return $post instanceof WP_Post && in_array( $post->post_type, ffc_structured_content_post_types(), true );
+}
+
+function ffc_is_structured_content_post_type( string $post_type ): bool {
+	return in_array( $post_type, ffc_structured_content_post_types(), true );
+}
+
 add_filter( 'use_block_editor_for_post', 'ffc_use_classic_editor_for_theme_pages', 9999, 2 );
 function ffc_use_classic_editor_for_theme_pages( bool $use_block_editor, WP_Post $post ): bool {
-	if ( ffc_is_theme_managed_page( $post ) ) {
+	if ( ffc_is_theme_managed_page( $post ) || ffc_is_structured_content_post( $post ) ) {
+		return false;
+	}
+
+	return $use_block_editor;
+}
+
+add_filter( 'use_block_editor_for_post_type', 'ffc_use_classic_editor_for_structured_post_types', 9999, 2 );
+function ffc_use_classic_editor_for_structured_post_types( bool $use_block_editor, string $post_type ): bool {
+	if ( ffc_is_structured_content_post_type( $post_type ) ) {
 		return false;
 	}
 
@@ -35,7 +68,16 @@ function ffc_use_classic_editor_for_theme_pages( bool $use_block_editor, WP_Post
 
 add_filter( 'gutenberg_can_edit_post', 'ffc_disable_gutenberg_for_theme_pages', 9999, 2 );
 function ffc_disable_gutenberg_for_theme_pages( bool $can_edit, WP_Post $post ): bool {
-	if ( ffc_is_theme_managed_page( $post ) ) {
+	if ( ffc_is_theme_managed_page( $post ) || ffc_is_structured_content_post( $post ) ) {
+		return false;
+	}
+
+	return $can_edit;
+}
+
+add_filter( 'gutenberg_can_edit_post_type', 'ffc_disable_gutenberg_for_structured_post_types', 9999, 2 );
+function ffc_disable_gutenberg_for_structured_post_types( bool $can_edit, string $post_type ): bool {
+	if ( ffc_is_structured_content_post_type( $post_type ) ) {
 		return false;
 	}
 
@@ -50,7 +92,7 @@ function ffc_force_classic_editor_for_theme_pages(): void {
 	}
 
 	$post_id = isset( $_GET['post'] ) ? absint( wp_unslash( $_GET['post'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	if ( ! $post_id || ! ffc_is_theme_managed_page( $post_id ) ) {
+	if ( ! $post_id || ( ! ffc_is_theme_managed_page( $post_id ) && ! ffc_is_structured_content_post( $post_id ) ) ) {
 		return;
 	}
 
@@ -79,13 +121,45 @@ function ffc_clear_builder_mode_for_theme_pages(): void {
 	}
 
 	$post_id = isset( $_GET['post'] ) ? absint( wp_unslash( $_GET['post'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	if ( ! $post_id || ! ffc_is_theme_managed_page( $post_id ) ) {
+	if ( ! $post_id || ( ! ffc_is_theme_managed_page( $post_id ) && ! ffc_is_structured_content_post( $post_id ) ) ) {
 		return;
 	}
 
 	if ( 'builder' === (string) get_post_meta( $post_id, '_elementor_edit_mode', true ) ) {
 		delete_post_meta( $post_id, '_elementor_edit_mode' );
 	}
+}
+
+add_action( 'add_meta_boxes', 'ffc_add_structured_content_editing_help', 10, 2 );
+function ffc_add_structured_content_editing_help( string $post_type, WP_Post $post ): void {
+	if ( ! ffc_is_structured_content_post_type( $post_type ) ) {
+		return;
+	}
+
+	add_meta_box(
+		'ffc-structured-content-editing-help',
+		__( 'F.F.C. Content Guide', 'ffc-academy' ),
+		'ffc_render_structured_content_editing_help',
+		$post_type,
+		'side',
+		'high'
+	);
+}
+
+function ffc_render_structured_content_editing_help( WP_Post $post ): void {
+	$guides = array(
+		'ffc_game'         => __( 'Add the opponent, date/time, location, field, home/away status, map link, and TeamSnap event link in Game Details. Use the title as an internal/admin-friendly game name.', 'ffc-academy' ),
+		'ffc_score'        => __( 'Add the final score, result, recap details, highlights link, season, and team in Score Details. The excerpt/content can be used for match recap copy.', 'ffc-academy' ),
+		'ffc_coach'        => __( 'Add the coach role, certifications, philosophy, contact email, and profile photo. The main editor is for the coach biography.', 'ffc-academy' ),
+		'ffc_announcement' => __( 'Use the title, excerpt, featured image, and main editor for club announcements, weather notices, tournament updates, and practice updates.', 'ffc-academy' ),
+		'ffc_sponsor'      => __( 'Add sponsor website, CTA label, tier, logo/featured image, and sponsor description. Mark Featured Sponsor when it should be highlighted.', 'ffc-academy' ),
+		'ffc_gallery'      => __( 'Choose the media type, add a photo or video URL, assign a gallery category, and use the title as the public gallery caption.', 'ffc-academy' ),
+		'ffc_tryout'       => __( 'Use Registration Details to review or manually add player tryout submissions. Public form submissions are stored here automatically.', 'ffc-academy' ),
+	);
+	?>
+	<p><?php echo esc_html( $guides[ $post->post_type ] ?? __( 'Use the fields on this screen to manage structured F.F.C. website content.', 'ffc-academy' ) ); ?></p>
+	<p><?php esc_html_e( 'These content types use the classic WordPress editor so custom fields stay visible and reliable.', 'ffc-academy' ); ?></p>
+	<?php
 }
 
 add_action( 'add_meta_boxes_page', 'ffc_add_theme_page_editing_help' );
@@ -125,21 +199,23 @@ add_action( 'admin_head-post.php', 'ffc_hide_builder_button_for_theme_pages' );
 add_action( 'admin_head-post-new.php', 'ffc_hide_builder_button_for_theme_pages' );
 function ffc_hide_builder_button_for_theme_pages(): void {
 	$screen = get_current_screen();
-	if ( ! $screen || 'page' !== $screen->post_type ) {
+	if ( ! $screen || ( 'page' !== $screen->post_type && ! ffc_is_structured_content_post_type( (string) $screen->post_type ) ) ) {
 		return;
 	}
 
 	$post_id = isset( $_GET['post'] ) ? absint( wp_unslash( $_GET['post'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	if ( ! $post_id || ! ffc_is_theme_managed_page( $post_id ) ) {
+	if ( 'page' === $screen->post_type && ( ! $post_id || ! ffc_is_theme_managed_page( $post_id ) ) ) {
 		return;
 	}
 	?>
 	<style>
-		.ffc-theme-managed-page #post-body-content > .acf-postbox {
+		.ffc-theme-managed-page #post-body-content > .acf-postbox,
+		.ffc-structured-content #post-body-content > .acf-postbox {
 			margin: 20px 0;
 		}
 
-		.ffc-theme-managed-page #post-body-content > .acf-postbox .inside {
+		.ffc-theme-managed-page #post-body-content > .acf-postbox .inside,
+		.ffc-structured-content #post-body-content > .acf-postbox .inside {
 			margin: 0;
 		}
 
@@ -161,7 +237,7 @@ function ffc_hide_builder_button_for_theme_pages(): void {
 add_filter( 'admin_body_class', 'ffc_add_theme_managed_admin_body_class' );
 function ffc_add_theme_managed_admin_body_class( string $classes ): string {
 	$screen = get_current_screen();
-	if ( ! $screen || 'page' !== $screen->post_type ) {
+	if ( ! $screen || ( 'page' !== $screen->post_type && ! ffc_is_structured_content_post_type( (string) $screen->post_type ) ) ) {
 		return $classes;
 	}
 
@@ -169,19 +245,23 @@ function ffc_add_theme_managed_admin_body_class( string $classes ): string {
 	if ( $post_id && ffc_is_theme_managed_page( $post_id ) ) {
 		$classes .= ' ffc-theme-managed-page';
 	}
+	if ( ffc_is_structured_content_post_type( (string) $screen->post_type ) ) {
+		$classes .= ' ffc-structured-content';
+	}
 
 	return $classes;
 }
 
 add_action( 'admin_footer-post.php', 'ffc_move_theme_fields_into_main_column' );
+add_action( 'admin_footer-post-new.php', 'ffc_move_theme_fields_into_main_column' );
 function ffc_move_theme_fields_into_main_column(): void {
 	$screen = get_current_screen();
-	if ( ! $screen || 'page' !== $screen->post_type ) {
+	if ( ! $screen || ( 'page' !== $screen->post_type && ! ffc_is_structured_content_post_type( (string) $screen->post_type ) ) ) {
 		return;
 	}
 
 	$post_id = isset( $_GET['post'] ) ? absint( wp_unslash( $_GET['post'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	if ( ! $post_id || ! ffc_is_theme_managed_page( $post_id ) ) {
+	if ( 'page' === $screen->post_type && ( ! $post_id || ! ffc_is_theme_managed_page( $post_id ) ) ) {
 		return;
 	}
 	?>
@@ -197,7 +277,13 @@ function ffc_move_theme_fields_into_main_column(): void {
 					'acf-group_ffc_homepage',
 					'acf-group_ffc_about_page',
 					'acf-group_ffc_contact_page',
-					'acf-group_ffc_tryout_page'
+					'acf-group_ffc_tryout_page',
+					'acf-group_ffc_game_details',
+					'acf-group_ffc_score_details',
+					'acf-group_ffc_people_media',
+					'acf-group_ffc_gallery_details',
+					'acf-group_ffc_sponsor_details',
+					'acf-group_ffc_tryout_registration_details'
 				];
 
 				if (!content) {

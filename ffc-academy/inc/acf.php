@@ -211,6 +211,89 @@ function ffc_register_acf_fields(): void {
 
 	acf_add_local_field_group(
 		array(
+			'key'      => 'group_ffc_tryout_registration_details',
+			'title'    => __( 'Tryout Registration Details', 'ffc-academy' ),
+			'fields'   => ffc_tryout_registration_fields(),
+			'location' => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'ffc_tryout',
+					),
+				),
+			),
+		)
+	);
+
+	acf_add_local_field_group(
+		array(
+			'key'      => 'group_ffc_team_term_details',
+			'title'    => __( 'Team Details', 'ffc-academy' ),
+			'fields'   => array(
+				ffc_acf_text( 'field_ffc_team_age_group', 'team_age_group', __( 'Age Group', 'ffc-academy' ) ),
+				ffc_acf_text( 'field_ffc_team_level', 'team_level', __( 'Competition Level', 'ffc-academy' ) ),
+				ffc_acf_text( 'field_ffc_team_coach_name', 'team_coach_name', __( 'Lead Coach Name', 'ffc-academy' ) ),
+				ffc_acf_url( 'field_ffc_team_teamsnap_url', 'team_teamsnap_url', __( 'TeamSnap Team URL', 'ffc-academy' ) ),
+				ffc_acf_textarea( 'field_ffc_team_notes', 'team_notes', __( 'Team Notes', 'ffc-academy' ) ),
+			),
+			'location' => array(
+				array(
+					array(
+						'param'    => 'taxonomy',
+						'operator' => '==',
+						'value'    => 'ffc_team',
+					),
+				),
+			),
+		)
+	);
+
+	acf_add_local_field_group(
+		array(
+			'key'      => 'group_ffc_season_term_details',
+			'title'    => __( 'Season Details', 'ffc-academy' ),
+			'fields'   => array(
+				ffc_acf_text( 'field_ffc_season_display_label', 'season_display_label', __( 'Display Label', 'ffc-academy' ) ),
+				ffc_acf_date( 'field_ffc_season_start_date', 'season_start_date', __( 'Start Date', 'ffc-academy' ) ),
+				ffc_acf_date( 'field_ffc_season_end_date', 'season_end_date', __( 'End Date', 'ffc-academy' ) ),
+				ffc_acf_true_false( 'field_ffc_season_is_current', 'season_is_current', __( 'Current Season', 'ffc-academy' ) ),
+				ffc_acf_textarea( 'field_ffc_season_notes', 'season_notes', __( 'Season Notes', 'ffc-academy' ) ),
+			),
+			'location' => array(
+				array(
+					array(
+						'param'    => 'taxonomy',
+						'operator' => '==',
+						'value'    => 'ffc_season',
+					),
+				),
+			),
+		)
+	);
+
+	acf_add_local_field_group(
+		array(
+			'key'      => 'group_ffc_sponsor_tier_term_details',
+			'title'    => __( 'Sponsor Tier Details', 'ffc-academy' ),
+			'fields'   => array(
+				ffc_acf_number( 'field_ffc_sponsor_tier_order', 'sponsor_tier_order', __( 'Display Order', 'ffc-academy' ) ),
+				ffc_acf_textarea( 'field_ffc_sponsor_tier_description', 'sponsor_tier_description', __( 'Tier Description', 'ffc-academy' ) ),
+			),
+			'location' => array(
+				array(
+					array(
+						'param'    => 'taxonomy',
+						'operator' => '==',
+						'value'    => 'ffc_sponsor_tier',
+					),
+				),
+			),
+		)
+	);
+
+	acf_add_local_field_group(
+		array(
 			'key'      => 'group_ffc_theme_options',
 			'title'    => __( 'F.F.C. Integration Settings', 'ffc-academy' ),
 			'fields'   => array(
@@ -705,6 +788,36 @@ function ffc_tryout_page_fields(): array {
 	return $fields;
 }
 
+function ffc_tryout_registration_fields(): array {
+	return array(
+		ffc_acf_select(
+			'field_ffc_tryout_registration_status',
+			'registration_status',
+			__( 'Registration Status', 'ffc-academy' ),
+			array(
+				'new'       => __( 'New', 'ffc-academy' ),
+				'contacted' => __( 'Contacted', 'ffc-academy' ),
+				'scheduled' => __( 'Scheduled', 'ffc-academy' ),
+				'completed' => __( 'Completed', 'ffc-academy' ),
+			)
+		),
+		ffc_acf_text( 'field_ffc_tryout_reg_player_first_name', 'player_first_name', __( 'Player First Name', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_reg_player_last_name', 'player_last_name', __( 'Player Last Name', 'ffc-academy' ) ),
+		ffc_acf_date( 'field_ffc_tryout_reg_date_of_birth', 'date_of_birth', __( 'Date of Birth', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_reg_age_group', 'age_group', __( 'Age Group', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_reg_preferred_position', 'preferred_position', __( 'Preferred Position', 'ffc-academy' ) ),
+		ffc_acf_date( 'field_ffc_tryout_reg_preferred_tryout_date', 'preferred_tryout_date', __( 'Preferred Tryout Date', 'ffc-academy' ) ),
+		ffc_acf_textarea( 'field_ffc_tryout_reg_previous_experience', 'previous_experience', __( 'Previous Experience', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_reg_parent_name', 'parent_name', __( 'Parent/Guardian Name', 'ffc-academy' ) ),
+		ffc_acf_email( 'field_ffc_tryout_reg_parent_email', 'parent_email', __( 'Parent/Guardian Email', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_reg_parent_phone', 'parent_phone', __( 'Parent/Guardian Phone', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_reg_emergency_contact', 'emergency_contact', __( 'Emergency Contact', 'ffc-academy' ) ),
+		ffc_acf_textarea( 'field_ffc_tryout_reg_medical_notes', 'medical_notes', __( 'Medical Notes', 'ffc-academy' ) ),
+		ffc_acf_textarea( 'field_ffc_tryout_reg_additional_comments', 'additional_comments', __( 'Additional Comments', 'ffc-academy' ) ),
+		ffc_acf_textarea( 'field_ffc_tryout_reg_staff_notes', 'staff_notes', __( 'Staff Notes', 'ffc-academy' ) ),
+	);
+}
+
 function ffc_acf_text( string $key, string $name, string $label, string $default = '' ): array {
 	$field = array(
 		'key'   => $key,
@@ -750,6 +863,28 @@ function ffc_acf_number( string $key, string $name, string $label ): array {
 		'label' => $label,
 		'name'  => $name,
 		'type'  => 'number',
+	);
+}
+
+function ffc_acf_date( string $key, string $name, string $label ): array {
+	return array(
+		'key'            => $key,
+		'label'          => $label,
+		'name'           => $name,
+		'type'           => 'date_picker',
+		'display_format' => 'M j, Y',
+		'return_format'  => 'Y-m-d',
+	);
+}
+
+function ffc_acf_true_false( string $key, string $name, string $label ): array {
+	return array(
+		'key'           => $key,
+		'label'         => $label,
+		'name'          => $name,
+		'type'          => 'true_false',
+		'ui'            => 1,
+		'default_value' => 0,
 	);
 }
 

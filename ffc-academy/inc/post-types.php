@@ -45,7 +45,7 @@ function ffc_register_content_types(): void {
 			'plural'   => __( 'Sponsors', 'ffc-academy' ),
 			'icon'     => 'dashicons-businessperson',
 			'slug'     => 'sponsors',
-			'supports' => array( 'title', 'editor', 'thumbnail', 'revisions' ),
+			'supports' => array( 'title', 'editor', 'excerpt', 'thumbnail', 'revisions' ),
 		),
 		'ffc_gallery'      => array(
 			'singular' => __( 'Gallery Item', 'ffc-academy' ),
@@ -70,12 +70,7 @@ function ffc_register_content_types(): void {
 		register_post_type(
 			$post_type,
 			array(
-				'labels'          => array(
-					'name'          => $args['plural'],
-					'singular_name' => $args['singular'],
-					'add_new_item'  => sprintf( __( 'Add New %s', 'ffc-academy' ), $args['singular'] ),
-					'edit_item'     => sprintf( __( 'Edit %s', 'ffc-academy' ), $args['singular'] ),
-				),
+				'labels'          => ffc_post_type_labels( $args['singular'], $args['plural'] ),
 				'public'          => $public,
 				'show_ui'         => true,
 				'show_in_rest'    => true,
@@ -92,11 +87,13 @@ function ffc_register_content_types(): void {
 		'ffc_team',
 		array( 'ffc_game', 'ffc_score', 'ffc_coach' ),
 		array(
-			'labels'       => array( 'name' => __( 'Teams', 'ffc-academy' ) ),
-			'public'       => true,
-			'show_in_rest' => true,
-			'hierarchical' => true,
-			'rewrite'      => array( 'slug' => 'team' ),
+			'labels'            => ffc_taxonomy_labels( __( 'Team', 'ffc-academy' ), __( 'Teams', 'ffc-academy' ) ),
+			'public'            => true,
+			'show_admin_column' => true,
+			'show_in_quick_edit' => true,
+			'show_in_rest'      => true,
+			'hierarchical'      => true,
+			'rewrite'           => array( 'slug' => 'team' ),
 		)
 	);
 
@@ -104,11 +101,13 @@ function ffc_register_content_types(): void {
 		'ffc_season',
 		array( 'ffc_game', 'ffc_score' ),
 		array(
-			'labels'       => array( 'name' => __( 'Seasons', 'ffc-academy' ) ),
-			'public'       => true,
-			'show_in_rest' => true,
-			'hierarchical' => false,
-			'rewrite'      => array( 'slug' => 'season' ),
+			'labels'            => ffc_taxonomy_labels( __( 'Season', 'ffc-academy' ), __( 'Seasons', 'ffc-academy' ) ),
+			'public'            => true,
+			'show_admin_column' => true,
+			'show_in_quick_edit' => true,
+			'show_in_rest'      => true,
+			'hierarchical'      => true,
+			'rewrite'           => array( 'slug' => 'season' ),
 		)
 	);
 
@@ -116,11 +115,13 @@ function ffc_register_content_types(): void {
 		'ffc_gallery_category',
 		'ffc_gallery',
 		array(
-			'labels'       => array( 'name' => __( 'Gallery Categories', 'ffc-academy' ) ),
-			'public'       => true,
-			'show_in_rest' => true,
-			'hierarchical' => true,
-			'rewrite'      => array( 'slug' => 'gallery-category' ),
+			'labels'            => ffc_taxonomy_labels( __( 'Gallery Category', 'ffc-academy' ), __( 'Gallery Categories', 'ffc-academy' ) ),
+			'public'            => true,
+			'show_admin_column' => true,
+			'show_in_quick_edit' => true,
+			'show_in_rest'      => true,
+			'hierarchical'      => true,
+			'rewrite'           => array( 'slug' => 'gallery-category' ),
 		)
 	);
 
@@ -128,11 +129,110 @@ function ffc_register_content_types(): void {
 		'ffc_sponsor_tier',
 		'ffc_sponsor',
 		array(
-			'labels'       => array( 'name' => __( 'Sponsor Tiers', 'ffc-academy' ) ),
-			'public'       => true,
-			'show_in_rest' => true,
-			'hierarchical' => true,
-			'rewrite'      => array( 'slug' => 'sponsor-tier' ),
+			'labels'            => ffc_taxonomy_labels( __( 'Sponsor Tier', 'ffc-academy' ), __( 'Sponsor Tiers', 'ffc-academy' ) ),
+			'public'            => true,
+			'show_admin_column' => true,
+			'show_in_quick_edit' => true,
+			'show_in_rest'      => true,
+			'hierarchical'      => true,
+			'rewrite'           => array( 'slug' => 'sponsor-tier' ),
 		)
+	);
+}
+
+function ffc_post_type_labels( string $singular, string $plural ): array {
+	return array(
+		'name'               => $plural,
+		'singular_name'      => $singular,
+		'add_new'            => __( 'Add New', 'ffc-academy' ),
+		'add_new_item'       => sprintf(
+			/* translators: %s: singular post type label. */
+			__( 'Add New %s', 'ffc-academy' ),
+			$singular
+		),
+		'edit_item'          => sprintf(
+			/* translators: %s: singular post type label. */
+			__( 'Edit %s', 'ffc-academy' ),
+			$singular
+		),
+		'new_item'           => sprintf(
+			/* translators: %s: singular post type label. */
+			__( 'New %s', 'ffc-academy' ),
+			$singular
+		),
+		'view_item'          => sprintf(
+			/* translators: %s: singular post type label. */
+			__( 'View %s', 'ffc-academy' ),
+			$singular
+		),
+		'search_items'       => sprintf(
+			/* translators: %s: plural post type label. */
+			__( 'Search %s', 'ffc-academy' ),
+			$plural
+		),
+		'not_found'          => sprintf(
+			/* translators: %s: plural post type label. */
+			__( 'No %s found', 'ffc-academy' ),
+			strtolower( $plural )
+		),
+		'not_found_in_trash' => sprintf(
+			/* translators: %s: plural post type label. */
+			__( 'No %s found in Trash', 'ffc-academy' ),
+			strtolower( $plural )
+		),
+		'all_items'          => sprintf(
+			/* translators: %s: plural post type label. */
+			__( 'All %s', 'ffc-academy' ),
+			$plural
+		),
+		'menu_name'          => $plural,
+	);
+}
+
+function ffc_taxonomy_labels( string $singular, string $plural ): array {
+	return array(
+		'name'              => $plural,
+		'singular_name'     => $singular,
+		'search_items'      => sprintf(
+			/* translators: %s: plural taxonomy label. */
+			__( 'Search %s', 'ffc-academy' ),
+			$plural
+		),
+		'all_items'         => sprintf(
+			/* translators: %s: plural taxonomy label. */
+			__( 'All %s', 'ffc-academy' ),
+			$plural
+		),
+		'parent_item'       => sprintf(
+			/* translators: %s: singular taxonomy label. */
+			__( 'Parent %s', 'ffc-academy' ),
+			$singular
+		),
+		'parent_item_colon' => sprintf(
+			/* translators: %s: singular taxonomy label. */
+			__( 'Parent %s:', 'ffc-academy' ),
+			$singular
+		),
+		'edit_item'         => sprintf(
+			/* translators: %s: singular taxonomy label. */
+			__( 'Edit %s', 'ffc-academy' ),
+			$singular
+		),
+		'update_item'       => sprintf(
+			/* translators: %s: singular taxonomy label. */
+			__( 'Update %s', 'ffc-academy' ),
+			$singular
+		),
+		'add_new_item'      => sprintf(
+			/* translators: %s: singular taxonomy label. */
+			__( 'Add New %s', 'ffc-academy' ),
+			$singular
+		),
+		'new_item_name'     => sprintf(
+			/* translators: %s: singular taxonomy label. */
+			__( 'New %s Name', 'ffc-academy' ),
+			$singular
+		),
+		'menu_name'         => $plural,
 	);
 }

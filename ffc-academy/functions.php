@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FFC_THEME_VERSION', '1.2.15' );
+define( 'FFC_THEME_VERSION', '1.2.17' );
 define( 'FFC_THEME_DIR', get_template_directory() );
 define( 'FFC_THEME_URI', get_template_directory_uri() );
 
