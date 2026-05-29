@@ -22,7 +22,7 @@ Then activate **F.F.C. Academy** in WordPress Admin.
 - Custom taxonomies for teams, seasons, gallery categories, and sponsor tiers.
 - ACF local field groups for admin-friendly content management.
 - TeamSnap embed and public link support for schedules, roster links, registration links, and app access.
-- Tryout registration form with nonce protection, honeypot spam trap, private admin storage, admin notification, and parent confirmation email.
+- Tryout registration form with nonce protection, honeypot spam trap, optional Cloudflare Turnstile, capacity locking, private admin storage, admin notification, and parent confirmation email.
 - Gallery filtering, media lightbox, lazy-loaded images, and responsive grids.
 - Sports organization and sports event schema support.
 - Hybrid theme foundation with `theme.json`, branded Gutenberg palettes, editor styles, block styles, and reusable F.F.C. block patterns.
@@ -30,7 +30,7 @@ Then activate **F.F.C. Academy** in WordPress Admin.
 ## Required Plugins
 
 - Advanced Custom Fields, free or Pro, for structured page, post, and taxonomy fields.
-- WP Mail SMTP or a transactional email provider for reliable tryout notifications.
+- WP Mail SMTP or a transactional email provider for reliable tryout and contact notifications.
 - SEO plugin such as Yoast SEO, Rank Math, or The SEO Framework.
 - Caching/performance plugin such as WP Rocket, LiteSpeed Cache, or W3 Total Cache.
 - Image optimization plugin such as ShortPixel, Imagify, or EWWW Image Optimizer.
@@ -55,8 +55,8 @@ ACF Pro options pages are not required. Global theme settings use the native Wor
 - About page: edit the About page and update **F.F.C. About Page Content**.
 - Contact page: edit the Contact page and update **F.F.C. Contact Page Content**. Add a form plugin shortcode in the Contact Form Shortcode field if using a plugin form, or use the built-in fallback contact form.
 - Tryout page, form labels, placeholders, email subjects, and no-session messaging: edit the Tryouts page and update **F.F.C. Tryout Page Content**.
-- Footer copy, copyright text, social links, header labels, and TeamSnap links: **Settings > F.F.C. Settings**.
-- Games, Scores, Coaches, Announcements, Sponsors, Gallery Items, Tryout Sessions, and Tryout Registrations: use their matching admin menu items.
+- Footer copy, copyright text, social links, header labels, TeamSnap links, Turnstile keys, and email test tool: **Settings > F.F.C. Settings**.
+- Games, Scores, Coaches, Announcements, Sponsors, Gallery Items, Tryout Sessions, and Tryout Registrations: use their matching admin menu items. Their list screens include operational columns so admins can scan dates, opponents, scores, sponsor URLs, media types, registration counts, and parent emails without opening every item.
 - Teams, Seasons, Gallery Categories, and Sponsor Tiers: edit under the relevant content type taxonomy screens.
 
 Theme-managed pages and structured content types intentionally use the classic WordPress editor so the custom fields stay visible and reliable for non-technical administrators.
@@ -103,7 +103,9 @@ Registrations are stored as private `Tryout Registrations` posts. The form colle
 - Emergency contact and medical notes.
 - Selected tryout session and comments.
 
-For production, configure SMTP before opening registration publicly.
+The theme re-checks session availability inside a short per-session lock before saving a registration, so capacity limits are protected during simultaneous submissions. Tryout Sessions and Tryout Registrations include admin list columns for status, capacity, registered count, session label, and parent email.
+
+For production, configure SMTP before opening registration publicly, then use **Settings > F.F.C. Settings > Email Deliverability Test** to send sample tryout, parent confirmation, and contact-form messages. Add Cloudflare Turnstile site and secret keys in the same settings screen to enable server-side spam protection on the built-in tryout form and fallback contact form.
 
 ## Handoff Checklist
 
@@ -122,8 +124,8 @@ See [HANDOFF.md](HANDOFF.md) for the production handoff checklist, admin editing
 
 - Keep WordPress core, plugins, and PHP updated.
 - Use least-privilege admin accounts for coaches and content editors.
-- Configure SMTP with authenticated sending.
-- Add a CAPTCHA plugin if form spam volume grows.
+- Configure SMTP with authenticated sending and verify it with the built-in email test.
+- Add Cloudflare Turnstile keys in **F.F.C. Settings** before public form launch.
 - Disable XML-RPC if it is not needed.
 - Use a WAF or host-level firewall for production.
 

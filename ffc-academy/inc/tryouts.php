@@ -62,6 +62,47 @@ function ffc_tryout_session_has_capacity( int $session_id ): bool {
 	return 0 === $capacity || ffc_tryout_session_registration_count( $session_id ) < $capacity;
 }
 
+function ffc_tryout_acquire_session_lock( int $session_id ): string {
+	$lock_key = ffc_tryout_session_lock_key( $session_id );
+	$token    = wp_generate_uuid4();
+	$now      = time();
+	$expires  = $now + 15;
+	$existing = (string) get_option( $lock_key, '' );
+
+	if ( '' !== $existing ) {
+		$parts            = explode( '|', $existing );
+		$existing_expires = isset( $parts[1] ) ? absint( $parts[1] ) : 0;
+
+		if ( $existing_expires > $now ) {
+			return '';
+		}
+
+		delete_option( $lock_key );
+	}
+
+	return add_option( $lock_key, $token . '|' . $expires, '', 'no' ) ? $token : '';
+}
+
+function ffc_tryout_release_session_lock( int $session_id, string $token ): void {
+	$lock_key = ffc_tryout_session_lock_key( $session_id );
+	$existing = (string) get_option( $lock_key, '' );
+
+	if ( '' === $existing ) {
+		return;
+	}
+
+	$parts          = explode( '|', $existing );
+	$existing_token = $parts[0] ?? '';
+
+	if ( hash_equals( $existing_token, $token ) ) {
+		delete_option( $lock_key );
+	}
+}
+
+function ffc_tryout_session_lock_key( int $session_id ): string {
+	return 'ffc_tryout_session_lock_' . $session_id;
+}
+
 function ffc_tryout_session_accepts_registration( int $session_id ): bool {
 	$session = get_post( $session_id );
 	if ( ! $session instanceof WP_Post || 'ffc_tryout_session' !== $session->post_type || 'publish' !== $session->post_status ) {
@@ -168,6 +209,11 @@ function ffc_handle_tryout_registration(): void {
 		exit;
 	}
 
+	if ( ! ffc_verify_turnstile_response() ) {
+		wp_safe_redirect( add_query_arg( 'tryout', 'error', wp_get_referer() ?: home_url( '/tryouts/' ) ) );
+		exit;
+	}
+
 	$session_id = isset( $_POST['tryout_session_id'] ) ? absint( wp_unslash( $_POST['tryout_session_id'] ) ) : 0;
 	if ( ! $session_id || ! ffc_tryout_session_accepts_registration( $session_id ) ) {
 		wp_safe_redirect( add_query_arg( 'tryout', 'unavailable', wp_get_referer() ?: home_url( '/tryouts/' ) ) );
@@ -205,22 +251,51 @@ function ffc_handle_tryout_registration(): void {
 		exit;
 	}
 
-	$post_id = wp_insert_post(
-		array(
-			'post_type'    => 'ffc_tryout',
-			'post_status'  => 'private',
-			'post_title'   => sprintf( '%s %s - %s', $data['player_first_name'], $data['player_last_name'], $data['tryout_session_label'] ),
-			'post_content' => ffc_tryout_summary( $data ),
-		)
-	);
-
-	if ( is_wp_error( $post_id ) ) {
-		wp_safe_redirect( add_query_arg( 'tryout', 'error', wp_get_referer() ?: home_url( '/' ) ) );
+	$lock_token = ffc_tryout_acquire_session_lock( $session_id );
+	if ( '' === $lock_token ) {
+		wp_safe_redirect( add_query_arg( 'tryout', 'unavailable', wp_get_referer() ?: home_url( '/tryouts/' ) ) );
 		exit;
 	}
 
-	foreach ( $data as $key => $value ) {
-		update_post_meta( $post_id, $key, $value );
+	$post_id            = 0;
+	$registration_error = '';
+
+	try {
+		if ( ! ffc_tryout_session_accepts_registration( $session_id ) ) {
+			$registration_error = 'unavailable';
+		} else {
+			$inserted_post = wp_insert_post(
+				array(
+					'post_type'    => 'ffc_tryout',
+					'post_status'  => 'private',
+					'post_title'   => sprintf( '%s %s - %s', $data['player_first_name'], $data['player_last_name'], $data['tryout_session_label'] ),
+					'post_content' => ffc_tryout_summary( $data ),
+				),
+				true
+			);
+
+			if ( is_wp_error( $inserted_post ) || ! $inserted_post ) {
+				$registration_error = 'error';
+			} else {
+				$post_id = (int) $inserted_post;
+
+				foreach ( $data as $key => $value ) {
+					update_post_meta( $post_id, $key, $value );
+				}
+			}
+		}
+	} finally {
+		ffc_tryout_release_session_lock( $session_id, $lock_token );
+	}
+
+	if ( 'unavailable' === $registration_error ) {
+		wp_safe_redirect( add_query_arg( 'tryout', 'unavailable', wp_get_referer() ?: home_url( '/tryouts/' ) ) );
+		exit;
+	}
+
+	if ( 'error' === $registration_error || ! $post_id ) {
+		wp_safe_redirect( add_query_arg( 'tryout', 'error', wp_get_referer() ?: home_url( '/' ) ) );
+		exit;
 	}
 
 	$admin_email      = get_option( 'admin_email' );

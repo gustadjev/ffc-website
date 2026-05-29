@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FFC_THEME_VERSION', '1.2.24' );
+define( 'FFC_THEME_VERSION', '1.2.25' );
 define( 'FFC_THEME_DIR', get_template_directory() );
 define( 'FFC_THEME_URI', get_template_directory_uri() );
 
@@ -20,7 +20,9 @@ require_once FFC_THEME_DIR . '/inc/admin-settings.php';
 require_once FFC_THEME_DIR . '/inc/customizer.php';
 require_once FFC_THEME_DIR . '/inc/editor.php';
 require_once FFC_THEME_DIR . '/inc/teamsnap.php';
+require_once FFC_THEME_DIR . '/inc/spam-protection.php';
 require_once FFC_THEME_DIR . '/inc/tryouts.php';
+require_once FFC_THEME_DIR . '/inc/admin-columns.php';
 require_once FFC_THEME_DIR . '/inc/contact.php';
 require_once FFC_THEME_DIR . '/inc/blocks.php';
 

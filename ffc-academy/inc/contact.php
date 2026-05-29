@@ -22,7 +22,8 @@ function ffc_handle_contact_form_submission(): void {
 	if (
 		empty( $_POST['ffc_contact_nonce'] )
 		|| ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ffc_contact_nonce'] ) ), 'ffc_contact_form' )
-		|| ! empty( $_POST['ffc_contact_company'] )
+		|| ! empty( sanitize_text_field( wp_unslash( $_POST['ffc_contact_company'] ?? '' ) ) )
+		|| ! ffc_verify_turnstile_response()
 	) {
 		wp_safe_redirect( add_query_arg( 'ffc_contact_status', 'error', $referer ) );
 		exit;

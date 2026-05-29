@@ -90,6 +90,7 @@ $labels  = array(
 
 				<label><?php echo esc_html( $labels['medical_notes'] ); ?><textarea name="medical_notes" rows="4"></textarea></label>
 				<label><?php echo esc_html( $labels['additional_comments'] ); ?><textarea name="additional_comments" rows="4"></textarea></label>
+				<?php echo ffc_turnstile_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<button class="button button--accent" type="submit"><?php echo esc_html( ffc_get_field( 'tryout_submit_label', $page_id, __( 'Submit Registration', 'ffc-academy' ) ) ); ?></button>
 			</form>
 			<?php endif; ?>

@@ -114,6 +114,16 @@ function ffc_native_settings_fields(): array {
 			'type'        => 'textarea',
 			'description' => __( 'Paste a TeamSnap iframe/widget embed code. If left blank, the website shows TeamSnap link cards instead.', 'ffc-academy' ),
 		),
+		'turnstile_site_key'        => array(
+			'label'       => __( 'Cloudflare Turnstile Site Key', 'ffc-academy' ),
+			'type'        => 'text',
+			'description' => __( 'Optional. Add both Turnstile keys to protect the tryout form and built-in contact form from spam.', 'ffc-academy' ),
+		),
+		'turnstile_secret_key'      => array(
+			'label'       => __( 'Cloudflare Turnstile Secret Key', 'ffc-academy' ),
+			'type'        => 'password',
+			'description' => __( 'Stored as a WordPress option. Leave blank to disable Turnstile.', 'ffc-academy' ),
+		),
 		'instagram_url'             => array(
 			'label' => __( 'Instagram URL', 'ffc-academy' ),
 			'type'  => 'url',
@@ -170,14 +180,74 @@ function ffc_register_native_settings(): void {
 	}
 }
 
+add_action( 'admin_post_ffc_send_test_emails', 'ffc_send_test_emails' );
+function ffc_send_test_emails(): void {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'You do not have permission to send test emails.', 'ffc-academy' ), esc_html__( 'Forbidden', 'ffc-academy' ), array( 'response' => 403 ) );
+	}
+
+	check_admin_referer( 'ffc_send_test_emails', 'ffc_email_test_nonce' );
+
+	$recipient = isset( $_POST['ffc_test_email_recipient'] ) ? sanitize_email( wp_unslash( $_POST['ffc_test_email_recipient'] ) ) : get_option( 'admin_email' );
+	$status    = 'error';
+
+	if ( is_email( $recipient ) ) {
+		$brand   = ffc_brand_name();
+		$samples = array(
+			sprintf(
+				/* translators: %s: brand name. */
+				__( '%s test: tryout admin notification', 'ffc-academy' ),
+				$brand
+			) => __( "This confirms that admin tryout notification emails can be sent from the F.F.C. theme.\n\nIf this landed in spam, configure an SMTP or transactional mail plugin before launch.", 'ffc-academy' ),
+			sprintf(
+				/* translators: %s: brand name. */
+				__( '%s test: parent confirmation', 'ffc-academy' ),
+				$brand
+			) => __( "This confirms that parent confirmation emails can be sent from the F.F.C. theme.\n\nUse this test after configuring WP Mail SMTP or another authenticated sender.", 'ffc-academy' ),
+			sprintf(
+				/* translators: %s: brand name. */
+				__( '%s test: contact form notification', 'ffc-academy' ),
+				$brand
+			) => __( "This confirms that the built-in contact form notification can be sent from the F.F.C. theme.\n\nReply-To behavior should be tested with a real contact form submission before launch.", 'ffc-academy' ),
+		);
+
+		$sent_all = true;
+		foreach ( $samples as $subject => $message ) {
+			if ( ! wp_mail( $recipient, $subject, $message ) ) {
+				$sent_all = false;
+			}
+		}
+
+		$status = $sent_all ? 'success' : 'error';
+	}
+
+	wp_safe_redirect(
+		add_query_arg(
+			array(
+				'page'           => 'ffc-theme-settings',
+				'ffc_email_test' => $status,
+			),
+			admin_url( 'options-general.php' )
+		)
+	);
+	exit;
+}
+
 function ffc_render_native_settings_page(): void {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
+
+	$email_test_status = isset( $_GET['ffc_email_test'] ) ? sanitize_key( wp_unslash( $_GET['ffc_email_test'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'F.F.C. Settings', 'ffc-academy' ); ?></h1>
 		<p><?php esc_html_e( 'Manage global club links, TeamSnap embeds, social links, header labels, and footer content.', 'ffc-academy' ); ?></p>
+		<?php if ( 'success' === $email_test_status ) : ?>
+			<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Test emails were handed to WordPress successfully. Confirm delivery in the inbox and spam folder.', 'ffc-academy' ); ?></p></div>
+		<?php elseif ( 'error' === $email_test_status ) : ?>
+			<div class="notice notice-error is-dismissible"><p><?php esc_html_e( 'The test email could not be sent. Confirm the recipient address and SMTP/transactional email configuration.', 'ffc-academy' ); ?></p></div>
+		<?php endif; ?>
 		<form method="post" action="options.php">
 			<?php settings_fields( 'ffc_native_settings' ); ?>
 			<table class="form-table" role="presentation">
@@ -201,6 +271,22 @@ function ffc_render_native_settings_page(): void {
 				</tbody>
 			</table>
 			<?php submit_button(); ?>
+		</form>
+		<hr>
+		<h2><?php esc_html_e( 'Email Deliverability Test', 'ffc-academy' ); ?></h2>
+		<p><?php esc_html_e( 'Send sample tryout, parent confirmation, and contact-form emails after SMTP is configured. WordPress can report a successful handoff even when a host later blocks delivery, so always confirm the messages arrive.', 'ffc-academy' ); ?></p>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+			<input type="hidden" name="action" value="ffc_send_test_emails">
+			<?php wp_nonce_field( 'ffc_send_test_emails', 'ffc_email_test_nonce' ); ?>
+			<table class="form-table" role="presentation">
+				<tbody>
+					<tr>
+						<th scope="row"><label for="ffc_test_email_recipient"><?php esc_html_e( 'Test Recipient', 'ffc-academy' ); ?></label></th>
+						<td><input class="regular-text" id="ffc_test_email_recipient" name="ffc_test_email_recipient" type="email" value="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>"></td>
+					</tr>
+				</tbody>
+			</table>
+			<?php submit_button( __( 'Send Test Emails', 'ffc-academy' ), 'secondary', 'submit', false ); ?>
 		</form>
 	</div>
 	<?php

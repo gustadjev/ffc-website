@@ -1213,6 +1213,10 @@ button.button {
   opacity: 0;
 }
 
+.ffc-turnstile {
+  min-height: 65px;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

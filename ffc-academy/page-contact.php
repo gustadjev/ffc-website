@@ -90,6 +90,7 @@ $methods = array(
 							<label><?php echo esc_html( ffc_get_field( 'contact_fallback_name_label', $page_id, __( 'Name', 'ffc-academy' ) ) ); ?><input name="ffc_contact_name" type="text" required></label>
 							<label><?php echo esc_html( ffc_get_field( 'contact_fallback_email_label', $page_id, __( 'Email', 'ffc-academy' ) ) ); ?><input name="ffc_contact_email" type="email" required></label>
 							<label><?php echo esc_html( ffc_get_field( 'contact_fallback_message_label', $page_id, __( 'Message', 'ffc-academy' ) ) ); ?><textarea name="ffc_contact_message" rows="5" required></textarea></label>
+							<?php echo ffc_turnstile_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 							<button class="button button--accent" type="submit"><?php echo esc_html( ffc_get_field( 'contact_fallback_button_label', $page_id, __( 'Send Message', 'ffc-academy' ) ) ); ?></button>
 						</form>
 							<?php

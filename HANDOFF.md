@@ -5,6 +5,7 @@ This checklist is for the final handoff of the F.F.C. Academy WordPress theme to
 ## Admin Editing Guide
 
 - **Global settings:** `Settings > F.F.C. Settings`.
+- **Email testing and spam protection:** `Settings > F.F.C. Settings`.
 - **Logo and site identity:** `Appearance > Customize > Site Identity`.
 - **Header and footer menus:** `Appearance > Menus`.
 - **Homepage slider:** edit the Home page, then update `F.F.C. Homepage Slider`.
@@ -57,12 +58,16 @@ This build is configured for TeamSnap embeds and links, not API credentials.
 - If no valid sessions exist, the submit action is hidden and the Tryouts page shows the editable no-sessions message.
 - The server rejects submissions if the selected session is missing, unpublished, closed, not yet open, past, full, or beyond the registration close time.
 - Submitted registrations store both the selected session ID and a readable session label.
+- The theme uses a short per-session lock and final availability re-check before saving a registration, so two simultaneous submissions cannot exceed a capped session.
+- Tryout Sessions and Tryout Registrations include admin list columns for session date/time, registration window, status, capacity, registered count, open/closed state, parent email, and selected session.
 
 ## Required Before Launch
 
 - Confirm WordPress core, PHP, and plugins are updated.
 - Install and activate Advanced Custom Fields.
 - Install and configure WP Mail SMTP or an equivalent transactional mail plugin.
+- Use `Settings > F.F.C. Settings > Email Deliverability Test` to confirm tryout, parent confirmation, and contact-form sample emails arrive.
+- Add Cloudflare Turnstile site and secret keys in `Settings > F.F.C. Settings` before opening public forms.
 - Install an SEO plugin and set page titles/descriptions.
 - Install a caching/performance plugin.
 - Install an image optimization plugin.
@@ -76,6 +81,7 @@ This build is configured for TeamSnap embeds and links, not API credentials.
 - Add real social media URLs.
 - Add real TeamSnap URLs or embed code.
 - Submit a test tryout registration and confirm admin and parent emails are received.
+- Submit a test contact form message and confirm the admin email is received.
 - Review all public pages on mobile, tablet, desktop, and large desktop.
 
 ## QA Checklist
@@ -89,9 +95,12 @@ This build is configured for TeamSnap embeds and links, not API credentials.
 - Sponsors archive shows tiers and sponsor CTAs.
 - Gallery archive shows images/videos and lightbox behavior.
 - Tryout form validates required fields and stores private registrations.
+- Tryout form rejects submissions when Turnstile is enabled and the challenge is missing or invalid.
 - Tryout form is hidden/closed when no open future Tryout Session exists.
 - Tryout form shows only open future sessions that still have capacity.
-- Admin can add and edit Games, Scores, Coaches, Announcements, Sponsors, Gallery Items, and Tryout Registrations.
+- Tryout Session list table shows date/time, window, status, capacity, registered count, and accepting state.
+- Tryout Registration list table shows selected session and parent email.
+- Admin can add and edit Games, Scores, Coaches, Announcements, Sponsors, Gallery Items, and Tryout Registrations, with useful list-table columns for quick scanning.
 - Teams, Seasons, Sponsor Tiers, and Gallery Categories can be added and edited.
 - Navigation links point to intended pages.
 - Page source includes schema where expected.
@@ -105,7 +114,7 @@ This build is configured for TeamSnap embeds and links, not API credentials.
 - Keep WordPress core, plugins, and theme code updated.
 - Configure backups before launch.
 - Use HTTPS in production.
-- Add CAPTCHA or another anti-spam layer if tryout form spam increases.
+- Keep Cloudflare Turnstile enabled on public forms.
 
 ## Known Content Tasks
 
