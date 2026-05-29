@@ -21,18 +21,21 @@ Then activate **F.F.C. Academy** in WordPress Admin.
 - Custom post types for games, scores, coaches, announcements, sponsors, gallery items, and tryout registrations.
 - Custom taxonomies for teams, seasons, gallery categories, and sponsor tiers.
 - ACF local field groups for admin-friendly content management.
-- TeamSnap settings and helper integration for public links and API-ready event fetching.
+- TeamSnap embed and public link support for schedules, roster links, registration links, and app access.
 - Tryout registration form with nonce protection, honeypot spam trap, private admin storage, admin notification, and parent confirmation email.
 - Gallery filtering, media lightbox, lazy-loaded images, and responsive grids.
 - Sports organization and sports event schema support.
+- Hybrid theme foundation with `theme.json`, branded Gutenberg palettes, editor styles, block styles, and reusable F.F.C. block patterns.
 
 ## Required Plugins
 
-- Advanced Custom Fields Pro or Advanced Custom Fields.
+- Advanced Custom Fields, free or Pro, for structured page, post, and taxonomy fields.
 - WP Mail SMTP or a transactional email provider for reliable tryout notifications.
 - SEO plugin such as Yoast SEO, Rank Math, or The SEO Framework.
 - Caching/performance plugin such as WP Rocket, LiteSpeed Cache, or W3 Total Cache.
 - Image optimization plugin such as ShortPixel, Imagify, or EWWW Image Optimizer.
+
+ACF Pro options pages are not required. Global theme settings use the native WordPress settings page at **Settings > F.F.C. Settings**.
 
 ## Recommended Setup
 
@@ -45,14 +48,38 @@ Then activate **F.F.C. Academy** in WordPress Admin.
 7. Add games, scores, announcements, coaches, sponsors, and gallery items from the WordPress admin.
 8. Visit **Settings > Permalinks** and save once after activation to flush rewrite rules.
 
+## Content Editing Map
+
+- Homepage slider: edit the Home page and update **F.F.C. Homepage Slider**.
+- Homepage sections: edit the Home page and update **F.F.C. Homepage Sections**.
+- About page: edit the About page and update **F.F.C. About Page Content**.
+- Contact page: edit the Contact page and update **F.F.C. Contact Page Content**. Add a form plugin shortcode in the Contact Form Shortcode field if using a plugin form, or use the built-in fallback contact form.
+- Tryout page: edit the Tryouts page and update **F.F.C. Tryout Page Content**.
+- Tryout form labels, placeholders, email subjects, and field help: **Settings > F.F.C. Settings**.
+- Footer copy, copyright text, social links, header labels, and TeamSnap links: **Settings > F.F.C. Settings**.
+- Games, Scores, Coaches, Announcements, Sponsors, Gallery Items, and Tryout Registrations: use their matching admin menu items.
+- Teams, Seasons, Gallery Categories, and Sponsor Tiers: edit under the relevant content type taxonomy screens.
+
+Theme-managed pages and structured content types intentionally use the classic WordPress editor so the custom fields stay visible and reliable for non-technical administrators.
+
+## Gutenberg & Style Book
+
+The theme is a hybrid theme. PHP templates still control the academy platform pages, while `theme.json` gives Gutenberg a branded F.F.C. design system.
+
+- The WordPress Style Book previews block colors, typography, buttons, quotes, tables, and patterns.
+- The Style Book does not edit the homepage slider, footer, TeamSnap links, tryout form, schedule cards, score cards, sponsor cards, or gallery templates.
+- Reusable F.F.C. block patterns are available for normal posts and flexible page content.
+- Global site copy and links remain in **Settings > F.F.C. Settings**.
+
 ## TeamSnap Integration
 
-The theme supports two integration paths:
+The theme supports TeamSnap through embed code and public links:
 
-- Public TeamSnap links through **F.F.C. Settings**.
-- API-ready event fetching through `ffc_get_teamsnap_events()` using a TeamSnap API key and team ID.
+- Paste a TeamSnap iframe/widget in **Settings > F.F.C. Settings > TeamSnap Embed Code**.
+- Add public TeamSnap URLs for the main team page, schedule, roster, registration, and app/login access.
+- Add event-specific TeamSnap links on individual Games.
 
-TeamSnap API responses are cached for 15 minutes with WordPress transients. If TeamSnap account permissions or endpoint availability change, replace the endpoint in `inc/teamsnap.php` with the approved TeamSnap feed endpoint for the academy account.
+The current implementation does not require TeamSnap API credentials.
 
 ## Tryout Registrations
 
@@ -64,6 +91,10 @@ Registrations are stored as private `Tryout Registrations` posts. The form colle
 - Preferred tryout date and comments.
 
 For production, configure SMTP before opening registration publicly.
+
+## Handoff Checklist
+
+See [HANDOFF.md](HANDOFF.md) for the production handoff checklist, admin editing guide, QA checklist, and launch notes.
 
 ## Performance Notes
 

@@ -60,6 +60,17 @@ $methods = array(
 			</div>
 			<div class="contact-form-panel">
 				<?php
+				$contact_status = isset( $_GET['ffc_contact_status'] ) ? sanitize_key( wp_unslash( $_GET['ffc_contact_status'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				if ( 'success' === $contact_status ) :
+					?>
+					<div class="notice notice--success" role="status"><?php echo esc_html( ffc_get_field( 'contact_success_message', $page_id, __( 'Message received. Our staff will follow up soon.', 'ffc-academy' ) ) ); ?></div>
+					<?php
+				elseif ( 'error' === $contact_status ) :
+					?>
+					<div class="notice notice--error" role="alert"><?php echo esc_html( ffc_get_field( 'contact_error_message', $page_id, __( 'Please check the required fields and try again.', 'ffc-academy' ) ) ); ?></div>
+					<?php
+				endif;
+
 				$form_shortcode = ffc_get_field( 'contact_form_shortcode', $page_id, '' );
 				if ( $form_shortcode ) {
 					echo do_shortcode( $form_shortcode );
@@ -71,11 +82,15 @@ $methods = array(
 							echo do_shortcode( preg_replace( '/.*(\[contact-form-7[^\]]+\]).*/s', '$1', $content ) );
 						} else {
 							?>
-						<form class="tryout-form contact-fallback-form">
-							<label><?php echo esc_html( ffc_get_field( 'contact_fallback_name_label', $page_id, __( 'Name', 'ffc-academy' ) ) ); ?><input type="text"></label>
-							<label><?php echo esc_html( ffc_get_field( 'contact_fallback_email_label', $page_id, __( 'Email', 'ffc-academy' ) ) ); ?><input type="email"></label>
-							<label><?php echo esc_html( ffc_get_field( 'contact_fallback_message_label', $page_id, __( 'Message', 'ffc-academy' ) ) ); ?><textarea rows="5"></textarea></label>
-							<button class="button button--accent" type="button"><?php echo esc_html( ffc_get_field( 'contact_fallback_button_label', $page_id, __( 'Send Message', 'ffc-academy' ) ) ); ?></button>
+						<form class="tryout-form contact-fallback-form" method="post">
+							<input type="hidden" name="ffc_contact_form" value="1">
+							<?php wp_nonce_field( 'ffc_contact_form', 'ffc_contact_nonce' ); ?>
+							<label class="screen-reader-text" for="ffc_contact_company"><?php esc_html_e( 'Company', 'ffc-academy' ); ?></label>
+							<input class="ffc-honeypot" id="ffc_contact_company" name="ffc_contact_company" type="text" tabindex="-1" autocomplete="off">
+							<label><?php echo esc_html( ffc_get_field( 'contact_fallback_name_label', $page_id, __( 'Name', 'ffc-academy' ) ) ); ?><input name="ffc_contact_name" type="text" required></label>
+							<label><?php echo esc_html( ffc_get_field( 'contact_fallback_email_label', $page_id, __( 'Email', 'ffc-academy' ) ) ); ?><input name="ffc_contact_email" type="email" required></label>
+							<label><?php echo esc_html( ffc_get_field( 'contact_fallback_message_label', $page_id, __( 'Message', 'ffc-academy' ) ) ); ?><textarea name="ffc_contact_message" rows="5" required></textarea></label>
+							<button class="button button--accent" type="submit"><?php echo esc_html( ffc_get_field( 'contact_fallback_button_label', $page_id, __( 'Send Message', 'ffc-academy' ) ) ); ?></button>
 						</form>
 							<?php
 						}

@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FFC_THEME_VERSION', '1.2.17' );
+define( 'FFC_THEME_VERSION', '1.2.22' );
 define( 'FFC_THEME_DIR', get_template_directory() );
 define( 'FFC_THEME_URI', get_template_directory_uri() );
 
@@ -21,6 +21,7 @@ require_once FFC_THEME_DIR . '/inc/customizer.php';
 require_once FFC_THEME_DIR . '/inc/editor.php';
 require_once FFC_THEME_DIR . '/inc/teamsnap.php';
 require_once FFC_THEME_DIR . '/inc/tryouts.php';
+require_once FFC_THEME_DIR . '/inc/contact.php';
 require_once FFC_THEME_DIR . '/inc/blocks.php';
 
 add_filter( 'hfe_footer_enabled', '__return_false', 999 );
@@ -45,6 +46,8 @@ function ffc_theme_setup(): void {
 	add_theme_support( 'html5', array( 'search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script' ) );
 	add_theme_support( 'align-wide' );
 	add_theme_support( 'responsive-embeds' );
+	add_theme_support( 'wp-block-styles' );
+	add_theme_support( 'appearance-tools' );
 	add_theme_support( 'editor-styles' );
 	add_editor_style( 'assets/css/editor.css' );
 
@@ -74,6 +77,16 @@ function ffc_set_default_front_page(): void {
 	}
 }
 
+add_action( 'enqueue_block_editor_assets', 'ffc_enqueue_block_editor_assets' );
+function ffc_enqueue_block_editor_assets(): void {
+	wp_enqueue_style(
+		'ffc-editor-fonts',
+		'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap',
+		array(),
+		null
+	);
+}
+
 add_action( 'wp_enqueue_scripts', 'ffc_enqueue_assets' );
 function ffc_enqueue_assets(): void {
 	$css_file = FFC_THEME_DIR . '/assets/css/main.css';
@@ -81,7 +94,7 @@ function ffc_enqueue_assets(): void {
 
 	wp_enqueue_style(
 		'ffc-fonts',
-		'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap',
+		'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap',
 		array(),
 		null
 	);

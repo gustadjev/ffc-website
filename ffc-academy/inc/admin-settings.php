@@ -1,6 +1,6 @@
 <?php
 /**
- * Native settings fallback for global editable theme content.
+ * Native settings for global editable theme content.
  *
  * @package FFCAcademy
  */
@@ -83,6 +83,12 @@ function ffc_native_settings_fields(): array {
 			'label' => __( 'Footer Copyright Note', 'ffc-academy' ),
 			'type'  => 'text',
 		),
+		'footer_copyright_text'     => array(
+			'label'       => __( 'Footer Copyright Text', 'ffc-academy' ),
+			'type'        => 'textarea',
+			'default'     => __( '@2026 freedomfutbolclub. All rights reserved | Webiste by Bpsquare - Powered by TeamSnap', 'ffc-academy' ),
+			'description' => __( 'Optional tokens: {year}, {site_name}, {brand_name}, {brand_short_name}, and {note}. Saved text renders directly in the footer.', 'ffc-academy' ),
+		),
 		'teamsnap_public_url'       => array(
 			'label' => __( 'TeamSnap Main Team URL', 'ffc-academy' ),
 			'type'  => 'url',
@@ -104,8 +110,9 @@ function ffc_native_settings_fields(): array {
 			'type'  => 'url',
 		),
 		'teamsnap_embed_code'       => array(
-			'label' => __( 'TeamSnap Embed Code', 'ffc-academy' ),
-			'type'  => 'textarea',
+			'label'       => __( 'TeamSnap Embed Code', 'ffc-academy' ),
+			'type'        => 'textarea',
+			'description' => __( 'Paste a TeamSnap iframe/widget embed code. If left blank, the website shows TeamSnap link cards instead.', 'ffc-academy' ),
 		),
 		'instagram_url'             => array(
 			'label' => __( 'Instagram URL', 'ffc-academy' ),
@@ -127,9 +134,10 @@ function ffc_native_settings_fields(): array {
 
 	foreach ( ffc_global_display_settings() as $key => $setting ) {
 		$fields[ $key ] = array(
-			'label'   => $setting['label'],
-			'type'    => $setting['type'] ?? 'text',
-			'default' => $setting['default'] ?? '',
+			'label'       => $setting['label'],
+			'type'        => $setting['type'] ?? 'text',
+			'default'     => $setting['default'] ?? '',
+			'description' => $setting['description'] ?? '',
 		);
 	}
 
@@ -138,10 +146,6 @@ function ffc_native_settings_fields(): array {
 
 add_action( 'admin_menu', 'ffc_register_native_settings_page' );
 function ffc_register_native_settings_page(): void {
-	if ( function_exists( 'acf_add_options_page' ) ) {
-		return;
-	}
-
 	add_options_page(
 		__( 'F.F.C. Settings', 'ffc-academy' ),
 		__( 'F.F.C. Settings', 'ffc-academy' ),
@@ -187,6 +191,9 @@ function ffc_render_native_settings_page(): void {
 									<textarea class="large-text" rows="4" id="ffc_<?php echo esc_attr( $key ); ?>" name="ffc_<?php echo esc_attr( $key ); ?>"><?php echo esc_textarea( $value ); ?></textarea>
 								<?php else : ?>
 									<input class="regular-text" type="<?php echo esc_attr( $field['type'] ); ?>" id="ffc_<?php echo esc_attr( $key ); ?>" name="ffc_<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $value ); ?>">
+								<?php endif; ?>
+								<?php if ( ! empty( $field['description'] ) ) : ?>
+									<p class="description"><?php echo esc_html( $field['description'] ); ?></p>
 								<?php endif; ?>
 							</td>
 						</tr>

@@ -84,6 +84,20 @@ function ffc_disable_gutenberg_for_structured_post_types( bool $can_edit, string
 	return $can_edit;
 }
 
+add_action( 'admin_notices', 'ffc_site_editor_context_notice' );
+function ffc_site_editor_context_notice(): void {
+	$pagenow = $GLOBALS['pagenow'] ?? '';
+	if ( 'site-editor.php' !== $pagenow ) {
+		return;
+	}
+
+	?>
+	<div class="notice notice-info">
+		<p><?php esc_html_e( 'F.F.C. Academy is a hybrid theme. The Style Book previews Gutenberg block colors, typography, and patterns. Homepage, footer, TeamSnap, tryout, schedule, score, and gallery content is still managed through F.F.C. Settings and the structured page/content fields.', 'ffc-academy' ); ?></p>
+	</div>
+	<?php
+}
+
 add_action( 'admin_init', 'ffc_force_classic_editor_for_theme_pages', 20 );
 function ffc_force_classic_editor_for_theme_pages(): void {
 	$pagenow = $GLOBALS['pagenow'] ?? '';

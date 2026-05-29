@@ -439,6 +439,89 @@ button.button {
   color: var(--ffc-white);
 }
 
+.wp-block-button__link {
+  border-radius: var(--radius);
+  font-weight: 900;
+  text-transform: uppercase;
+  box-shadow: 0 12px 28px rgba(5, 19, 61, 0.14);
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.wp-block-button__link:hover,
+.wp-block-button__link:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(5, 19, 61, 0.2);
+}
+
+.wp-block-button.is-style-ffc-rose-gold .wp-block-button__link,
+.is-style-ffc-rose-gold .wp-block-button__link {
+  background: var(--ffc-rose);
+  color: var(--ffc-navy);
+}
+
+.wp-block-button.is-style-ffc-outline .wp-block-button__link,
+.is-style-ffc-outline .wp-block-button__link {
+  background: transparent;
+  border: 1px solid currentColor;
+  color: var(--ffc-navy);
+  box-shadow: none;
+}
+
+.wp-block-group.is-style-ffc-navy-band,
+.is-style-ffc-navy-band {
+  padding: clamp(2rem, 5vw, 4rem);
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--ffc-navy), var(--ffc-navy-2));
+  color: var(--ffc-white);
+  box-shadow: var(--shadow);
+}
+
+.wp-block-group.is-style-ffc-navy-band h1,
+.wp-block-group.is-style-ffc-navy-band h2,
+.wp-block-group.is-style-ffc-navy-band h3,
+.is-style-ffc-navy-band h1,
+.is-style-ffc-navy-band h2,
+.is-style-ffc-navy-band h3 {
+  color: var(--ffc-white);
+}
+
+.wp-block-group.is-style-ffc-navy-band a:not(.wp-block-button__link),
+.is-style-ffc-navy-band a:not(.wp-block-button__link) {
+  color: var(--ffc-rose);
+}
+
+.wp-block-group.is-style-ffc-ivory-band,
+.is-style-ffc-ivory-band {
+  padding: clamp(2rem, 5vw, 4rem);
+  border: 1px solid rgba(189, 192, 208, 0.65);
+  border-radius: var(--radius);
+  background: var(--ffc-ivory);
+  color: var(--ffc-ink);
+}
+
+.wp-block-quote.is-style-ffc-touchline-quote,
+.is-style-ffc-touchline-quote {
+  padding: 1.25rem 1.5rem;
+  border-left: 6px solid var(--ffc-rose);
+  border-radius: var(--radius);
+  background: var(--ffc-white);
+  box-shadow: 0 18px 42px rgba(5, 19, 61, 0.1);
+}
+
+.wp-block-quote.is-style-ffc-touchline-quote p,
+.is-style-ffc-touchline-quote p {
+  color: var(--ffc-navy);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.wp-block-quote.is-style-ffc-touchline-quote cite,
+.is-style-ffc-touchline-quote cite {
+  color: var(--ffc-rose);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
 .section-heading {
   display: flex;
   align-items: end;
@@ -1120,6 +1203,14 @@ button.button {
   border-radius: var(--radius);
   background: var(--ffc-white);
   box-shadow: var(--shadow);
+}
+
+.ffc-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
 }
 
 .form-grid {

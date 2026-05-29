@@ -36,8 +36,7 @@ $footer_social_links = ffc_social_links_markup( 'social-icons social-icons--foot
 	</div>
 	<div class="site-footer__bottom">
 		<p>
-			&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>.
-			<?php echo esc_html( ffc_option( 'footer_copyright_note', __( 'Powered by TeamSnap-connected club operations.', 'ffc-academy' ) ) ); ?>
+			<?php echo wp_kses_post( ffc_footer_copyright_text() ); ?>
 			<?php if ( $footer_teamsnap_url ) : ?>
 				<a class="site-footer__teamsnap-link" href="<?php echo esc_url( $footer_teamsnap_url ); ?>" target="_blank" rel="noopener"><?php echo esc_html( ffc_option( 'teamsnap_footer_link_label', __( 'TeamSnap', 'ffc-academy' ) ) ); ?></a>
 			<?php endif; ?>

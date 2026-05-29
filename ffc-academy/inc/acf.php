@@ -9,20 +9,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_action( 'acf/init', 'ffc_register_acf_options' );
-function ffc_register_acf_options(): void {
-	if ( function_exists( 'acf_add_options_page' ) ) {
-		acf_add_options_page(
-			array(
-				'page_title' => __( 'F.F.C. Theme Settings', 'ffc-academy' ),
-				'menu_title' => __( 'F.F.C. Settings', 'ffc-academy' ),
-				'menu_slug'  => 'ffc-theme-settings',
-				'capability' => 'manage_options',
-				'redirect'   => false,
-				'position'   => 59,
-			)
-		);
+add_action( 'admin_notices', 'ffc_acf_required_admin_notice' );
+function ffc_acf_required_admin_notice(): void {
+	if ( function_exists( 'acf_add_local_field_group' ) || ! current_user_can( 'activate_plugins' ) ) {
+		return;
 	}
+
+	?>
+	<div class="notice notice-error">
+		<p><?php esc_html_e( 'F.F.C. Academy requires Advanced Custom Fields for editable page, post, and taxonomy content fields. Please install and activate Advanced Custom Fields before handoff.', 'ffc-academy' ); ?></p>
+	</div>
+	<?php
 }
 
 add_action( 'acf/include_fields', 'ffc_register_acf_fields' );
@@ -294,79 +291,6 @@ function ffc_register_acf_fields(): void {
 
 	acf_add_local_field_group(
 		array(
-			'key'      => 'group_ffc_theme_options',
-			'title'    => __( 'F.F.C. Integration Settings', 'ffc-academy' ),
-			'fields'   => array(
-				ffc_acf_url( 'field_ffc_tryout_page_url', 'tryout_page_url', __( 'Tryout Page URL', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_utility_bar_text', 'utility_bar_text', __( 'Top Bar Text', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_utility_tryouts_label', 'utility_tryouts_label', __( 'Top Bar Tryouts Label', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_utility_schedule_label', 'utility_schedule_label', __( 'Top Bar Schedule Label', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_utility_teamsnap_label', 'utility_teamsnap_label', __( 'Top Bar TeamSnap Label', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_header_cta_label', 'header_cta_label', __( 'Header CTA Label', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_footer_cta_one_label', 'footer_cta_one_label', __( 'Footer CTA 1 Label', 'ffc-academy' ) ),
-				ffc_acf_url( 'field_ffc_footer_cta_one_url', 'footer_cta_one_url', __( 'Footer CTA 1 URL', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_footer_cta_two_label', 'footer_cta_two_label', __( 'Footer CTA 2 Label', 'ffc-academy' ) ),
-				ffc_acf_url( 'field_ffc_footer_cta_two_url', 'footer_cta_two_url', __( 'Footer CTA 2 URL', 'ffc-academy' ) ),
-				ffc_acf_textarea( 'field_ffc_footer_brand_copy', 'footer_brand_copy', __( 'Footer Brand Copy', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_footer_teamsnap_label', 'footer_teamsnap_label', __( 'Footer TeamSnap Label', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_footer_contact_heading', 'footer_contact_heading', __( 'Footer Contact Heading', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_footer_mailing_label', 'footer_mailing_label', __( 'Footer Mailing Label', 'ffc-academy' ) ),
-				ffc_acf_textarea( 'field_ffc_footer_mailing_address', 'footer_mailing_address', __( 'Footer Mailing Address', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_footer_training_label', 'footer_training_label', __( 'Footer Training Label', 'ffc-academy' ) ),
-				ffc_acf_textarea( 'field_ffc_footer_training_text', 'footer_training_text', __( 'Footer Training Text', 'ffc-academy' ) ),
-				ffc_acf_text( 'field_ffc_footer_copyright_note', 'footer_copyright_note', __( 'Footer Copyright Note', 'ffc-academy' ) ),
-				ffc_acf_url( 'field_ffc_teamsnap_public_url', 'teamsnap_public_url', __( 'TeamSnap Main Team URL', 'ffc-academy' ) ),
-				ffc_acf_url( 'field_ffc_teamsnap_schedule_url', 'teamsnap_schedule_url', __( 'TeamSnap Schedule URL', 'ffc-academy' ) ),
-				ffc_acf_url( 'field_ffc_teamsnap_roster_url', 'teamsnap_roster_url', __( 'TeamSnap Roster URL', 'ffc-academy' ) ),
-				ffc_acf_url( 'field_ffc_teamsnap_registration_url', 'teamsnap_registration_url', __( 'TeamSnap Registration URL', 'ffc-academy' ) ),
-				ffc_acf_url( 'field_ffc_teamsnap_app_url', 'teamsnap_app_url', __( 'TeamSnap App / Login URL', 'ffc-academy' ) ),
-				array(
-					'key'          => 'field_ffc_teamsnap_embed_code',
-					'label'        => __( 'TeamSnap Embed Code', 'ffc-academy' ),
-					'name'         => 'teamsnap_embed_code',
-					'type'         => 'textarea',
-					'instructions' => __( 'Paste a TeamSnap iframe/widget embed code here. If left blank, the site shows polished TeamSnap link cards instead.', 'ffc-academy' ),
-					'rows'         => 6,
-					'new_lines'    => '',
-				),
-				ffc_acf_url( 'field_ffc_instagram_url', 'instagram_url', __( 'Instagram URL', 'ffc-academy' ) ),
-				ffc_acf_url( 'field_ffc_facebook_url', 'facebook_url', __( 'Facebook URL', 'ffc-academy' ) ),
-				ffc_acf_url( 'field_ffc_youtube_url', 'youtube_url', __( 'YouTube URL', 'ffc-academy' ) ),
-				ffc_acf_url( 'field_ffc_tiktok_url', 'tiktok_url', __( 'TikTok URL', 'ffc-academy' ) ),
-			),
-			'location' => array(
-				array(
-					array(
-						'param'    => 'options_page',
-						'operator' => '==',
-						'value'    => 'ffc-theme-settings',
-					),
-				),
-			),
-			'position' => 'acf_after_title',
-		)
-	);
-
-	acf_add_local_field_group(
-		array(
-			'key'      => 'group_ffc_global_display_options',
-			'title'    => __( 'F.F.C. Global Display Copy', 'ffc-academy' ),
-			'fields'   => ffc_global_display_acf_fields(),
-			'location' => array(
-				array(
-					array(
-						'param'    => 'options_page',
-						'operator' => '==',
-						'value'    => 'ffc-theme-settings',
-					),
-				),
-			),
-			'position' => 'normal',
-		)
-	);
-
-	acf_add_local_field_group(
-		array(
 			'key'      => 'group_ffc_homepage',
 			'title'    => __( 'F.F.C. Homepage Sections', 'ffc-academy' ),
 			'fields'   => ffc_homepage_section_fields(),
@@ -454,25 +378,6 @@ function ffc_register_acf_fields(): void {
 			)
 		);
 	}
-}
-
-function ffc_global_display_acf_fields(): array {
-	$fields = array();
-
-	foreach ( ffc_global_display_settings() as $key => $setting ) {
-		$field_key = 'field_ffc_global_' . $key;
-		$default   = $setting['default'] ?? '';
-		$type      = $setting['type'] ?? 'text';
-
-		if ( 'textarea' === $type ) {
-			$fields[] = ffc_acf_textarea( $field_key, $key, $setting['label'], $default );
-			continue;
-		}
-
-		$fields[] = ffc_acf_text( $field_key, $key, $setting['label'], $default );
-	}
-
-	return $fields;
 }
 
 function ffc_homepage_section_fields(): array {
@@ -717,6 +622,9 @@ function ffc_contact_page_fields(): array {
 		ffc_acf_text( 'field_ffc_contact_fallback_email_label', 'contact_fallback_email_label', __( 'Fallback Form Email Label', 'ffc-academy' ), __( 'Email', 'ffc-academy' ) ),
 		ffc_acf_text( 'field_ffc_contact_fallback_message_label', 'contact_fallback_message_label', __( 'Fallback Form Message Label', 'ffc-academy' ), __( 'Message', 'ffc-academy' ) ),
 		ffc_acf_text( 'field_ffc_contact_fallback_button_label', 'contact_fallback_button_label', __( 'Fallback Form Button Label', 'ffc-academy' ), __( 'Send Message', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_contact_success_message', 'contact_success_message', __( 'Success Message', 'ffc-academy' ), __( 'Message received. Our staff will follow up soon.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_contact_error_message', 'contact_error_message', __( 'Error Message', 'ffc-academy' ), __( 'Please check the required fields and try again.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_contact_email_subject', 'contact_email_subject', __( 'Admin Email Subject', 'ffc-academy' ), __( 'New F.F.C. Contact Message: {name}', 'ffc-academy' ) ),
 	);
 	$methods = array(
 		array(

@@ -84,14 +84,13 @@ function ffc_image_url_from_field( $image, string $size = 'full', string $fallba
 }
 
 function ffc_option( string $key, $default = '' ) {
-	if ( function_exists( 'get_field' ) ) {
-		$value = get_field( $key, 'option' );
-		if ( null !== $value && false !== $value && '' !== $value ) {
-			return $value;
-		}
+	$value = get_option( 'ffc_' . $key, null );
+
+	if ( null === $value || false === $value || '' === $value ) {
+		return $default;
 	}
 
-	return get_option( 'ffc_' . $key, $default );
+	return $value;
 }
 
 function ffc_home_page_id(): int {
@@ -126,6 +125,22 @@ function ffc_brand_name( bool $short = false ): string {
 	return $short
 		? (string) ffc_option( 'brand_short_name', __( 'F.F.C.', 'ffc-academy' ) )
 		: (string) ffc_option( 'brand_full_name', __( 'Freedom Futbol Club', 'ffc-academy' ) );
+}
+
+function ffc_footer_copyright_text(): string {
+	$note = (string) ffc_option( 'footer_copyright_note', __( 'Powered by TeamSnap-connected club operations.', 'ffc-academy' ) );
+	$text = (string) ffc_option( 'footer_copyright_text', __( '@2026 freedomfutbolclub. All rights reserved | Webiste by Bpsquare - Powered by TeamSnap', 'ffc-academy' ) );
+
+	$tokens = array(
+		'{copyright}'       => '&copy;',
+		'{year}'            => gmdate( 'Y' ),
+		'{site_name}'       => get_bloginfo( 'name' ),
+		'{brand_name}'      => ffc_brand_name(),
+		'{brand_short_name}' => ffc_brand_name( true ),
+		'{note}'            => $note,
+	);
+
+	return strtr( $text, $tokens );
 }
 
 function ffc_global_display_settings(): array {
