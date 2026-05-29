@@ -54,6 +54,14 @@ function ffc_register_content_types(): void {
 			'slug'     => 'gallery',
 			'supports' => array( 'title', 'editor', 'thumbnail', 'revisions' ),
 		),
+		'ffc_tryout_session' => array(
+			'singular' => __( 'Tryout Session', 'ffc-academy' ),
+			'plural'   => __( 'Tryout Sessions', 'ffc-academy' ),
+			'icon'     => 'dashicons-calendar',
+			'slug'     => 'tryout-sessions',
+			'supports' => array( 'title', 'editor', 'revisions' ),
+			'public'   => false,
+		),
 		'ffc_tryout'       => array(
 			'singular' => __( 'Tryout Registration', 'ffc-academy' ),
 			'plural'   => __( 'Tryout Registrations', 'ffc-academy' ),
@@ -76,7 +84,7 @@ function ffc_register_content_types(): void {
 				'show_in_rest'    => true,
 				'menu_icon'       => $args['icon'],
 				'has_archive'     => $public,
-				'rewrite'         => array( 'slug' => $args['slug'] ),
+				'rewrite'         => $public ? array( 'slug' => $args['slug'] ) : false,
 				'supports'        => $args['supports'],
 				'capability_type' => 'post',
 			)

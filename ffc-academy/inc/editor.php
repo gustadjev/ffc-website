@@ -32,6 +32,7 @@ function ffc_structured_content_post_types(): array {
 		'ffc_announcement',
 		'ffc_sponsor',
 		'ffc_gallery',
+		'ffc_tryout_session',
 		'ffc_tryout',
 	);
 }
@@ -168,6 +169,7 @@ function ffc_render_structured_content_editing_help( WP_Post $post ): void {
 		'ffc_announcement' => __( 'Use the title, excerpt, featured image, and main editor for club announcements, weather notices, tournament updates, and practice updates.', 'ffc-academy' ),
 		'ffc_sponsor'      => __( 'Add sponsor website, CTA label, tier, logo/featured image, and sponsor description. Mark Featured Sponsor when it should be highlighted.', 'ffc-academy' ),
 		'ffc_gallery'      => __( 'Choose the media type, add a photo or video URL, assign a gallery category, and use the title as the public gallery caption.', 'ffc-academy' ),
+		'ffc_tryout_session' => __( 'Schedule tryout sessions with date/time, optional registration open/close times, location, age group, registration status, capacity, and optional TeamSnap link. Only published, open sessions inside the registration window with capacity appear on the public tryout form.', 'ffc-academy' ),
 		'ffc_tryout'       => __( 'Use Registration Details to review or manually add player tryout submissions. Public form submissions are stored here automatically.', 'ffc-academy' ),
 	);
 	?>
@@ -297,6 +299,7 @@ function ffc_move_theme_fields_into_main_column(): void {
 					'acf-group_ffc_people_media',
 					'acf-group_ffc_gallery_details',
 					'acf-group_ffc_sponsor_details',
+					'acf-group_ffc_tryout_session_details',
 					'acf-group_ffc_tryout_registration_details'
 				];
 

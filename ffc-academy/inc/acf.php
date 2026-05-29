@@ -225,6 +225,46 @@ function ffc_register_acf_fields(): void {
 
 	acf_add_local_field_group(
 		array(
+			'key'      => 'group_ffc_tryout_session_details',
+			'title'    => __( 'Tryout Session Details', 'ffc-academy' ),
+			'fields'   => array(
+				ffc_acf_date_time( 'field_ffc_tryout_session_datetime', 'tryout_session_datetime', __( 'Session Date/Time', 'ffc-academy' ) ),
+				ffc_acf_date_time( 'field_ffc_tryout_registration_opens_at', 'tryout_registration_opens_at', __( 'Registration Opens At', 'ffc-academy' ) ),
+				ffc_acf_date_time( 'field_ffc_tryout_registration_closes_at', 'tryout_registration_closes_at', __( 'Registration Closes At', 'ffc-academy' ) ),
+				ffc_acf_text( 'field_ffc_tryout_session_location', 'tryout_session_location', __( 'Location', 'ffc-academy' ) ),
+				ffc_acf_text( 'field_ffc_tryout_session_field', 'tryout_session_field', __( 'Field', 'ffc-academy' ) ),
+				ffc_acf_text( 'field_ffc_tryout_session_age_group', 'tryout_session_age_group', __( 'Age Group', 'ffc-academy' ) ),
+				array(
+					'key'           => 'field_ffc_tryout_session_status',
+					'label'         => __( 'Registration Status', 'ffc-academy' ),
+					'name'          => 'tryout_session_status',
+					'type'          => 'select',
+					'choices'       => array(
+						'open'   => __( 'Open', 'ffc-academy' ),
+						'closed' => __( 'Closed', 'ffc-academy' ),
+						'full'   => __( 'Full', 'ffc-academy' ),
+					),
+					'default_value' => 'open',
+					'ui'            => 1,
+				),
+				ffc_acf_number( 'field_ffc_tryout_session_capacity', 'tryout_session_capacity', __( 'Capacity', 'ffc-academy' ) ),
+				ffc_acf_url( 'field_ffc_tryout_session_teamsnap_url', 'tryout_session_teamsnap_url', __( 'TeamSnap Event URL', 'ffc-academy' ) ),
+				ffc_acf_textarea( 'field_ffc_tryout_session_notes', 'tryout_session_notes', __( 'Session Notes', 'ffc-academy' ) ),
+			),
+			'location' => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'ffc_tryout_session',
+					),
+				),
+			),
+		)
+	);
+
+	acf_add_local_field_group(
+		array(
 			'key'      => 'group_ffc_team_term_details',
 			'title'    => __( 'Team Details', 'ffc-academy' ),
 			'fields'   => array(
@@ -657,6 +697,11 @@ function ffc_tryout_page_fields(): array {
 		ffc_acf_textarea( 'field_ffc_tryout_intro_copy', 'tryout_intro_copy', __( 'Intro Copy', 'ffc-academy' ), __( 'Submit player and guardian details so academy staff can place athletes in the correct evaluation group and follow up with next steps.', 'ffc-academy' ) ),
 		ffc_acf_text( 'field_ffc_tryout_success_message', 'tryout_success_message', __( 'Success Message', 'ffc-academy' ), __( 'Registration received. Our staff will follow up soon.', 'ffc-academy' ) ),
 		ffc_acf_text( 'field_ffc_tryout_error_message', 'tryout_error_message', __( 'Error Message', 'ffc-academy' ), __( 'Please check the required fields and try again.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_unavailable_message', 'tryout_unavailable_message', __( 'Unavailable Session Message', 'ffc-academy' ), __( 'The selected tryout session is no longer available. Please choose another open session.', 'ffc-academy' ) ),
+		ffc_acf_textarea( 'field_ffc_tryout_no_sessions_message', 'tryout_no_sessions_message', __( 'No Open Sessions Message', 'ffc-academy' ), __( 'No tryout sessions are currently open. Please check back soon or contact us for the next evaluation window.', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_no_sessions_button_label', 'tryout_no_sessions_button_label', __( 'No Sessions CTA Label', 'ffc-academy' ), __( 'Contact Us', 'ffc-academy' ) ),
+		ffc_acf_url( 'field_ffc_tryout_no_sessions_button_url', 'tryout_no_sessions_button_url', __( 'No Sessions CTA URL', 'ffc-academy' ), home_url( '/contact/' ) ),
+		ffc_acf_text( 'field_ffc_tryout_session_placeholder', 'tryout_session_placeholder', __( 'Tryout Session Placeholder', 'ffc-academy' ), __( 'Select an open tryout session', 'ffc-academy' ) ),
 		ffc_acf_text( 'field_ffc_tryout_submit_label', 'tryout_submit_label', __( 'Submit Button Label', 'ffc-academy' ), __( 'Submit Registration', 'ffc-academy' ) ),
 		ffc_acf_text( 'field_ffc_tryout_age_group_placeholder', 'tryout_age_group_placeholder', __( 'Age Group Placeholder', 'ffc-academy' ), __( 'U10, U12, U14', 'ffc-academy' ) ),
 		ffc_acf_text( 'field_ffc_tryout_admin_email_subject', 'tryout_admin_email_subject', __( 'Admin Email Subject', 'ffc-academy' ), __( 'New F.F.C. Tryout Registration: {player_first_name} {player_last_name}', 'ffc-academy' ) ),
@@ -670,7 +715,7 @@ function ffc_tryout_page_fields(): array {
 		'date_of_birth'         => __( 'Date of Birth', 'ffc-academy' ),
 		'age_group'             => __( 'Age Group', 'ffc-academy' ),
 		'preferred_position'    => __( 'Preferred Position', 'ffc-academy' ),
-		'preferred_tryout_date' => __( 'Preferred Tryout Date', 'ffc-academy' ),
+		'preferred_tryout_date' => __( 'Preferred Tryout Session', 'ffc-academy' ),
 		'previous_experience'   => __( 'Previous Experience', 'ffc-academy' ),
 		'parent_name'           => __( 'Parent/Guardian Name', 'ffc-academy' ),
 		'parent_email'          => __( 'Parent/Guardian Email', 'ffc-academy' ),
@@ -709,6 +754,8 @@ function ffc_tryout_registration_fields(): array {
 				'completed' => __( 'Completed', 'ffc-academy' ),
 			)
 		),
+		ffc_acf_text( 'field_ffc_tryout_reg_session_id', 'tryout_session_id', __( 'Tryout Session ID', 'ffc-academy' ) ),
+		ffc_acf_text( 'field_ffc_tryout_reg_session_label', 'tryout_session_label', __( 'Tryout Session', 'ffc-academy' ) ),
 		ffc_acf_text( 'field_ffc_tryout_reg_player_first_name', 'player_first_name', __( 'Player First Name', 'ffc-academy' ) ),
 		ffc_acf_text( 'field_ffc_tryout_reg_player_last_name', 'player_last_name', __( 'Player Last Name', 'ffc-academy' ) ),
 		ffc_acf_date( 'field_ffc_tryout_reg_date_of_birth', 'date_of_birth', __( 'Date of Birth', 'ffc-academy' ) ),

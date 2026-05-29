@@ -12,6 +12,151 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_action( 'admin_post_nopriv_ffc_tryout_register', 'ffc_handle_tryout_registration' );
 add_action( 'admin_post_ffc_tryout_register', 'ffc_handle_tryout_registration' );
 
+function ffc_tryout_session_timestamp( int $session_id ): int {
+	return ffc_tryout_datetime_field_timestamp( 'tryout_session_datetime', $session_id );
+}
+
+function ffc_tryout_datetime_field_timestamp( string $field_name, int $post_id ): int {
+	$date_time = (string) ffc_get_field( $field_name, $post_id, '' );
+	if ( '' === $date_time ) {
+		return 0;
+	}
+
+	$date = DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $date_time, wp_timezone() );
+
+	return $date instanceof DateTimeImmutable ? $date->getTimestamp() : 0;
+}
+
+function ffc_tryout_registration_opens_timestamp( int $session_id ): int {
+	return ffc_tryout_datetime_field_timestamp( 'tryout_registration_opens_at', $session_id );
+}
+
+function ffc_tryout_registration_closes_timestamp( int $session_id ): int {
+	$closes_at = ffc_tryout_datetime_field_timestamp( 'tryout_registration_closes_at', $session_id );
+
+	return $closes_at ?: ffc_tryout_session_timestamp( $session_id );
+}
+
+function ffc_tryout_session_registration_count( int $session_id ): int {
+	$registrations = get_posts(
+		array(
+			'post_type'      => 'ffc_tryout',
+			'post_status'    => array( 'private', 'publish', 'pending', 'draft' ),
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'meta_query'     => array(
+				array(
+					'key'   => 'tryout_session_id',
+					'value' => (string) $session_id,
+				),
+			),
+		)
+	);
+
+	return count( $registrations );
+}
+
+function ffc_tryout_session_has_capacity( int $session_id ): bool {
+	$capacity = absint( ffc_get_field( 'tryout_session_capacity', $session_id, 0 ) );
+
+	return 0 === $capacity || ffc_tryout_session_registration_count( $session_id ) < $capacity;
+}
+
+function ffc_tryout_session_accepts_registration( int $session_id ): bool {
+	$session = get_post( $session_id );
+	if ( ! $session instanceof WP_Post || 'ffc_tryout_session' !== $session->post_type || 'publish' !== $session->post_status ) {
+		return false;
+	}
+
+	$status = (string) ffc_get_field( 'tryout_session_status', $session_id, 'open' );
+	if ( 'open' !== $status ) {
+		return false;
+	}
+
+	$now               = current_datetime()->getTimestamp();
+	$session_timestamp = ffc_tryout_session_timestamp( $session_id );
+	if ( ! $session_timestamp || $session_timestamp < $now ) {
+		return false;
+	}
+
+	$opens_at = ffc_tryout_registration_opens_timestamp( $session_id );
+	if ( $opens_at && $now < $opens_at ) {
+		return false;
+	}
+
+	$closes_at = ffc_tryout_registration_closes_timestamp( $session_id );
+	if ( $closes_at && $now > $closes_at ) {
+		return false;
+	}
+
+	return ffc_tryout_session_has_capacity( $session_id );
+}
+
+function ffc_tryout_session_label( int $session_id ): string {
+	$parts     = array();
+	$title     = get_the_title( $session_id );
+	$timestamp = ffc_tryout_session_timestamp( $session_id );
+	$age_group = (string) ffc_get_field( 'tryout_session_age_group', $session_id, '' );
+	$location  = (string) ffc_get_field( 'tryout_session_location', $session_id, '' );
+
+	if ( $title ) {
+		$parts[] = $title;
+	}
+	if ( $timestamp ) {
+		$parts[] = wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $timestamp );
+	}
+	if ( $age_group ) {
+		$parts[] = $age_group;
+	}
+	if ( $location ) {
+		$parts[] = $location;
+	}
+
+	return implode( ' - ', $parts );
+}
+
+function ffc_get_open_tryout_sessions(): array {
+	$query = new WP_Query(
+		array(
+			'post_type'      => 'ffc_tryout_session',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'meta_key'       => 'tryout_session_datetime',
+			'orderby'        => 'meta_value',
+			'order'          => 'ASC',
+			'meta_query'     => array(
+				array(
+					'key'     => 'tryout_session_datetime',
+					'value'   => current_datetime()->format( 'Y-m-d H:i:s' ),
+					'compare' => '>=',
+					'type'    => 'DATETIME',
+				),
+				array(
+					'relation' => 'OR',
+					array(
+						'key'     => 'tryout_session_status',
+						'value'   => 'open',
+						'compare' => '=',
+					),
+					array(
+						'key'     => 'tryout_session_status',
+						'compare' => 'NOT EXISTS',
+					),
+				),
+			),
+		)
+	);
+
+	return array_values(
+		array_filter(
+			$query->posts,
+			static function ( WP_Post $session ): bool {
+				return ffc_tryout_session_accepts_registration( (int) $session->ID );
+			}
+		)
+	);
+}
+
 function ffc_handle_tryout_registration(): void {
 	if ( ! isset( $_POST['ffc_tryout_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ffc_tryout_nonce'] ) ), 'ffc_tryout_register' ) ) {
 		wp_die( esc_html__( 'Security check failed.', 'ffc-academy' ), esc_html__( 'Forbidden', 'ffc-academy' ), array( 'response' => 403 ) );
@@ -20,6 +165,12 @@ function ffc_handle_tryout_registration(): void {
 	$honeypot = isset( $_POST['website'] ) ? sanitize_text_field( wp_unslash( $_POST['website'] ) ) : '';
 	if ( '' !== $honeypot ) {
 		wp_safe_redirect( add_query_arg( 'tryout', 'success', wp_get_referer() ?: home_url( '/' ) ) );
+		exit;
+	}
+
+	$session_id = isset( $_POST['tryout_session_id'] ) ? absint( wp_unslash( $_POST['tryout_session_id'] ) ) : 0;
+	if ( ! $session_id || ! ffc_tryout_session_accepts_registration( $session_id ) ) {
+		wp_safe_redirect( add_query_arg( 'tryout', 'unavailable', wp_get_referer() ?: home_url( '/tryouts/' ) ) );
 		exit;
 	}
 
@@ -35,7 +186,6 @@ function ffc_handle_tryout_registration(): void {
 		'parent_phone',
 		'emergency_contact',
 		'medical_notes',
-		'preferred_tryout_date',
 		'additional_comments',
 	);
 
@@ -46,6 +196,9 @@ function ffc_handle_tryout_registration(): void {
 	}
 
 	$data['parent_email'] = sanitize_email( $data['parent_email'] );
+	$data['tryout_session_id']    = (string) $session_id;
+	$data['tryout_session_label'] = ffc_tryout_session_label( $session_id );
+	$data['preferred_tryout_date'] = (string) ffc_get_field( 'tryout_session_datetime', $session_id, '' );
 
 	if ( empty( $data['player_first_name'] ) || empty( $data['player_last_name'] ) || empty( $data['parent_email'] ) || ! is_email( $data['parent_email'] ) ) {
 		wp_safe_redirect( add_query_arg( 'tryout', 'error', wp_get_referer() ?: home_url( '/' ) ) );
@@ -56,7 +209,7 @@ function ffc_handle_tryout_registration(): void {
 		array(
 			'post_type'    => 'ffc_tryout',
 			'post_status'  => 'private',
-			'post_title'   => sprintf( '%s %s - %s', $data['player_first_name'], $data['player_last_name'], current_time( 'mysql' ) ),
+			'post_title'   => sprintf( '%s %s - %s', $data['player_first_name'], $data['player_last_name'], $data['tryout_session_label'] ),
 			'post_content' => ffc_tryout_summary( $data ),
 		)
 	);
@@ -102,6 +255,7 @@ function ffc_tryout_replace_tokens( string $text, array $data ): string {
 function ffc_tryout_summary( array $data ): string {
 	$tryout_page_id = ffc_tryout_page_id();
 	$labels = array(
+		'tryout_session_label'  => __( 'Tryout Session', 'ffc-academy' ),
 		'player_first_name'     => __( 'Player First Name', 'ffc-academy' ),
 		'player_last_name'      => __( 'Player Last Name', 'ffc-academy' ),
 		'date_of_birth'         => __( 'Date of Birth', 'ffc-academy' ),
@@ -113,7 +267,7 @@ function ffc_tryout_summary( array $data ): string {
 		'parent_phone'          => __( 'Parent/Guardian Phone', 'ffc-academy' ),
 		'emergency_contact'     => __( 'Emergency Contact', 'ffc-academy' ),
 		'medical_notes'         => __( 'Medical Notes', 'ffc-academy' ),
-		'preferred_tryout_date' => __( 'Preferred Tryout Date', 'ffc-academy' ),
+		'preferred_tryout_date' => __( 'Session Date/Time', 'ffc-academy' ),
 		'additional_comments'   => __( 'Additional Comments', 'ffc-academy' ),
 	);
 

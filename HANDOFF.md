@@ -12,8 +12,8 @@ This checklist is for the final handoff of the F.F.C. Academy WordPress theme to
 - **About page:** edit the About page, then update `F.F.C. About Page Content`.
 - **Contact page:** edit the Contact page, then update `F.F.C. Contact Page Content`.
 - **Contact form:** add a form plugin shortcode in `Contact Form Shortcode`, or use the built-in fallback contact form.
-- **Tryout page:** edit the Tryouts page, then update `F.F.C. Tryout Page Content`.
-- **Tryout form labels/placeholders/email copy:** `Settings > F.F.C. Settings`.
+- **Tryout page, form labels/placeholders/email copy, and no-session copy:** edit the Tryouts page, then update `F.F.C. Tryout Page Content`.
+- **Tryout availability:** add at least one published, future, open `Tryout Session` before opening registration.
 - **Games and schedule:** `Games`, plus Teams and Seasons taxonomies.
 - **Scores and results:** `Scores`, plus Teams and Seasons taxonomies.
 - **Coaches:** `Coaches`.
@@ -48,6 +48,16 @@ ACF is used for structured content fields on pages, posts, and taxonomies. ACF o
 
 This build is configured for TeamSnap embeds and links, not API credentials.
 
+## Tryout Session Workflow
+
+- Create Tryout Sessions before sending families to the registration page.
+- A session appears on the public form only when it is published, has a future session date/time, has registration status `Open`, is inside the optional registration window, and is not over capacity.
+- Leave `Registration Closes At` blank to use the session date/time as the cutoff.
+- The public form uses a required session dropdown instead of a free preferred date field.
+- If no valid sessions exist, the submit action is hidden and the Tryouts page shows the editable no-sessions message.
+- The server rejects submissions if the selected session is missing, unpublished, closed, not yet open, past, full, or beyond the registration close time.
+- Submitted registrations store both the selected session ID and a readable session label.
+
 ## Required Before Launch
 
 - Confirm WordPress core, PHP, and plugins are updated.
@@ -62,6 +72,7 @@ This build is configured for TeamSnap embeds and links, not API credentials.
 - Assign Home as the static front page.
 - Confirm the primary and footer menus are assigned.
 - Replace placeholder copy, phone numbers, addresses, images, and sponsor examples.
+- Add at least one open future Tryout Session before public tryout launch.
 - Add real social media URLs.
 - Add real TeamSnap URLs or embed code.
 - Submit a test tryout registration and confirm admin and parent emails are received.
@@ -78,6 +89,8 @@ This build is configured for TeamSnap embeds and links, not API credentials.
 - Sponsors archive shows tiers and sponsor CTAs.
 - Gallery archive shows images/videos and lightbox behavior.
 - Tryout form validates required fields and stores private registrations.
+- Tryout form is hidden/closed when no open future Tryout Session exists.
+- Tryout form shows only open future sessions that still have capacity.
 - Admin can add and edit Games, Scores, Coaches, Announcements, Sponsors, Gallery Items, and Tryout Registrations.
 - Teams, Seasons, Sponsor Tiers, and Gallery Categories can be added and edited.
 - Navigation links point to intended pages.

@@ -18,7 +18,7 @@ Then activate **F.F.C. Academy** in WordPress Admin.
 
 - Custom WordPress theme using PHP, CSS, JavaScript, and WordPress template hierarchy.
 - Mobile-first sports academy design system derived from the F.F.C. navy and rose-gold identity.
-- Custom post types for games, scores, coaches, announcements, sponsors, gallery items, and tryout registrations.
+- Custom post types for games, scores, coaches, announcements, sponsors, gallery items, tryout sessions, and tryout registrations.
 - Custom taxonomies for teams, seasons, gallery categories, and sponsor tiers.
 - ACF local field groups for admin-friendly content management.
 - TeamSnap embed and public link support for schedules, roster links, registration links, and app access.
@@ -54,10 +54,9 @@ ACF Pro options pages are not required. Global theme settings use the native Wor
 - Homepage sections: edit the Home page and update **F.F.C. Homepage Sections**.
 - About page: edit the About page and update **F.F.C. About Page Content**.
 - Contact page: edit the Contact page and update **F.F.C. Contact Page Content**. Add a form plugin shortcode in the Contact Form Shortcode field if using a plugin form, or use the built-in fallback contact form.
-- Tryout page: edit the Tryouts page and update **F.F.C. Tryout Page Content**.
-- Tryout form labels, placeholders, email subjects, and field help: **Settings > F.F.C. Settings**.
+- Tryout page, form labels, placeholders, email subjects, and no-session messaging: edit the Tryouts page and update **F.F.C. Tryout Page Content**.
 - Footer copy, copyright text, social links, header labels, and TeamSnap links: **Settings > F.F.C. Settings**.
-- Games, Scores, Coaches, Announcements, Sponsors, Gallery Items, and Tryout Registrations: use their matching admin menu items.
+- Games, Scores, Coaches, Announcements, Sponsors, Gallery Items, Tryout Sessions, and Tryout Registrations: use their matching admin menu items.
 - Teams, Seasons, Gallery Categories, and Sponsor Tiers: edit under the relevant content type taxonomy screens.
 
 Theme-managed pages and structured content types intentionally use the classic WordPress editor so the custom fields stay visible and reliable for non-technical administrators.
@@ -83,12 +82,26 @@ The current implementation does not require TeamSnap API credentials.
 
 ## Tryout Registrations
 
+Before the public tryout form can be submitted, at least one **Tryout Session** must be published, open, scheduled in the future, and under capacity.
+
+Tryout Sessions are managed in **Tryout Sessions** and include:
+
+- Session date/time.
+- Optional registration opens at and registration closes at times.
+- Location and field.
+- Age group.
+- Registration status: open, closed, or full.
+- Optional capacity.
+- Optional TeamSnap event link and notes.
+
+If no open sessions exist, the Tryouts page hides the registration form submit action and shows the editable no-sessions message from the Tryouts page fields. Server-side validation also rejects submissions for missing, closed, not-yet-open, past, full, or registration-closed sessions.
+
 Registrations are stored as private `Tryout Registrations` posts. The form collects:
 
 - Player name, date of birth, age group, position, experience.
 - Parent/guardian contact details.
 - Emergency contact and medical notes.
-- Preferred tryout date and comments.
+- Selected tryout session and comments.
 
 For production, configure SMTP before opening registration publicly.
 

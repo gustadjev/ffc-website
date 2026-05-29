@@ -1282,6 +1282,19 @@ a:focus-visible {
 	color: #7d1616;
 }
 
+.notice--info {
+	background: var(--ffc-ivory);
+	color: var(--ffc-navy);
+}
+
+.tryout-form--closed {
+	align-content: start;
+}
+
+.tryout-form--closed .notice {
+	margin: 0;
+}
+
 .site-footer__top {
 	display: grid;
 	grid-template-columns: 1.5fr 1fr 1fr;
